@@ -8,8 +8,8 @@ import { xmlFormatter } from "./defs/xml";
 import { yamlJson } from "./defs/yaml";
 import { base64, jwtDecoder, urlEncoder } from "./defs/encoding";
 import { csvToJson } from "./defs/csv";
-import { diffChecker, wordCounter } from "./defs/text";
-import { uuidGenerator } from "./defs/generators";
+import { caseConverter, diffChecker, wordCounter } from "./defs/text";
+import { loremIpsum, passwordGenerator, qrCodeGenerator, uuidGenerator } from "./defs/generators";
 import { gradientGenerator } from "./defs/design";
 import { percentageCalculator } from "./defs/calculators";
 import { compressImage, imageConverter, passportPhoto, resizeImage } from "./defs/images";
@@ -39,10 +39,14 @@ export const toolDefinitions: ToolDefinition[] = [
   imageConverter,
   wordCounter,
   diffChecker,
+  caseConverter,
   csvToJson,
   yamlJson,
   gradientGenerator,
   uuidGenerator,
+  passwordGenerator,
+  qrCodeGenerator,
+  loremIpsum,
   percentageCalculator,
 ];
 

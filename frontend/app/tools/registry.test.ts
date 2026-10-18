@@ -20,6 +20,10 @@ import { mergePdfs, rotatePdf, splitPdf } from "./engine/pdf";
 import { parsePageRanges } from "./engine/page-ranges";
 import { describeConversion, targetFormats } from "./engine/image-format";
 import { pageImageName, pageImageSize } from "./engine/pdf-image";
+import { cases, convertCase } from "./engine/case";
+import { passwordEntropy, strengthLabel } from "./engine/password";
+import { describeQr, wifiPayload, type QrLevel } from "./engine/qr";
+import { generateLorem } from "./engine/lorem";
 
 const defaults = (def: TextToolDefinition) => ({
   ...def.engineOptions,
@@ -104,6 +108,33 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     const out = pageImageSize(Number(w), Number(h), Number(dpi));
     return `${out.width} × ${out.height} px`;
   },
+  "case-converter": (input) => {
+    const at = input.indexOf(": ");
+    const id = cases.find((c) => c.label === input.slice(0, at))!.id;
+    return convertCase(input.slice(at + 2), id);
+  },
+  "password-generator": (input) => {
+    const length = Number(input.match(/^(\d+) characters/)![1]);
+    const all = input.includes("all four sets");
+    const options = {
+      length,
+      upper: all,
+      lower: true,
+      digits: true,
+      symbols: all,
+      avoidAmbiguous: input.includes("look-alikes"),
+    };
+    const bits = passwordEntropy(options);
+    return `${strengthLabel(bits)} · ${bits} bits`;
+  },
+  "qr-code-generator": (input) => {
+    const wifi = input.match(/^Wi-Fi: network (.+), password (.+), (WPA|WEP)$/);
+    if (wifi) return wifiPayload(wifi[1], wifi[2], wifi[3] as "WPA");
+    const [, text, level] = input.match(/^(.+) at level ([LMQH])$/)!;
+    return describeQr(text, level as QrLevel);
+  },
+  "lorem-ipsum": (input) =>
+    generateLorem({ unit: "words", count: Number(input.split(" ")[0]), startWithLorem: true, html: false }),
   "image-converter": (input) => {
     const [, name, label] = input.match(/^(.+) → (\w+)$/)!;
     return describeConversion(name, targetFormats.find((f) => f.label === label)!.value);

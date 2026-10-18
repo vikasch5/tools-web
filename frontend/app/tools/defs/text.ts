@@ -99,3 +99,43 @@ export const diffChecker: WidgetToolDefinition = {
   ],
   related: ["word-counter", "json-formatter", "csv-to-json"],
 };
+
+export const caseConverter: WidgetToolDefinition = {
+  workspace: "case-converter",
+  slug: "case-converter",
+  category: "text-tools",
+  name: "Case Converter",
+  metaTitle: "Case Converter – UPPER, lower, Title, camelCase and More",
+  description:
+    "Convert text to UPPER, lower, Title or Sentence case, or to camelCase, snake_case, kebab-case and other code styles. Every result at once, ready to copy.",
+  howTo: [
+    "Type or paste your text. Every case is shown at once and updates as you type.",
+    "Press the copy button next to the case you need.",
+    "Code cases (camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case, dot.case) convert each line separately, so you can convert a list of names in one go.",
+  ],
+  examples: [
+    { title: "Headline to Title Case", input: "Title Case: the lord of the rings: the return of the king", output: "The Lord of the Rings: The Return of the King" },
+    { title: "Shouting to Sentence case", input: "Sentence case: PLEASE READ THIS. i MEAN IT!", output: "Please read this. I mean it!" },
+    { title: "Phrase to a variable name", input: "camelCase: user account id", output: "userAccountId" },
+    { title: "Acronyms are split sensibly", input: "snake_case: parseHTTPResponse", output: "parse_http_response" },
+  ],
+  limitations: [
+    "Title Case keeps short words such as “of”, “the” and “and” lower case unless they start the title, follow a colon or end it. Names and acronyms (NASA, iPhone) may need fixing by hand.",
+    "Sentence case lowers everything except the first letter of each sentence and the word “I”, so names lose their capitals.",
+    "Code cases drop punctuation but keep accented letters, so check names meant for systems that only allow ASCII.",
+  ],
+  faq: [
+    {
+      question: "What is the difference between camelCase and PascalCase?",
+      answer:
+        "camelCase starts with a lower-case letter (userName), PascalCase with a capital (UserName). JavaScript variables usually use camelCase; classes and React components use PascalCase.",
+    },
+    {
+      question: "When should I use snake_case or kebab-case?",
+      answer:
+        "snake_case is common for Python names and database columns; kebab-case for URLs, CSS classes and file names. CONSTANT_CASE is used for constants and environment variables.",
+    },
+    textPrivacyFaq,
+  ],
+  related: ["word-counter", "diff-checker", "lorem-ipsum"],
+};

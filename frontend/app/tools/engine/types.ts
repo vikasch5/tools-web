@@ -9,7 +9,8 @@ export type EngineId =
   | "csv"
   | "html-minify"
   | "xml"
-  | "yaml";
+  | "yaml"
+  | "url";
 export type EngineAction =
   | "format"
   | "minify"
@@ -18,7 +19,8 @@ export type EngineAction =
   | "decode"
   | "convert"
   | "to-json"
-  | "to-yaml";
+  | "to-yaml"
+  | "parse";
 export type OptionValue = string | number | boolean;
 export type EngineOptions = Record<string, OptionValue>;
 

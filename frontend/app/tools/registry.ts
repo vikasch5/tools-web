@@ -6,7 +6,7 @@ import { htmlFormatter, htmlMinifier } from "./defs/html";
 import { sqlFormatter } from "./defs/sql";
 import { xmlFormatter } from "./defs/xml";
 import { yamlJson } from "./defs/yaml";
-import { base64, jwtDecoder } from "./defs/encoding";
+import { base64, jwtDecoder, urlEncoder } from "./defs/encoding";
 import { csvToJson } from "./defs/csv";
 import { diffChecker, wordCounter } from "./defs/text";
 import { uuidGenerator } from "./defs/generators";
@@ -28,6 +28,7 @@ export const toolDefinitions: ToolDefinition[] = [
   sqlFormatter,
   base64,
   jwtDecoder,
+  urlEncoder,
   mergePdf,
   splitPdf,
   compressImage,

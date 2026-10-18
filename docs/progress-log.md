@@ -30,3 +30,28 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
   - Typecheck, 87 tests and the build all pass.
   - Browser smoke test: search, filters, palette, and every page has exactly one h1.
   - No horizontal scroll at 375px and no hydration errors.
+
+### PR #3: batch 3, first four developer and data tools
+- **HTML Minifier**:
+  - Removes comments, keeping conditional and `<!--!` comments.
+  - Drops whitespace next to block-level tags and collapses it between inline elements.
+  - Keeps `<pre>` and `<textarea>` content exactly as written.
+  - Minifies inline CSS with csso and inline JS with terser, without renaming top-level names. JSON scripts are compacted.
+  - Broken scripts are left as they are and listed as warnings.
+- **XML Formatter & Validator**:
+  - Format, minify and validate, backed by an in-house well-formedness parser.
+  - Errors report line and column: mismatched tags, unquoted or repeated attributes, bare `&` or `<`, more than one root.
+  - SVG, RSS and plist files are accepted.
+- **YAML ⇄ JSON Converter** (converters category):
+  - Uses the new `yaml` dependency (2.9.1).
+  - Handles anchors and merge keys, and turns multi-document files into a JSON array.
+  - Alias bombs are rejected.
+  - Download uses `.json` or `.yaml` depending on the direction.
+- **URL Encode / Decode**:
+  - Component, Full URL and Form (+) styles.
+  - Broken `%` escapes report their position.
+  - "Parse URL" splits a URL into its parts and decoded query parameters, with the password hidden.
+- Shared changes:
+  - Actions can set their own download extension.
+  - Text tools can set a custom input placeholder.
+- Verified: typecheck, 116 tests and the build all pass. A browser run of each tool's sample and secondary actions showed no console errors.

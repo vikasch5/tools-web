@@ -101,3 +101,20 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
   - Browser run: clipboard copy, the symbols toggle, word count, Wi-Fi QR and PNG download all work.
   - No horizontal scroll at 375px and no console errors.
 - All 11 batch 3 tools are now live, and the site has 31 tools.
+
+### PR #6: launch readiness (sitemap, robots, self-hosted fonts)
+- `/sitemap.xml` and `/robots.txt` are resource routes, prerendered at build time.
+  - The sitemap lists every public page (home, static pages, categories, all 31 tools) from `app/lib/pages.ts`.
+  - The prerender list in `react-router.config.ts` uses the same file, so the two cannot drift apart.
+- Fonts are now self-hosted via `@fontsource-variable` (Geist, Geist Mono, Bricolage Grotesque with the optical-size axis) instead of Google Fonts.
+  - The Latin files are preloaded.
+  - The Privacy page now says no third-party requests are made.
+- Verified:
+  - Typecheck, 145 tests and the build all pass.
+  - Browser check: all three fonts load, and no external requests are made on the home, JSON and PDF pages.
+  - Sitemap and robots return 200.
+- **Before going live:**
+  - Build with `VITE_SITE_URL=https://<real-domain>`. Canonical URLs, the sitemap and robots.txt use it; the placeholder is `https://toolbench.example`.
+  - Replace the placeholder brand name and contact email.
+  - Get Privacy and Terms legally reviewed.
+  - Choose hosting. The build output is a Node server (`react-router-serve`) plus static prerendered pages.

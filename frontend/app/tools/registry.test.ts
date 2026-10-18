@@ -18,6 +18,7 @@ import {
 } from "./engine/image-geometry";
 import { mergePdfs, splitPdf } from "./engine/pdf";
 import { parsePageRanges } from "./engine/page-ranges";
+import { describeConversion, targetFormats } from "./engine/image-format";
 
 const defaults = (def: TextToolDefinition) => ({
   ...def.engineOptions,
@@ -89,6 +90,10 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     const preset = passportPresets.find((p) => p.label === input)!;
     const sheet = sheetLayout(preset, { width: 152.4, height: 101.6 });
     return `${mmToPx(preset.widthMm)} × ${mmToPx(preset.heightMm)} px at 300 DPI; ${sheet.positions.length} photos fit on a 6 × 4 in sheet`;
+  },
+  "image-converter": (input) => {
+    const [, name, label] = input.match(/^(.+) → (\w+)$/)!;
+    return describeConversion(name, targetFormats.find((f) => f.label === label)!.value);
   },
   "merge-pdf": async (input) => {
     const files = await Promise.all(

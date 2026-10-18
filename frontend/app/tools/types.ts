@@ -75,7 +75,8 @@ export type WidgetId =
   | "resize-image"
   | "passport-photo"
   | "merge-pdf"
-  | "split-pdf";
+  | "split-pdf"
+  | "image-converter";
 
 export type WidgetToolDefinition = ToolContentBase & { workspace: WidgetId };
 

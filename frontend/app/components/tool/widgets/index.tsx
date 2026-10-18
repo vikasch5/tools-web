@@ -16,6 +16,7 @@ const widgets: Record<WidgetId, ComponentType> = {
   "passport-photo": load(() => import("./PassportPhoto"), "PassportPhoto"),
   "merge-pdf": load(() => import("./MergePdf"), "MergePdf"),
   "split-pdf": load(() => import("./SplitPdf"), "SplitPdf"),
+  "image-converter": load(() => import("./ImageConverter"), "ImageConverter"),
 };
 
 export function ToolWidget({ id }: { id: WidgetId }) {

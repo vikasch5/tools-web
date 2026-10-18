@@ -133,3 +133,45 @@ export const passportPhoto: WidgetToolDefinition = {
   ],
   related: ["resize-image", "compress-image", "merge-pdf"],
 };
+
+export const imageConverter: WidgetToolDefinition = {
+  workspace: "image-converter",
+  slug: "image-converter",
+  category: "image-tools",
+  name: "Image Converter",
+  metaTitle: "Image Converter – Convert to JPG, PNG or WebP Online",
+  description:
+    "Convert images between JPG, PNG and WebP, from GIF, BMP, AVIF and ICO too. Batch up to 30 files and download them as a ZIP. Nothing is uploaded.",
+  howTo: [
+    "Choose the format to convert to: JPG for compatibility, PNG for lossless images with transparency, or WebP for the smallest files.",
+    "Drop up to 30 images onto the page or choose them from your device. They are converted straight away.",
+    "For JPG and WebP, adjust Quality. For JPG, choose the colour that replaces transparent areas.",
+    "Download each image, or all of them as a ZIP file.",
+  ],
+  examples: [
+    { title: "PNG logo to JPG", input: "logo.png → JPG", output: "logo.jpg (transparent areas filled with white)" },
+    { title: "Phone photo to WebP", input: "IMG_2041.jpeg → WebP", output: "IMG_2041.webp" },
+    { title: "Old BMP to PNG", input: "scan.bmp → PNG", output: "scan.png" },
+  ],
+  limitations: [
+    "JPG has no transparency, so transparent areas are filled with white or black.",
+    "Only the first frame of an animated GIF or WebP is converted.",
+    "HEIC photos from iPhones and SVG files are not supported. On iPhone, photos are usually converted to JPG automatically when you share or upload them.",
+    "Which formats can be opened depends on your browser: AVIF needs a recent browser, and some browsers (notably Safari) cannot save WebP. You will be told if a different format was used.",
+    "Converting removes metadata such as camera details and GPS location.",
+  ],
+  faq: [
+    {
+      question: "Which format should I choose?",
+      answer:
+        "WebP for websites (smallest files, supports transparency), JPG for photos you will email or print, and PNG for screenshots, logos and anything that needs sharp edges or lossless quality.",
+    },
+    {
+      question: "Will converting to PNG improve quality?",
+      answer:
+        "No. PNG keeps the image exactly as it is now, but cannot restore detail that JPG compression already discarded. The file will usually be larger.",
+    },
+    filePrivacyFaq,
+  ],
+  related: ["compress-image", "resize-image", "passport-photo"],
+};

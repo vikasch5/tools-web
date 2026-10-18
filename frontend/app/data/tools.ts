@@ -33,6 +33,7 @@ export const tools: Tool[] = [
   { slug: "xml-formatter", name: "XML Formatter & Validator", category: "developer-tools", description: "Indent, minify and check XML with error locations.", status: "live", isNew: true, keywords: ["beautify", "pretty print", "validate", "svg", "rss", "sitemap", "well-formed"] },
   { slug: "yaml-to-json", name: "YAML ⇄ JSON Converter", category: "converters", description: "Convert YAML to JSON and JSON back to YAML.", status: "live", isNew: true, keywords: ["yml", "convert", "kubernetes", "docker compose", "config", "json to yaml"] },
   { slug: "url-encoder", name: "URL Encode / Decode", category: "developer-tools", description: "Percent-encode text, decode escapes and parse URLs.", status: "live", isNew: true, keywords: ["percent encoding", "urlencode", "urldecode", "query string", "%20", "uri"] },
+  { slug: "image-converter", name: "Image Converter", category: "image-tools", description: "Convert images to JPG, PNG or WebP in bulk.", status: "live", isNew: true, keywords: ["png to jpg", "jpg to png", "webp to jpg", "jpg to webp", "gif", "bmp", "avif", "format"] },
 
   // Added in batch 2
   { slug: "sql-formatter", name: "SQL Formatter", category: "developer-tools", description: "Format SQL for MySQL, PostgreSQL, SQL Server and more.", status: "live", isNew: true, keywords: ["query", "mysql", "postgres", "postgresql", "sqlite", "sql server", "tsql", "beautify"] },

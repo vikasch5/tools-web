@@ -17,19 +17,18 @@ import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { categories, categoryPath } from "~/data/categories";
 import { Link } from "react-router";
 import { themeInitScript } from "~/lib/theme";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/geist-mono";
+import "@fontsource-variable/bricolage-grotesque/opsz.css";
+import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
+import bricolageLatin from "@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2?url";
 import "./app.css";
 
+// Fonts are self-hosted (bundled from @fontsource), so no request goes to
+// a third party. The Latin files used above the fold are preloaded.
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap",
-  },
+  { rel: "preload", href: geistLatin, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: bricolageLatin, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {

@@ -42,8 +42,8 @@ export default function Privacy() {
       </ContentSection>
       <ContentSection id="third-parties" title="Third parties">
         <p>
-          Fonts are currently loaded from Google Fonts, which means your browser requests them from Google’s servers and Google
-          receives your IP address. We plan to host fonts ourselves before launch so this request no longer happens.
+          Fonts, scripts and the data used to display PDFs are all served from our own site. Your browser makes no requests to
+          font services, analytics or advertising networks.
         </p>
         <p>Like any website, our hosting provider may keep standard server logs (IP address, page requested, time) for security.</p>
       </ContentSection>

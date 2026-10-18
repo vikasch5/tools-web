@@ -177,3 +177,51 @@ export const pdfToImage: WidgetToolDefinition = {
   ],
   related: ["rotate-pdf", "split-pdf", "image-converter"],
 };
+
+export const imageToPdf: WidgetToolDefinition = {
+  workspace: "image-to-pdf",
+  slug: "image-to-pdf",
+  category: "pdf-tools",
+  name: "JPG to PDF",
+  metaTitle: "JPG to PDF – Convert Images to PDF Free, No Upload",
+  description:
+    "Turn JPG, PNG and other images into one PDF, one image per page. Choose A4, Letter or the image’s own size, orientation and margins. No upload.",
+  overview: [
+    "Forms, visa portals, schools and employers often ask for a single PDF: scanned pages, receipts, ID cards or photos of handwritten work. Sending a pile of separate photos is awkward, and many upload forms accept only one file.",
+    "This tool puts each image on its own page, in the order you choose. A4 and Letter pages scale images down to fit inside the margins and centre them, and wide images can turn the page to landscape automatically. Upright JPEG photos are placed in the PDF exactly as they are, without re-compressing, so they keep their quality. Phone photos stored sideways are turned upright first. Everything happens in your browser, so your documents are never uploaded.",
+  ],
+  howTo: [
+    "Drop your images onto the page or choose them from your device. Phone photos, scans and screenshots all work.",
+    "Put them in order with the up and down arrows. Each image becomes one page.",
+    "Choose the page size: A4 or Letter for printing and forms, or “Same as image” for pages that match each picture.",
+    "Pick an orientation and margin, then press Create PDF to download images.pdf.",
+  ],
+  examples: [
+    { title: "A 12-megapixel phone photo on A4", input: "4032 × 3024 px on A4, auto, small margin", output: "Page 841.89 × 595.28 pt (11.69 × 8.27 in)\nImage 745.71 × 559.28 pt at (48.09, 18)" },
+    { title: "A portrait screenshot on Letter", input: "1080 × 1920 px on Letter, portrait, none margin", output: "Page 612 × 792 pt (8.5 × 11 in)\nImage 445.5 × 792 pt at (83.25, 0)" },
+    { title: "Page the same size as the image", input: "1920 × 1080 px on image size, auto, none margin", output: "Page 1440 × 810 pt (20 × 11.25 in)\nImage 1440 × 810 pt at (0, 0)" },
+  ],
+  limitations: [
+    "Images are scaled down to fit a page but never enlarged beyond their natural size (96 pixels per inch), so small images stay sharp and centred.",
+    "WebP, GIF, BMP and AVIF images, and sideways phone photos, are redrawn as high-quality JPEG first. Transparent areas become white.",
+    "Up to 100 images and 25 MB per image. The PDF contains images only, so text in a scan is not searchable.",
+  ],
+  faq: [
+    {
+      question: "Will my photos lose quality?",
+      answer:
+        "Upright JPEG and PNG files are embedded unchanged, so they keep their original quality. Other formats are converted to JPEG at 92% quality, which is visually lossless for most photos.",
+    },
+    {
+      question: "Why is my PDF large?",
+      answer:
+        "The PDF is about as big as the images inside it. To make it smaller, first shrink the photos with the Compress Image tool, then convert them.",
+    },
+    {
+      question: "Can I put several images on one page?",
+      answer: "Not yet. Each image gets its own page. To combine existing PDFs instead, use Merge PDF.",
+    },
+    filePrivacyFaq,
+  ],
+  related: ["merge-pdf", "compress-image", "pdf-to-image"],
+};

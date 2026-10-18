@@ -84,7 +84,14 @@ export type WidgetId =
   | "case-converter"
   | "password-generator"
   | "qr-code-generator"
-  | "lorem-ipsum";
+  | "lorem-ipsum"
+  | "image-to-pdf"
+  | "age-calculator"
+  | "bmi-calculator"
+  | "loan-calculator"
+  | "timestamp-converter"
+  | "hash-generator"
+  | "color-converter";
 
 export type WidgetToolDefinition = ToolContentBase & { workspace: WidgetId };
 

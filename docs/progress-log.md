@@ -136,3 +136,14 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
   - Create the AdSense account, then build with `VITE_ADSENSE_CLIENT` and, after creating a display ad unit, `VITE_ADSENSE_SLOT`.
   - In AdSense → Privacy & messaging, publish the European regulations (GDPR) message and, optionally, the US state regulations message.
   - Add the site in Google Search Console and submit the sitemap.
+
+### PR #8: seven high-demand tools (batch 4, 38 tools live)
+- **JPG to PDF** (`/pdf-tools/image-to-pdf`): one image per page on A4, Letter or a page the size of the image, with auto/portrait/landscape and three margins. Upright JPEGs and PNGs are embedded unchanged; other formats and EXIF-rotated phone photos are redrawn as JPEG first (a small EXIF reader decides). Up to 100 images.
+- **Unix Timestamp Converter**: seconds, ms, µs or ns (guessed from the number's size, or chosen), or date text, to ISO 8601, UTC, local time and relative time. Live clock and "Use current time".
+- **Hash Generator**: MD5 (own RFC 1321 implementation, since Web Crypto lacks it), SHA-1, SHA-256, SHA-384 and SHA-512 for text or files up to 200 MB, plus checksum comparison that names the matching algorithm.
+- **Color Converter**: HEX, RGB, HSL, HSV and CMYK from any of HEX, rgb(), hsl() or basic names, a colour picker, and WCAG contrast against white and black.
+- **Age Calculator**: exact years, months and days on any date, totals, and the next birthday (29 February counts as 28 February in common years).
+- **BMI Calculator**: metric or US units, WHO adult categories and the healthy weight range for the height, with the limits of BMI stated on the page.
+- **Loan & EMI Calculator**: standard amortised payment, total interest and a yearly schedule; any currency.
+- `FileDrop` now takes any file when `accept` is empty (used by the hash tool). Category descriptions updated to match what each category really holds.
+- Verified: typecheck, 171 tests and the build pass. Engine tests use RFC/NIST hash vectors, the textbook mortgage payment (200,000 at 6% for 30 years = 1,199.10) and leap-day ages; every published example is checked against real output. Browser run: all seven work, a 2-image PDF came out with landscape and portrait A4 pages, no console errors, no horizontal scroll at 375 px.

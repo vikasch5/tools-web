@@ -1,6 +1,8 @@
 import type { DiffOptions, DiffResult } from "./diff";
 import type { ImageJob } from "./image";
 import type { PdfFile, SplitMode } from "./pdf";
+import type { ImagesPdfOptions, PdfImage } from "./images-pdf";
+import type { HashAlgorithm } from "./hash";
 
 /** Binary and structured jobs for the engine worker (files in, files out). */
 export type Task =
@@ -9,6 +11,8 @@ export type Task =
   | { type: "pdf-merge"; files: PdfFile[] }
   | { type: "pdf-split"; file: PdfFile; mode: SplitMode; ranges: string }
   | { type: "pdf-rotate"; file: PdfFile; turns: number[] }
+  | { type: "images-pdf"; images: PdfImage[]; options: ImagesPdfOptions }
+  | { type: "hash"; data: Uint8Array }
   | { type: "image"; job: ImageJob };
 
 export type TaskOutputs = {
@@ -17,6 +21,8 @@ export type TaskOutputs = {
   "pdf-merge": { data: Uint8Array; pageCount: number };
   "pdf-split": { name: string; data: Uint8Array; files: number; type: string };
   "pdf-rotate": { name: string; data: Uint8Array; rotations: number[] };
+  "images-pdf": { data: Uint8Array; pageCount: number };
+  hash: Record<HashAlgorithm, string>;
   image: Blob;
 };
 
@@ -47,6 +53,10 @@ async function dispatch(task: Task) {
       return (await import("./pdf")).splitPdf(task.file, task.mode, task.ranges);
     case "pdf-rotate":
       return (await import("./pdf")).rotatePdf(task.file, task.turns);
+    case "images-pdf":
+      return (await import("./images-pdf")).imagesToPdf(task.images, task.options);
+    case "hash":
+      return (await import("./hash")).hashAll(task.data);
     case "image":
       return (await import("./image")).renderImage(task.job);
   }

@@ -10,10 +10,11 @@ import { base64, jwtDecoder, urlEncoder } from "./defs/encoding";
 import { csvToJson } from "./defs/csv";
 import { caseConverter, diffChecker, wordCounter } from "./defs/text";
 import { loremIpsum, passwordGenerator, qrCodeGenerator, uuidGenerator } from "./defs/generators";
-import { gradientGenerator } from "./defs/design";
-import { percentageCalculator } from "./defs/calculators";
+import { colorConverter, gradientGenerator } from "./defs/design";
+import { ageCalculator, bmiCalculator, loanCalculator, percentageCalculator } from "./defs/calculators";
 import { compressImage, imageConverter, passportPhoto, resizeImage } from "./defs/images";
-import { mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
+import { imageToPdf, mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
+import { hashGenerator, timestampConverter } from "./defs/utilities";
 
 /** Full definitions of working tools. Import from loaders only. */
 export const toolDefinitions: ToolDefinition[] = [
@@ -29,10 +30,13 @@ export const toolDefinitions: ToolDefinition[] = [
   base64,
   jwtDecoder,
   urlEncoder,
+  timestampConverter,
+  hashGenerator,
   mergePdf,
   splitPdf,
   rotatePdf,
   pdfToImage,
+  imageToPdf,
   compressImage,
   resizeImage,
   passportPhoto,
@@ -43,11 +47,15 @@ export const toolDefinitions: ToolDefinition[] = [
   csvToJson,
   yamlJson,
   gradientGenerator,
+  colorConverter,
   uuidGenerator,
   passwordGenerator,
   qrCodeGenerator,
   loremIpsum,
   percentageCalculator,
+  ageCalculator,
+  bmiCalculator,
+  loanCalculator,
 ];
 
 export function getToolDefinition(category: string, slug: string) {

@@ -24,6 +24,13 @@ import { cases, convertCase } from "./engine/case";
 import { passwordEntropy, strengthLabel } from "./engine/password";
 import { describeQr, wifiPayload, type QrLevel } from "./engine/qr";
 import { generateLorem } from "./engine/lorem";
+import { describeAge } from "./engine/age";
+import { describeBmi } from "./engine/bmi";
+import { describeLoan } from "./engine/loan";
+import { describeTimestamp } from "./engine/timestamp";
+import { describeHash } from "./engine/hash";
+import { describeColor } from "./engine/color";
+import { describeLayout, type ImagesPdfOptions } from "./engine/images-pdf";
 
 const defaults = (def: TextToolDefinition) => ({
   ...def.engineOptions,
@@ -135,6 +142,32 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
   },
   "lorem-ipsum": (input) =>
     generateLorem({ unit: "words", count: Number(input.split(" ")[0]), startWithLorem: true, html: false }),
+  "image-to-pdf": (input) => {
+    const [, w, h, page, orientation, margin] = input.match(/^(\d+) × (\d+) px on (A4|Letter|image size), (\w+), (\w+) margin$/)!;
+    const pageSize = ({ A4: "a4", Letter: "letter", "image size": "fit" } as const)[page as "A4"];
+    return describeLayout({ width: Number(w), height: Number(h) }, { pageSize, orientation, margin } as ImagesPdfOptions);
+  },
+  "age-calculator": (input) => {
+    const [, birth, on] = input.match(/^Born (\S+), on (\S+)$/)!;
+    return describeAge(birth, on);
+  },
+  "bmi-calculator": (input) => {
+    const metric = input.match(/^([\d.]+) kg, ([\d.]+) cm$/);
+    if (metric) return describeBmi({ system: "metric", weightKg: Number(metric[1]), heightCm: Number(metric[2]) });
+    const [, lb, ft, inch] = input.match(/^([\d.]+) lb, (\d+) ft (\d+) in$/)!;
+    return describeBmi({ system: "imperial", weightLb: Number(lb), heightFt: Number(ft), heightIn: Number(inch) });
+  },
+  "loan-calculator": (input) => {
+    const [, amount, rate, term, unit] = input.match(/^([\d,]+) at ([\d.]+)% for (\d+) (years|months)$/)!;
+    return describeLoan({
+      principal: parseNumber(amount),
+      annualRate: Number(rate),
+      months: Number(term) * (unit === "years" ? 12 : 1),
+    });
+  },
+  "timestamp-converter": (input) => describeTimestamp(input),
+  "hash-generator": (input) => describeHash(input),
+  "color-converter": (input) => describeColor(input),
   "image-converter": (input) => {
     const [, name, label] = input.match(/^(.+) → (\w+)$/)!;
     return describeConversion(name, targetFormats.find((f) => f.label === label)!.value);

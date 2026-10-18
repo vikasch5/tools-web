@@ -68,3 +68,24 @@ export async function splitPdf(file: PdfFile, mode: SplitMode, ranges: string) {
     return { name: outputs[0].name, data: outputs[0].data, files: 1, type: "application/pdf" };
   return { name: `${base}-split.zip`, data: createZip(outputs), files: outputs.length, type: "application/zip" };
 }
+
+/**
+ * Adds a clockwise turn (a multiple of 90°) to each page; turns[i] is for
+ * page i. The page content is untouched: only its /Rotate entry changes,
+ * so text stays selectable and quality is unchanged.
+ */
+export async function rotatePdf(file: PdfFile, turns: number[]) {
+  const { degrees } = await import("pdf-lib");
+  const doc = await load(file);
+  const pages = doc.getPages();
+  pages.forEach((page, i) => {
+    const turn = turns[i] ?? 0;
+    if (turn % 360 === 0) return;
+    page.setRotation(degrees((((page.getRotation().angle + turn) % 360) + 360) % 360));
+  });
+  return {
+    name: `${baseName(file.name)}-rotated.pdf`,
+    data: await doc.save(),
+    rotations: pages.map((p) => p.getRotation().angle),
+  };
+}

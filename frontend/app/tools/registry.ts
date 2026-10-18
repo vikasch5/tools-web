@@ -12,8 +12,8 @@ import { diffChecker, wordCounter } from "./defs/text";
 import { uuidGenerator } from "./defs/generators";
 import { gradientGenerator } from "./defs/design";
 import { percentageCalculator } from "./defs/calculators";
-import { compressImage, passportPhoto, resizeImage } from "./defs/images";
-import { mergePdf, splitPdf } from "./defs/pdf";
+import { compressImage, imageConverter, passportPhoto, resizeImage } from "./defs/images";
+import { mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
 
 /** Full definitions of working tools. Import from loaders only. */
 export const toolDefinitions: ToolDefinition[] = [
@@ -31,9 +31,12 @@ export const toolDefinitions: ToolDefinition[] = [
   urlEncoder,
   mergePdf,
   splitPdf,
+  rotatePdf,
+  pdfToImage,
   compressImage,
   resizeImage,
   passportPhoto,
+  imageConverter,
   wordCounter,
   diffChecker,
   csvToJson,

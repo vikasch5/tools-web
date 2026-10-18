@@ -4,7 +4,7 @@ import { ArrowRight, Search } from "lucide-react";
 import { Kbd } from "~/components/ui/Kbd";
 import { tools, toolPath } from "~/data/tools";
 
-const suggestions = ["json-formatter", "css-minifier", "js-formatter", "html-formatter"]
+const suggestions = ["merge-pdf", "compress-image", "json-formatter", "word-counter"]
   .map((slug) => tools.find((t) => t.slug === slug))
   .filter((t) => t !== undefined);
 

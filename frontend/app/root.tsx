@@ -13,6 +13,9 @@ import { SiteHeader } from "~/components/layout/SiteHeader";
 import { SiteFooter } from "~/components/layout/SiteFooter";
 import { Container } from "~/components/layout/Container";
 import { ButtonLink } from "~/components/ui/Button";
+import { CategoryIcon } from "~/components/ui/CategoryIcon";
+import { categories, categoryPath } from "~/data/categories";
+import { Link } from "react-router";
 import { themeInitScript } from "~/lib/theme";
 import "./app.css";
 
@@ -72,7 +75,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   if (notFound) {
     title = "Page not found";
     details =
-      "This page does not exist yet, or it may have moved. Try browsing the tools directory instead.";
+      "This page does not exist, or it may have moved. Search the tools directory or pick a category below.";
   } else if (isRouteErrorResponse(error)) {
     title = `Error ${error.status}`;
     details = error.statusText || details;
@@ -103,6 +106,24 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
           </ButtonLink>
         </div>
       </div>
+      {notFound && (
+        <nav aria-label="Categories" className="mx-auto mt-14 max-w-3xl">
+          <h2 className="label-mono text-center font-sans text-fg-subtle">Or pick a category</h2>
+          <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {categories.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  to={categoryPath(c.slug)}
+                  className="flex items-center gap-2.5 rounded-lg border border-border bg-surface p-3 text-sm font-medium text-fg shadow-sm transition-colors hover:border-border-strong"
+                >
+                  <CategoryIcon category={c} size="sm" />
+                  {c.shortName}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
       {stack && (
         <pre className="mx-auto mt-12 max-w-3xl overflow-x-auto rounded-md border border-border bg-surface-2 p-4 font-mono text-xs text-fg-muted">
           <code>{stack}</code>

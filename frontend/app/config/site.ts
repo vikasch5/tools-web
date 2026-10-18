@@ -4,6 +4,8 @@ export const site = {
   /** Production origin for canonical URLs. Placeholder until a domain is chosen. */
   url: import.meta.env.VITE_SITE_URL ?? "https://toolbench.example",
   tagline: "Small, sharp tools for the jobs in between.",
+  /** Placeholder until launch; pages that show it say so. */
+  email: "hello@toolbench.example",
 } as const;
 
 export type NavLink = { label: string; to: string };

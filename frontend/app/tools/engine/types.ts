@@ -7,7 +7,8 @@ export type EngineId =
   | "base64"
   | "jwt"
   | "csv"
-  | "html-minify";
+  | "html-minify"
+  | "xml";
 export type EngineAction =
   | "format"
   | "minify"

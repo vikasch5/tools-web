@@ -10,6 +10,7 @@ import { runSql } from "./sql";
 import { runBase64 } from "./base64";
 import { decodeJwt } from "./jwt";
 import { csvToJson } from "./csv";
+import { runXml } from "./xml";
 
 /**
  * Single entry point for all processing. Heavy libraries are imported on
@@ -44,6 +45,8 @@ export async function runEngine({
         return decodeJwt(input);
       case "csv":
         return csvToJson(input, options);
+      case "xml":
+        return runXml(action, input, options);
       case "html-minify": {
         const { minifyHtml } = await import("./html-minify");
         return await minifyHtml(input, options);

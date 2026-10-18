@@ -4,6 +4,7 @@ import { cssFormatter, cssMinifier } from "./defs/css";
 import { jsFormatter, jsMinifier } from "./defs/js";
 import { htmlFormatter, htmlMinifier } from "./defs/html";
 import { sqlFormatter } from "./defs/sql";
+import { xmlFormatter } from "./defs/xml";
 import { base64, jwtDecoder } from "./defs/encoding";
 import { csvToJson } from "./defs/csv";
 import { diffChecker, wordCounter } from "./defs/text";
@@ -22,6 +23,7 @@ export const toolDefinitions: ToolDefinition[] = [
   jsMinifier,
   htmlFormatter,
   htmlMinifier,
+  xmlFormatter,
   sqlFormatter,
   base64,
   jwtDecoder,

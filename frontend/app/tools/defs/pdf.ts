@@ -120,3 +120,44 @@ export const rotatePdf: WidgetToolDefinition = {
   ],
   related: ["split-pdf", "merge-pdf", "compress-image"],
 };
+
+export const pdfToImage: WidgetToolDefinition = {
+  workspace: "pdf-to-image",
+  slug: "pdf-to-image",
+  category: "pdf-tools",
+  name: "PDF to Image",
+  metaTitle: "PDF to Image – Convert PDF Pages to PNG or JPG",
+  description:
+    "Turn PDF pages into PNG, JPG or WebP images at 72, 150 or 300 DPI. Pick the pages from previews and download them as a ZIP. No upload.",
+  howTo: [
+    "Drop a PDF onto the page or choose one from your device. A preview of every page appears, all selected.",
+    "Click previews to leave pages out, or use Select all / Select none.",
+    "Choose a format: PNG for sharp text, JPG or WebP for smaller files. Choose 150 DPI for screens or 300 DPI for print.",
+    "Press Convert. One page downloads as an image; several are bundled into a ZIP.",
+  ],
+  examples: [
+    { title: "A4 page for screens", input: "A4 page (595.28 × 841.89 pt) at 150 DPI", output: "1240 × 1754 px" },
+    { title: "US Letter page for print", input: "Letter page (612 × 792 pt) at 300 DPI", output: "2550 × 3300 px" },
+    { title: "File names keep page order", input: "report.pdf, page 3 of 12, as PNG", output: "report-page-03.png" },
+  ],
+  limitations: [
+    "Very large pages (such as posters) are saved at a lower resolution if the image would exceed 40 megapixels, and you will be told.",
+    "Password-protected PDFs cannot be opened. Remove the password in your PDF reader first.",
+    "Pages are drawn by your browser, so a long document at 300 DPI can take a while on older phones.",
+    "Form fields are drawn as they appear in the PDF; interactive elements such as links do not carry over into images.",
+  ],
+  faq: [
+    {
+      question: "Which resolution should I choose?",
+      answer:
+        "150 DPI is sharp on screens and keeps files small. Use 300 DPI for printing or zooming into fine text, and 72 DPI for quick thumbnails.",
+    },
+    {
+      question: "PNG or JPG?",
+      answer:
+        "PNG keeps text and lines perfectly crisp and suits documents. JPG and WebP are much smaller for pages that are mostly photos.",
+    },
+    filePrivacyFaq,
+  ],
+  related: ["rotate-pdf", "split-pdf", "image-converter"],
+};

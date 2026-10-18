@@ -19,6 +19,7 @@ import {
 import { mergePdfs, rotatePdf, splitPdf } from "./engine/pdf";
 import { parsePageRanges } from "./engine/page-ranges";
 import { describeConversion, targetFormats } from "./engine/image-format";
+import { pageImageName, pageImageSize } from "./engine/pdf-image";
 
 const defaults = (def: TextToolDefinition) => ({
   ...def.engineOptions,
@@ -95,6 +96,13 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     const turns = input.replace("turn ", "").split(", ").map(Number);
     const r = await rotatePdf({ name: "report.pdf", data: await blankPdf(turns.length) }, turns);
     return `${r.name} with page rotations ${r.rotations.map((d) => `${d}°`).join(", ")}`;
+  },
+  "pdf-to-image": (input) => {
+    const name = input.match(/^(.+), page (\d+) of (\d+), as (\w+)$/);
+    if (name) return pageImageName(name[1], Number(name[2]), Number(name[3]), name[4].toLowerCase());
+    const [, w, h, dpi] = input.match(/\(([\d.]+) × ([\d.]+) pt\) at (\d+) DPI/)!;
+    const out = pageImageSize(Number(w), Number(h), Number(dpi));
+    return `${out.width} × ${out.height} px`;
   },
   "image-converter": (input) => {
     const [, name, label] = input.match(/^(.+) → (\w+)$/)!;

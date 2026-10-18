@@ -17,6 +17,7 @@ const widgets: Record<WidgetId, ComponentType> = {
   "merge-pdf": load(() => import("./MergePdf"), "MergePdf"),
   "split-pdf": load(() => import("./SplitPdf"), "SplitPdf"),
   "rotate-pdf": load(() => import("./RotatePdf"), "RotatePdf"),
+  "pdf-to-image": load(() => import("./PdfToImage"), "PdfToImage"),
   "image-converter": load(() => import("./ImageConverter"), "ImageConverter"),
 };
 

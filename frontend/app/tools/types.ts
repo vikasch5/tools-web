@@ -77,7 +77,8 @@ export type WidgetId =
   | "merge-pdf"
   | "split-pdf"
   | "image-converter"
-  | "rotate-pdf";
+  | "rotate-pdf"
+  | "pdf-to-image";
 
 export type WidgetToolDefinition = ToolContentBase & { workspace: WidgetId };
 

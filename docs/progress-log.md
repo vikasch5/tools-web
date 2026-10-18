@@ -55,3 +55,25 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
   - Actions can set their own download extension.
   - Text tools can set a custom input placeholder.
 - Verified: typecheck, 116 tests and the build all pass. A browser run of each tool's sample and secondary actions showed no console errors.
+
+### PR #4: Image Converter, Rotate PDF, PDF to Image
+- **Image Converter**:
+  - Converts JPG, PNG, WebP, GIF, BMP, AVIF and ICO into JPG, PNG or WebP.
+  - Quality control for lossy formats, and a white or black fill for transparency when saving as JPG.
+  - Batches of up to 30 images, downloaded as a ZIP. A note appears when the browser cannot save the chosen format.
+- **Rotate PDF**:
+  - Shows page previews with per-page and all-page left/right turns, plus Reset.
+  - Only each page's `/Rotate` setting changes (pdf-lib), so text and quality are untouched.
+- **PDF to Image**:
+  - Click previews to choose pages. Output is PNG, JPG or WebP at 72, 150 or 300 DPI.
+  - One page downloads as an image; several come as a ZIP. Names are zero-padded so files sort in page order.
+  - Pages over 40 megapixels are scaled down, with a warning.
+- New dependency: `pdfjs-dist` 6.4.299.
+  - Uses the **legacy build**, because the modern build needs `Map.getOrInsertComputed`, which current Chromium lacks.
+  - Loaded only on PDF preview pages.
+  - Fonts, cmaps, colour profiles and decoders are served same-origin from `/pdfjs/` by a small Vite plugin, with no CDN.
+- Verified:
+  - Typecheck, 122 tests and the build all pass.
+  - Browser run: rotated pages read back as 0/90/270/0.
+  - A 3-page ZIP and a 300 DPI JPG at the expected pixel size downloaded correctly.
+  - Image conversion works, with no console errors.

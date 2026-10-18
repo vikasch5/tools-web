@@ -42,8 +42,8 @@ export async function renderPdfPage(
   const page = await pdf.getPage(pageNumber);
   const viewport = page.getViewport({ scale, rotation: (page.rotate + extraRotation) % 360 });
   const canvas = document.createElement("canvas");
-  canvas.width = Math.max(1, Math.floor(viewport.width));
-  canvas.height = Math.max(1, Math.floor(viewport.height));
+  canvas.width = Math.max(1, Math.round(viewport.width));
+  canvas.height = Math.max(1, Math.round(viewport.height));
   await page.render({ canvas, viewport, background }).promise;
   page.cleanup();
   return canvas;

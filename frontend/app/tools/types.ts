@@ -78,7 +78,11 @@ export type WidgetId =
   | "split-pdf"
   | "image-converter"
   | "rotate-pdf"
-  | "pdf-to-image";
+  | "pdf-to-image"
+  | "case-converter"
+  | "password-generator"
+  | "qr-code-generator"
+  | "lorem-ipsum";
 
 export type WidgetToolDefinition = ToolContentBase & { workspace: WidgetId };
 

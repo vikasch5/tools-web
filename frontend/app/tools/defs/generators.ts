@@ -47,3 +47,126 @@ export const uuidGenerator: WidgetToolDefinition = {
   ],
   related: ["base64", "jwt-decoder", "gradient-generator"],
 };
+
+export const passwordGenerator: WidgetToolDefinition = {
+  workspace: "password-generator",
+  slug: "password-generator",
+  category: "generators",
+  name: "Password Generator",
+  metaTitle: "Password Generator – Strong, Random and Private",
+  description:
+    "Create strong random passwords up to 128 characters with your browser’s secure generator. Choose the characters, avoid look-alikes and see the strength.",
+  howTo: [
+    "Set the length. 16 characters or more is a good default for accounts; use your password manager’s limit if it has one.",
+    "Choose which characters to use. Turn on “Avoid look-alikes” if the password will be read or typed by hand.",
+    "Copy a password. Press Generate for a fresh set; each one is created on your device.",
+  ],
+  examples: [
+    { title: "Default settings", input: "16 characters, all four sets", output: "Very strong · 103 bits" },
+    { title: "Easy to read aloud", input: "12 characters, all four sets, avoiding look-alikes", output: "Strong · 76 bits" },
+    { title: "Short PIN-style password", input: "8 characters, lower case and digits", output: "Fair · 41 bits" },
+  ],
+  limitations: [
+    "Strength is calculated from the length and the characters allowed, assuming the password is random, which it is here. The time estimate assumes an attacker who can try 10 billion guesses a second offline.",
+    "Each chosen character type appears at least once, as many sites require.",
+    "Passwords are not saved anywhere. Store them in a password manager.",
+  ],
+  faq: [
+    {
+      question: "Are these passwords really random?",
+      answer:
+        "Yes. They come from crypto.getRandomValues, the browser’s cryptographically secure random generator, without modulo bias. They are never sent over the network.",
+    },
+    {
+      question: "How long should my password be?",
+      answer:
+        "At least 16 characters for important accounts. Length adds more strength than symbols do, so a longer password with only letters and digits is better than a short one with everything.",
+    },
+    {
+      question: "Is my password stored or logged?",
+      answer: "No. It is generated in your browser and exists only on this page until you close or refresh it.",
+    },
+  ],
+  related: ["uuid-generator", "qr-code-generator", "base64"],
+};
+
+export const qrCodeGenerator: WidgetToolDefinition = {
+  workspace: "qr-code-generator",
+  slug: "qr-code-generator",
+  category: "generators",
+  name: "QR Code Generator",
+  metaTitle: "QR Code Generator – Links and Wi-Fi, PNG or SVG",
+  description:
+    "Make QR codes for links, text or Wi-Fi logins. Choose error correction and colours, and download a crisp PNG or SVG. Free, no sign-up, no tracking.",
+  howTo: [
+    "Choose Link or text, or Wi-Fi to let guests join your network by scanning.",
+    "Enter the content. The code updates as you type.",
+    "Pick an error correction level: higher levels survive smudges and logos but make the code denser.",
+    "Download a PNG for documents and screens, or an SVG for print at any size. Scan it with your phone to test before printing.",
+  ],
+  examples: [
+    { title: "A website link", input: "https://example.com at level M", output: "Version 2 · 25 × 25 modules" },
+    { title: "Higher error correction makes a denser code", input: "https://example.com at level H", output: "Version 3 · 29 × 29 modules" },
+    { title: "Wi-Fi login", input: "Wi-Fi: network Cafe Guest, password coffee123, WPA", output: "WIFI:T:WPA;S:Cafe Guest;P:coffee123;;" },
+  ],
+  limitations: [
+    "Codes are static: the content is stored in the code itself, so they never expire and cannot be changed or tracked after printing.",
+    "A QR code holds up to about 2,900 bytes at the lowest error correction. Long text makes the code hard to scan, so keep links short.",
+    "Wi-Fi codes work with the built-in camera on current iPhone and Android phones. The password is visible to anyone who decodes the image.",
+    "Light codes on dark backgrounds, and low-contrast colours, do not scan reliably. You will see a warning.",
+  ],
+  faq: [
+    {
+      question: "Do these QR codes expire?",
+      answer: "No. The link or text is encoded directly in the image, with no redirect service in between, so the code works as long as the link does.",
+    },
+    {
+      question: "Which error correction level should I choose?",
+      answer:
+        "M (15%) suits most uses. Choose Q or H if the code will be printed small, on a rough surface, or with a logo over it; choose L for the simplest code when it will only be shown on screens.",
+    },
+    {
+      question: "Is my content uploaded?",
+      answer: "No. The code is generated in your browser, so links and Wi-Fi passwords never leave your device.",
+    },
+  ],
+  related: ["password-generator", "url-encoder", "uuid-generator"],
+};
+
+export const loremIpsum: WidgetToolDefinition = {
+  workspace: "lorem-ipsum",
+  slug: "lorem-ipsum",
+  category: "generators",
+  name: "Lorem Ipsum Generator",
+  metaTitle: "Lorem Ipsum Generator – Paragraphs, Sentences, Words",
+  description:
+    "Generate lorem ipsum placeholder text by paragraphs, sentences or words, as plain text or HTML paragraphs. Copy or download it in one click.",
+  howTo: [
+    "Choose paragraphs, sentences or words, and how many.",
+    "Keep “Start with Lorem ipsum” on for the classic opening, or turn it off for fully random text.",
+    "Turn on HTML <p> tags to paste straight into markup.",
+    "Copy the text or download it. Press Generate for a new variation.",
+  ],
+  examples: [
+    { title: "The classic opening", input: "8 words", output: "Lorem ipsum dolor sit amet consectetur adipiscing elit." },
+    { title: "A short label", input: "3 words", output: "Lorem ipsum dolor." },
+  ],
+  limitations: [
+    "The text is pseudo-Latin built from the traditional lorem ipsum vocabulary. It has no meaning and is not grammatically correct Latin.",
+    "Up to 500 paragraphs or sentences, or 5,000 words, at a time.",
+    "The output is not marked as placeholder text, so remember to replace it before publishing.",
+  ],
+  faq: [
+    {
+      question: "Why use lorem ipsum instead of real text?",
+      answer:
+        "It looks like natural text in length and rhythm, so a layout can be judged without readers getting distracted by the words. Replace it with real content before launch.",
+    },
+    {
+      question: "Where does lorem ipsum come from?",
+      answer:
+        "It is a scrambled passage from Cicero’s “De finibus bonorum et malorum” (45 BC), used by typesetters since at least the 1500s.",
+    },
+  ],
+  related: ["word-counter", "case-converter", "uuid-generator"],
+};

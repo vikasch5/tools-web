@@ -36,6 +36,10 @@ export const tools: Tool[] = [
   { slug: "image-converter", name: "Image Converter", category: "image-tools", description: "Convert images to JPG, PNG or WebP in bulk.", status: "live", isNew: true, keywords: ["png to jpg", "jpg to png", "webp to jpg", "jpg to webp", "gif", "bmp", "avif", "format"] },
   { slug: "rotate-pdf", name: "Rotate PDF", category: "pdf-tools", description: "Turn single pages or the whole PDF, with previews.", status: "live", isNew: true, keywords: ["turn", "landscape", "portrait", "sideways", "upside down", "pdf"] },
   { slug: "pdf-to-image", name: "PDF to Image", category: "pdf-tools", description: "Save PDF pages as PNG, JPG or WebP images.", status: "live", isNew: true, keywords: ["pdf to jpg", "pdf to png", "convert pdf", "export pages", "screenshot", "dpi"] },
+  { slug: "password-generator", name: "Password Generator", category: "generators", description: "Strong random passwords with a strength meter.", status: "live", isNew: true, keywords: ["secure password", "random password", "passphrase", "strong", "credentials"] },
+  { slug: "qr-code-generator", name: "QR Code Generator", category: "generators", description: "QR codes for links and Wi-Fi, as PNG or SVG.", status: "live", isNew: true, keywords: ["qr", "barcode", "wifi qr", "link", "scan"] },
+  { slug: "case-converter", name: "Case Converter", category: "text-tools", description: "UPPER, lower, Title, camelCase, snake_case and more.", status: "live", isNew: true, keywords: ["uppercase", "lowercase", "title case", "sentence case", "camelcase", "snake case", "kebab case"] },
+  { slug: "lorem-ipsum", name: "Lorem Ipsum Generator", category: "generators", description: "Placeholder text by paragraphs, sentences or words.", status: "live", isNew: true, keywords: ["placeholder text", "dummy text", "filler", "lipsum"] },
 
   // Added in batch 2
   { slug: "sql-formatter", name: "SQL Formatter", category: "developer-tools", description: "Format SQL for MySQL, PostgreSQL, SQL Server and more.", status: "live", isNew: true, keywords: ["query", "mysql", "postgres", "postgresql", "sqlite", "sql server", "tsql", "beautify"] },

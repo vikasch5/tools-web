@@ -18,6 +18,10 @@ const widgets: Record<WidgetId, ComponentType> = {
   "split-pdf": load(() => import("./SplitPdf"), "SplitPdf"),
   "rotate-pdf": load(() => import("./RotatePdf"), "RotatePdf"),
   "pdf-to-image": load(() => import("./PdfToImage"), "PdfToImage"),
+  "case-converter": load(() => import("./CaseConverter"), "CaseConverter"),
+  "password-generator": load(() => import("./PasswordGenerator"), "PasswordGenerator"),
+  "qr-code-generator": load(() => import("./QrCode"), "QrCode"),
+  "lorem-ipsum": load(() => import("./LoremIpsum"), "LoremIpsum"),
   "image-converter": load(() => import("./ImageConverter"), "ImageConverter"),
 };
 

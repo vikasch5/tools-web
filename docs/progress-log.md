@@ -77,3 +77,27 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
   - Browser run: rotated pages read back as 0/90/270/0.
   - A 3-page ZIP and a 300 DPI JPG at the expected pixel size downloaded correctly.
   - Image conversion works, with no console errors.
+
+### PR #5: Password Generator, QR Code Generator, Case Converter, Lorem Ipsum (batch 3 complete)
+- **Password Generator**:
+  - Lengths from 4 to 128, choice of character sets, and an option to avoid look-alikes.
+  - Every chosen set is included at least once.
+  - Uses `crypto.getRandomValues` with rejection sampling, so there is no modulo bias.
+  - Strength is shown as a label plus bits, with an offline crack-time estimate.
+- **QR Code Generator**:
+  - Content can be a link or text, or a Wi-Fi login (with escaping, WPA/WEP/open, hidden networks).
+  - L/M/Q/H error correction and custom colours, with a low-contrast warning.
+  - PNG export at 512, 1024 or 2048 px, plus SVG export.
+  - New dependency: `uqr` 0.1.3 (zero dependencies).
+- **Case Converter**:
+  - Shows all 11 cases at once with copy buttons.
+  - Title Case is smart about minor words. Code cases split acronyms and digits and work line by line.
+- **Lorem Ipsum Generator**:
+  - Generates paragraphs, sentences or words, with an optional classic opening and HTML `<p>` output.
+  - Copy or download the result.
+  - Uses a seedable PRNG so tests are repeatable.
+- Verified:
+  - Typecheck, 143 tests and the build all pass.
+  - Browser run: clipboard copy, the symbols toggle, word count, Wi-Fi QR and PNG download all work.
+  - No horizontal scroll at 375px and no console errors.
+- All 11 batch 3 tools are now live, and the site has 31 tools.

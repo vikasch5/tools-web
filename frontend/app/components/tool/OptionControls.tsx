@@ -36,7 +36,7 @@ export function OptionControls({
   );
 }
 
-function Segmented({
+export function Segmented({
   label,
   choices,
   value,
@@ -78,7 +78,7 @@ function Segmented({
   );
 }
 
-function Switch({
+export function Switch({
   label,
   checked,
   onChange,

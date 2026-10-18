@@ -1,5 +1,19 @@
-export type EngineId = "json" | "prettier" | "terser" | "csso";
-export type EngineAction = "format" | "minify" | "validate";
+export type EngineId =
+  | "json"
+  | "prettier"
+  | "terser"
+  | "csso"
+  | "sql"
+  | "base64"
+  | "jwt"
+  | "csv";
+export type EngineAction =
+  | "format"
+  | "minify"
+  | "validate"
+  | "encode"
+  | "decode"
+  | "convert";
 export type OptionValue = string | number | boolean;
 export type EngineOptions = Record<string, OptionValue>;
 

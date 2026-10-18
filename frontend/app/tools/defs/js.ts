@@ -1,4 +1,4 @@
-import type { ToolDefinition } from "../types";
+import type { TextToolDefinition } from "../types";
 import { indentOption, printWidthOption, privacyFaq } from "./shared";
 
 const jsSample = `// Debounce a function call
@@ -22,7 +22,8 @@ const handleResize = debounce(() => {
 window.addEventListener("resize", handleResize);
 `;
 
-export const jsFormatter: ToolDefinition = {
+export const jsFormatter: TextToolDefinition = {
+  workspace: "text",
   slug: "js-formatter",
   category: "developer-tools",
   name: "JavaScript Formatter",
@@ -84,7 +85,8 @@ export const jsFormatter: ToolDefinition = {
   related: ["js-minifier", "json-formatter", "html-formatter"],
 };
 
-export const jsMinifier: ToolDefinition = {
+export const jsMinifier: TextToolDefinition = {
+  workspace: "text",
   slug: "js-minifier",
   category: "developer-tools",
   name: "JavaScript Minifier",

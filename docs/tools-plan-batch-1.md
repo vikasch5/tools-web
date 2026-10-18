@@ -1,6 +1,6 @@
 # Tools Plan — Batch 1: Code Formatters & Minifiers
 
-Status: **Built (local, uncommitted).** Decisions: separate formatter/minifier pages, enhanced textarea editor, prettier + terser + csso + vitest approved.
+Status: **Batch 1 and batch 2 built.** Decisions: separate formatter/minifier pages, enhanced textarea editor, prettier + terser + csso + vitest approved.
 Goal: ship the first set of *working* developer tools on top of the existing design system, and build the shared tool framework every later tool reuses.
 
 ---
@@ -138,3 +138,13 @@ Testing: add **Vitest** (dev dependency only) for the engine adapters, e.g. "inv
 - Tests (`npm test`, 28): engine behaviour, error locations, and every published example/sample is checked against real engine output.
 - Engine download on first use (gzip): CSS formatter ≈ 68 KB, JS formatter ≈ 168 KB (TypeScript adds ≈ 270 KB only when chosen), HTML formatter ≈ 260 KB, JS minifier ≈ 136 KB, CSS minifier ≈ 59 KB, JSON 0 KB. Tool page JS before engines ≈ 7 KB gzip on top of the shared app shell.
 - Known gaps: output pane has no syntax colouring; `site.url` is a placeholder (`VITE_SITE_URL`) so canonicals point at toolbench.example until a domain is set; /tools, /help, /about and legal pages still 404.
+
+## 11. Batch 2 (as built, 2026-10-18)
+
+The 14 remaining "soon" tools are live: SQL Formatter, Base64, JWT Decoder, CSV to JSON (text workspace + new worker engines), and Merge PDF, Split PDF, Compress Image, Resize Image, Passport Photo Maker, Word Counter, Diff Checker, Gradient Generator, UUID Generator, Percentage Calculator (panel tools).
+
+- **Definitions:** `ToolDefinition` is now a union. `workspace: "text"` tools use the two-pane `ToolWorkspace`; other tools name a panel (`WidgetId`) in `components/tool/widgets/`, each lazy-loaded inside the same `ToolLayout` page (header, content, FAQ, related). Shared panel primitives: `Panel`, `PanelSection`, `StatusMessage`, `FileDrop`, and `ui/Field` (text, select, range).
+- **Engines:** `sql.ts` (sql-formatter, dialect rules tree-shaken), `base64.ts`, `jwt.ts` (decode only, never verifies), `csv.ts` (RFC 4180 parser), `diff.ts` (Myers), `text-stats.ts`, `uuid.ts`, `percent.ts`, `gradient.ts`, `pdf.ts` (pdf-lib), `image.ts` (OffscreenCanvas; main-thread fallback), `image-geometry.ts`, `zip.ts` (stored ZIP writer, no dependency). File and structured jobs go through `runTaskInWorker` (`tasks.ts`); diff, PDF and image work run in the worker. Word count, UUID, percentage and gradient maths are instant and run on the main thread.
+- **New dependencies:** `sql-formatter` (~27 KB gzip, SQL page only) and `pdf-lib` (~175 KB gzip, PDF pages only, loaded in the worker on first use).
+- **Tests:** 84. Every published example on every page is checked against the real functions the panel uses (`registry.test.ts`), plus engine tests in `engine/batch2.test.ts`.
+- **Known gaps:** Base64 is text-only; Split PDF has no page thumbnails; Passport Photo does not check backgrounds or remove them; Safari cannot encode WebP (the UI says when it falls back).

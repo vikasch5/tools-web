@@ -4,12 +4,20 @@ import type { Route } from "./+types/tool";
 import { Container } from "~/components/layout/Container";
 import { Breadcrumbs } from "~/components/layout/Breadcrumbs";
 import { ToolWorkspace } from "~/components/tool/ToolWorkspace";
+import { ToolWidget } from "~/components/tool/widgets";
 import { RelatedTools, ToolContent } from "~/components/tool/ToolContent";
 import { getToolDefinition } from "~/tools/registry";
 import { categories, categoryPath } from "~/data/categories";
 import { tools, toolPath } from "~/data/tools";
 import { breadcrumbJsonLd, buildMeta, absoluteUrl } from "~/lib/seo";
 import { site } from "~/config/site";
+
+// schema.org application categories for the WebApplication JSON-LD.
+const applicationCategories: Record<string, string> = {
+  "developer-tools": "DeveloperApplication",
+  "image-tools": "MultimediaApplication",
+  "web-design-tools": "DesignApplication",
+};
 
 export function loader({ params }: Route.LoaderArgs) {
   const tool = getToolDefinition(params.category, params.tool);
@@ -47,7 +55,8 @@ export function meta({ loaderData }: Route.MetaArgs) {
         name: tool.name,
         description: tool.description,
         url: absoluteUrl(path),
-        applicationCategory: "DeveloperApplication",
+        applicationCategory:
+          applicationCategories[category.slug] ?? "UtilitiesApplication",
         operatingSystem: "Any (runs in the browser)",
         isAccessibleForFree: true,
       },
@@ -94,19 +103,24 @@ export default function ToolPage({ loaderData }: Route.ComponentProps) {
       </header>
 
       <Container className="py-4 sm:py-5">
-        <ToolWorkspace
-          tool={{
-            slug: tool.slug,
-            engine: tool.engine,
-            actions: tool.actions,
-            options: tool.options,
-            engineOptions: tool.engineOptions,
-            language: tool.language,
-            accept: tool.accept,
-            downloadExtension: tool.downloadExtension,
-            sample: tool.sample,
-          }}
-        />
+        {tool.workspace === "text" ? (
+          <ToolWorkspace
+            tool={{
+              slug: tool.slug,
+              engine: tool.engine,
+              actions: tool.actions,
+              options: tool.options,
+              engineOptions: tool.engineOptions,
+              language: tool.language,
+              accept: tool.accept,
+              downloadExtension: tool.downloadExtension,
+              sample: tool.sample,
+              tree: tool.tree,
+            }}
+          />
+        ) : (
+          <ToolWidget id={tool.workspace} />
+        )}
       </Container>
 
       <Container className="space-y-16 pt-8 pb-20 sm:pt-12">

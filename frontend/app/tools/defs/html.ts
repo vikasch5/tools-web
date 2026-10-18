@@ -1,7 +1,8 @@
-import type { ToolDefinition } from "../types";
+import type { TextToolDefinition } from "../types";
 import { indentOption, printWidthOption, privacyFaq } from "./shared";
 
-export const htmlFormatter: ToolDefinition = {
+export const htmlFormatter: TextToolDefinition = {
+  workspace: "text",
   slug: "html-formatter",
   category: "developer-tools",
   name: "HTML Formatter",

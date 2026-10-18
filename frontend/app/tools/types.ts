@@ -21,12 +21,8 @@ export type ToolExample = {
   output: string;
 };
 
-/**
- * Everything a tool page needs. Definitions are plain data, loaded by the
- * route loader on the server, so their long-form content does not ship in
- * the client JavaScript bundle.
- */
-export type ToolDefinition = {
+/** Long-form page content shared by every tool. */
+type ToolContentBase = {
   slug: string;
   category: string;
   name: string;
@@ -34,6 +30,16 @@ export type ToolDefinition = {
   metaTitle: string;
   /** Meta description and intro, ~150 characters. */
   description: string;
+  howTo: string[];
+  examples: ToolExample[];
+  limitations: string[];
+  faq: { question: string; answer: string }[];
+  related: string[];
+};
+
+/** Text in, text out: rendered by the shared two-pane ToolWorkspace. */
+export type TextToolDefinition = ToolContentBase & {
+  workspace: "text";
   engine: EngineId;
   /** First action is the primary one (and Ctrl/Cmd+Enter). */
   actions: ToolAction[];
@@ -47,11 +53,33 @@ export type ToolDefinition = {
   /** Extension used for "Download". */
   downloadExtension: string;
   sample: string;
-  howTo: string[];
-  examples: ToolExample[];
-  limitations: string[];
-  faq: { question: string; answer: string }[];
-  related: string[];
+  /** Offer the JSON tree view for the output. */
+  tree?: boolean;
 };
+
+/**
+ * Tools whose input is not a single text (files, two texts, numbers,
+ * colours). Each id maps to a panel in components/tool/widgets.
+ */
+export type WidgetId =
+  | "word-counter"
+  | "diff-checker"
+  | "uuid-generator"
+  | "gradient-generator"
+  | "percentage-calculator"
+  | "compress-image"
+  | "resize-image"
+  | "passport-photo"
+  | "merge-pdf"
+  | "split-pdf";
+
+export type WidgetToolDefinition = ToolContentBase & { workspace: WidgetId };
+
+/**
+ * Everything a tool page needs. Definitions are plain data, loaded by the
+ * route loader on the server, so their long-form content does not ship in
+ * the client JavaScript bundle.
+ */
+export type ToolDefinition = TextToolDefinition | WidgetToolDefinition;
 
 export type ToolOptionValues = Record<string, OptionValue>;

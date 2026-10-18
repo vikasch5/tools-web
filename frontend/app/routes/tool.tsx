@@ -3,6 +3,7 @@ import { ShieldCheck } from "lucide-react";
 import type { Route } from "./+types/tool";
 import { Container } from "~/components/layout/Container";
 import { Breadcrumbs } from "~/components/layout/Breadcrumbs";
+import { AdSlot } from "~/components/layout/AdSlot";
 import { ToolWorkspace } from "~/components/tool/ToolWorkspace";
 import { ToolWidget } from "~/components/tool/widgets";
 import { RelatedTools, ToolContent } from "~/components/tool/ToolContent";
@@ -124,8 +125,12 @@ export default function ToolPage({ loaderData }: Route.ComponentProps) {
         )}
       </Container>
 
+      {/* Ads sit below the workspace with clear space around them, never
+          beside tool controls, to avoid accidental clicks. */}
       <Container className="space-y-16 pt-8 pb-20 sm:pt-12">
+        <AdSlot />
         <ToolContent tool={tool} />
+        <AdSlot />
         <RelatedTools tools={related} />
       </Container>
     </article>

@@ -32,6 +32,8 @@ type ToolContentBase = {
   metaTitle: string;
   /** Meta description and intro, ~150 characters. */
   description: string;
+  /** "About" section: what the tool is for and when to use it, 2–3 paragraphs. */
+  overview: string[];
   howTo: string[];
   examples: ToolExample[];
   limitations: string[];

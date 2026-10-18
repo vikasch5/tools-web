@@ -9,6 +9,10 @@ export const mergePdf: WidgetToolDefinition = {
   metaTitle: "Merge PDF – Combine PDF Files into One, Free and Private",
   description:
     "Combine several PDF files into one document in the order you choose. Runs in your browser, so your documents are never uploaded.",
+  overview: [
+    "Combining PDFs is one of the most common document tasks: putting scanned pages together, attaching receipts to an expense claim, or assembling chapters, forms and appendices into a single file to send or upload.",
+    "Many online PDF tools upload your documents to a server to do this. Here the files are read and joined by your browser, so contracts, bank statements and ID documents never leave your device. Pages are copied as they are, without re-compressing, so text stays sharp and searchable and images keep their quality.",
+  ],
   howTo: [
     "Drop two or more PDF files onto the page, or choose them from your device.",
     "Put them in order with the up and down buttons. The page count of each file is shown.",
@@ -49,6 +53,10 @@ export const splitPdf: WidgetToolDefinition = {
   metaTitle: "Split PDF – Extract Pages or Split by Range, Free",
   description:
     "Extract pages from a PDF, split it into ranges, or save every page as its own file. Works in your browser with no upload.",
+  overview: [
+    "Splitting a PDF lets you send only the pages someone needs, break a large scan into separate documents, or meet the file size and page limits of upload forms. It is also a quick way to remove pages you do not want to share.",
+    "You can extract a selection of pages into one new file, cut the document into several ranges, or save every page separately. The pages are copied without re-compressing, so the quality of text and images is unchanged, and the processing happens on your device rather than on a server.",
+  ],
   howTo: [
     "Drop a PDF onto the page or choose one from your device. Its page count is shown.",
     "Choose Extract pages to save chosen pages as one PDF, Split by range for one PDF per range, or Every page.",
@@ -92,6 +100,10 @@ export const rotatePdf: WidgetToolDefinition = {
   metaTitle: "Rotate PDF – Turn Pages and Save, Free and Private",
   description:
     "Rotate single pages or a whole PDF by 90° steps with live page previews, then save it. Quality and text are kept. Runs in your browser, no upload.",
+  overview: [
+    "Scanned documents and phone captures often come out sideways or upside down, and a mix of portrait and landscape pages is common in reports. Rotating them properly makes the file comfortable to read on screen and print correctly.",
+    "This tool changes each page's rotation setting rather than re-drawing its contents, so text remains selectable and searchable and the file size stays almost the same. Previews show every page so you can fix only the ones that need it, and your document is processed in the browser without being uploaded.",
+  ],
   howTo: [
     "Drop a PDF onto the page or choose one from your device. A preview of every page appears.",
     "Use the arrows under a page to turn it left or right, or All left / All right to turn every page.",
@@ -129,6 +141,10 @@ export const pdfToImage: WidgetToolDefinition = {
   metaTitle: "PDF to Image – Convert PDF Pages to PNG or JPG",
   description:
     "Turn PDF pages into PNG, JPG or WebP images at 72, 150 or 300 DPI. Pick the pages from previews and download them as a ZIP. No upload.",
+  overview: [
+    "Turning PDF pages into images is handy when you need to post a page on social media, put it in a slide deck, attach it where PDFs are not accepted, or share a preview without the full document.",
+    "Resolution decides how sharp the image is: 72 or 150 DPI suits screens and messages, while 300 DPI is the usual choice for printing. PNG keeps text and line art crisp, while JPG and WebP make smaller files for photos and scans. The pages are drawn by your browser, so the PDF is never uploaded.",
+  ],
   howTo: [
     "Drop a PDF onto the page or choose one from your device. A preview of every page appears, all selected.",
     "Click previews to leave pages out, or use Select all / Select none.",

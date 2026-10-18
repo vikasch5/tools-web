@@ -38,7 +38,15 @@ function Block({
 export function ToolContent({ tool }: { tool: ToolDefinition }) {
   return (
     <div className="space-y-12">
-      <Block id="how-to" index="01" title={`How to use the ${tool.name}`}>
+      <Block id="about" index="01" title={`About the ${tool.name}`}>
+        <div className="max-w-prose space-y-4 leading-relaxed text-fg-muted">
+          {tool.overview.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
+      </Block>
+
+      <Block id="how-to" index="02" title={`How to use the ${tool.name}`}>
         <ol className="max-w-prose space-y-3">
           {tool.howTo.map((step, i) => (
             <li
@@ -54,7 +62,7 @@ export function ToolContent({ tool }: { tool: ToolDefinition }) {
         </ol>
       </Block>
 
-      <Block id="examples" index="02" title="Examples">
+      <Block id="examples" index="03" title="Examples">
         <div className="space-y-6">
           {tool.examples.map((example) => (
             <figure key={example.title}>
@@ -84,7 +92,7 @@ export function ToolContent({ tool }: { tool: ToolDefinition }) {
         </div>
       </Block>
 
-      <Block id="limitations" index="03" title="Good to know">
+      <Block id="limitations" index="04" title="Good to know">
         <ul className="max-w-prose space-y-3">
           {tool.limitations.map((item) => (
             <li key={item} className="flex gap-3 leading-6 text-fg-muted">
@@ -98,7 +106,7 @@ export function ToolContent({ tool }: { tool: ToolDefinition }) {
         </ul>
       </Block>
 
-      <Block id="faq" index="04" title="Questions">
+      <Block id="faq" index="05" title="Questions">
         <div className="divide-y divide-border border-y border-border">
           {tool.faq.map((item) => (
             <details key={item.question} className="group">

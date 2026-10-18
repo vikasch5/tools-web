@@ -118,3 +118,21 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
   - Replace the placeholder brand name and contact email.
   - Get Privacy and Terms legally reviewed.
   - Choose hosting. The build output is a Node server (`react-router-serve`) plus static prerendered pages.
+
+### PR #7: AdSense readiness
+- Audit (what was already in place): About, Contact, Privacy, Terms and Help pages; footer links on every page; sitemap and robots.txt; canonical, Open Graph and Twitter tags; self-hosted fonts and prerendered pages; categories with no live tools are `noindex`.
+- **Ads, off by default.** Nothing ad-related ships until `VITE_ADSENSE_CLIENT` is set at build time (see `frontend/README.md`).
+  - Loads the AdSense script asynchronously and adds the `google-adsense-account` verification tag.
+  - `/ads.txt` is prerendered from the publisher ID (`google.com, pub-…, DIRECT, f08c47fec0942fa0`). A malformed ID fails the build.
+  - `AdSlot`: a labelled responsive unit, two per tool page (below the workspace and after the guide, never next to tool controls) and one per category page. Space is reserved (250/280 px) so the page does not shift when the ad loads. It refills on client-side navigation.
+- **Consent (EEA/UK/Switzerland).** Uses Google's own certified CMP, which the AdSense script serves once the GDPR message is published in AdSense → Privacy & messaging. A "Privacy and cookie settings" footer link reopens it so visitors can withdraw consent.
+- **Privacy policy and terms.** Privacy now has Advertising and cookies (Google and third-party vendor cookies, links to Google's partner-sites policy, My Ad Center and aboutads.info, consent for EEA/UK users), Children and Changes sections with a last-updated date. The advertising text appears only when ads are enabled, so the policy stays truthful. Terms gained an Ads and links section.
+- **Share cards.** `public/og-image.png` (1200×630, source in `frontend/scripts/og-image.html`), plus `og:image` with size and alt, `og:locale`, and `twitter:card=summary_large_image`.
+- **Content depth.** Every tool page has a new "About the …" section (2 original paragraphs on what the tool is for and when to use it). Tool pages now carry roughly 380–630 words of text each. Tests require an overview of at least 80 words and 3 FAQs per tool.
+- Verified: typecheck, 150 tests and the build pass. Browser run with a test publisher ID: two slots per tool page reserve 280 px, they refill after client-side navigation, the consent link queues Google's revocation message, and there are no console errors. Without the ID, the built HTML has no ad code.
+- **Needs Vikas before applying to AdSense:**
+  - A real domain (AdSense reviews a live site; subdomains and free hosts are often refused) and `VITE_SITE_URL` set to it.
+  - Replace the placeholder brand and contact email, and remove the "Draft" notices and the footer's "Design prototype" label. Reviewers treat placeholder content as an unfinished site.
+  - Create the AdSense account, then build with `VITE_ADSENSE_CLIENT` and, after creating a display ad unit, `VITE_ADSENSE_SLOT`.
+  - In AdSense → Privacy & messaging, publish the European regulations (GDPR) message and, optionally, the US state regulations message.
+  - Add the site in Google Search Console and submit the sitemap.

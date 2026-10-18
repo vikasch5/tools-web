@@ -42,6 +42,16 @@ Create a production build:
 npm run build
 ```
 
+Build-time settings (all optional):
+
+| Variable | Purpose |
+| --- | --- |
+| `VITE_SITE_URL` | Production origin for canonical URLs, Open Graph tags, the sitemap and robots.txt. |
+| `VITE_ADSENSE_CLIENT` | AdSense publisher ID (`ca-pub-…`). Turns on the AdSense script, the verification meta tag, `/ads.txt`, the "Privacy and cookie settings" footer link and the advertising section of the privacy policy. |
+| `VITE_ADSENSE_SLOT` | Ad unit ID for the in-page display slots (tool and category pages). Without it, only Auto ads apply. |
+
+With no AdSense variables set, the site ships with no ad code at all.
+
 ## Deployment
 
 ### Docker Deployment

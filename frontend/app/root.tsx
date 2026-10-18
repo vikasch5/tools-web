@@ -17,6 +17,7 @@ import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { categories, categoryPath } from "~/data/categories";
 import { Link } from "react-router";
 import { themeInitScript } from "~/lib/theme";
+import { ads } from "~/config/site";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
 import "@fontsource-variable/bricolage-grotesque/opsz.css";
@@ -39,6 +40,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {ads.client && (
+          <>
+            {/* Site verification, plus the AdSense loader. Google's consent
+                message for EEA/UK/Swiss visitors is served by this script once
+                it is enabled under Privacy & messaging in AdSense. */}
+            <meta name="google-adsense-account" content={ads.client} />
+            <script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ads.client}`}
+              crossOrigin="anonymous"
+            />
+          </>
+        )}
         <Meta />
         <Links />
       </head>

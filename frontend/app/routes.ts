@@ -11,6 +11,7 @@ export default [
   route("terms", "routes/terms.tsx"),
   route("sitemap.xml", "routes/sitemap.ts"),
   route("robots.txt", "routes/robots.ts"),
+  route("ads.txt", "routes/ads-txt.ts"),
   route(":category", "routes/category.tsx"),
   route(":category/:tool", "routes/tool.tsx"),
 ] satisfies RouteConfig;

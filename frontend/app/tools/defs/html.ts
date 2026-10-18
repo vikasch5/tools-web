@@ -21,6 +21,10 @@ export const htmlFormatter: TextToolDefinition = {
   accept: [".html", ".htm", ".txt"],
   downloadExtension: "html",
   sample: `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Demo</title><style>body{font-family:system-ui;margin:0}</style></head><body><header class="site-header"><nav><a href="/">Home</a><a href="/tools">Tools</a></nav></header><main><h1>Hello</h1><p>This page was <strong>minified</strong>.</p></main><script>document.querySelector("h1").textContent="Formatted"</script></body></html>`,
+  overview: [
+    "HTML from a CMS export, an email template or a page's view-source is often a single dense block, with inline styles and scripts mixed in. Indentation that follows the element nesting makes the structure visible: which elements are inside which, where a section ends, and where a tag was left unclosed.",
+    "The formatter uses Prettier and also formats CSS inside style tags and JavaScript inside script tags. Because whitespace between inline elements can change how text renders, it keeps such text intact rather than forcing every line to the chosen width. Warnings point to common mistakes, such as elements that are never closed, with their line and column.",
+  ],
   howTo: [
     "Paste your markup, open an .html file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Choose indent size and line width.",
@@ -44,6 +48,11 @@ export const htmlFormatter: TextToolDefinition = {
       question: "Will formatting change how my page looks?",
       answer:
         "No. The formatter follows HTML whitespace rules so inline text renders the same. Only indentation and line breaks change.",
+    },
+    {
+      question: "Can I format a snippet instead of a whole page?",
+      answer:
+        "Yes. A fragment such as a single <div> or a list of <li> elements is formatted as it is, without adding <html>, <head> or <body> tags.",
     },
     privacyFaq,
   ],
@@ -92,6 +101,10 @@ export const htmlMinifier: TextToolDefinition = {
     </script>
   </body>
 </html>`,
+  overview: [
+    "Minified HTML loads faster because there is less to download before the browser can start building the page. The savings matter most for large static pages, HTML emails with size limits, and markup embedded in scripts or databases.",
+    "This minifier removes comments and whitespace that browsers ignore, and compresses inline CSS and JavaScript using the same engines as the dedicated minifiers on this site. It is careful where whitespace matters: text between inline elements keeps a single space, and the content of pre and textarea elements is left exactly as written, so the page looks the same afterwards.",
+  ],
   howTo: [
     "Paste your markup, open an .html file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Choose whether to remove comments and compress inline CSS and JavaScript.",

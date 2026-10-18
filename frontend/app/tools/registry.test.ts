@@ -216,4 +216,13 @@ describe("tool definitions", () => {
       expect(def.description.length, def.slug).toBeLessThanOrEqual(165);
     }
   });
+
+  it("every tool page has enough original explanatory content", () => {
+    for (const def of toolDefinitions) {
+      const words = def.overview.join(" ").split(/\s+/).length;
+      expect(def.overview.length, def.slug).toBeGreaterThanOrEqual(2);
+      expect(words, def.slug).toBeGreaterThanOrEqual(80);
+      expect(def.faq.length, def.slug).toBeGreaterThanOrEqual(3);
+    }
+  });
 });

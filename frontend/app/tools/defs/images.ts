@@ -9,6 +9,10 @@ export const compressImage: WidgetToolDefinition = {
   metaTitle: "Compress Image – Reduce JPG, PNG and WebP File Size",
   description:
     "Shrink JPG, PNG and WebP images in your browser. Choose quality and format, optionally cap the dimensions, and download them one by one or as a ZIP.",
+  overview: [
+    "Large images are the main reason web pages load slowly and emails bounce. Photos from phones are often 3–10 MB each, far more than a website, chat app or upload form needs.",
+    "Compression re-encodes the image at a chosen quality. Around 70–80% quality, most photos look the same to the eye but are several times smaller. Converting to WebP saves even more for the web, and capping the dimensions helps when the original is much larger than it will ever be shown. Re-encoding also removes hidden metadata such as GPS location, and because it happens in your browser, your photos stay private.",
+  ],
   howTo: [
     "Drop up to 30 images onto the page or choose them from your device. They are compressed straight away.",
     "Adjust Quality: 70–80% is usually indistinguishable from the original and much smaller.",
@@ -53,6 +57,10 @@ export const resizeImage: WidgetToolDefinition = {
   metaTitle: "Resize Image – Change Image Size in Pixels or Percent",
   description:
     "Resize a JPG, PNG or WebP to exact pixel dimensions or by percentage, keeping the aspect ratio if you want. Free and private, in your browser.",
+  overview: [
+    "Websites, marketplaces, job portals and social networks often ask for images at specific dimensions or below a size limit. Resizing to the size that will actually be displayed also makes files much smaller and pages faster.",
+    "You can set an exact width and height in pixels or scale by percentage, and keep the original aspect ratio so the image is not stretched. Scaling down keeps images sharp, while enlarging cannot add detail that was never captured. All resizing happens in your browser.",
+  ],
   howTo: [
     "Drop an image onto the page or choose one from your device.",
     "Type a new width or height in pixels. With “Keep aspect ratio” on, the other side follows automatically.",
@@ -97,6 +105,10 @@ export const passportPhoto: WidgetToolDefinition = {
   metaTitle: "Passport Photo Maker – Crop to Official Sizes at 300 DPI",
   description:
     "Crop a portrait to common passport and visa photo sizes, including US 2×2 in and 35×45 mm. Download a single photo or a 6×4 in print sheet.",
+  overview: [
+    "Passport, visa and ID applications require photos of an exact size, with the head at a set position and scale. Getting this wrong is one of the most common reasons applications are delayed or rejected.",
+    "This tool helps you crop your own photo to the right dimensions, using guides for the eye and chin positions, and produces a 300 DPI file for online submission or a 6×4 inch sheet with several copies to print at a photo shop. It does not judge whether the background, lighting or expression meet the rules, so always compare your photo with the official requirements for your document.",
+  ],
   howTo: [
     "Take a photo facing the camera against a plain, light background, with even lighting and no shadows.",
     "Drop it onto the page and choose the country and document size.",
@@ -142,6 +154,10 @@ export const imageConverter: WidgetToolDefinition = {
   metaTitle: "Image Converter – Convert to JPG, PNG or WebP Online",
   description:
     "Convert images between JPG, PNG and WebP, from GIF, BMP, AVIF and ICO too. Batch up to 30 files and download them as a ZIP. Nothing is uploaded.",
+  overview: [
+    "Different places need different image formats. JPG is accepted almost everywhere and suits photos; PNG keeps sharp edges and transparency for screenshots and logos; WebP gives the smallest files for websites. Older or unusual formats such as BMP, ICO or AVIF often need converting before they can be uploaded or edited.",
+    "This converter handles batches of up to 30 images and saves them as a ZIP, with quality control for lossy formats and a choice of background colour when transparency has to be flattened for JPG. Everything runs locally, so the images are never uploaded.",
+  ],
   howTo: [
     "Choose the format to convert to: JPG for compatibility, PNG for lossless images with transparency, or WebP for the smallest files.",
     "Drop up to 30 images onto the page or choose them from your device. They are converted straight away.",

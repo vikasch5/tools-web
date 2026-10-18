@@ -52,6 +52,10 @@ export const jsFormatter: TextToolDefinition = {
   accept: [".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".txt"],
   downloadExtension: "js",
   sample: jsSample,
+  overview: [
+    "Readable JavaScript is easier to review, debug and maintain. Code copied from a browser console, a minified bundle or a chat message often loses its line breaks, and different editors produce different spacing and quote styles.",
+    "This formatter uses Prettier, the formatter many teams run in their editors and CI, so the output matches what those projects expect. It reprints the code from its syntax tree, which means indentation, line breaks, quotes and semicolons become consistent while the behaviour stays the same. TypeScript, JSX and TSX are supported, and syntax errors are reported with their position, which also makes it a quick syntax check.",
+  ],
   howTo: [
     "Paste your code, open a .js or .ts file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Choose JavaScript or TypeScript, then set indentation, line width, semicolons and quote style.",
@@ -104,6 +108,10 @@ export const jsMinifier: TextToolDefinition = {
   accept: [".js", ".mjs", ".cjs", ".txt"],
   downloadExtension: "min.js",
   sample: jsReadable,
+  overview: [
+    "JavaScript is usually the heaviest part of a web page after images, and it must be downloaded, parsed and compiled before it runs. Minification shrinks it without changing what it does, which speeds up loading on slow connections and mobile devices.",
+    "This tool uses Terser, the minifier behind many popular build tools. Besides removing whitespace and comments, it can shorten local variable names and simplify expressions, often halving the size of hand-written code. That is useful for inline scripts, small widgets, bookmarklets, or checking how much a file could shrink before adding a build step to a project.",
+  ],
   howTo: [
     "Paste your JavaScript, open a .js file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Keep Compress and Shorten names on for the smallest output. Turn them off for whitespace-only minification.",

@@ -24,6 +24,10 @@ export const jsonFormatter: TextToolDefinition = {
   accept: [".json", ".txt"],
   downloadExtension: "json",
   sample: `{"id":1024,"name":"Ada Lovelace","email":"ada@example.com","active":true,"roles":["admin","editor"],"profile":{"timezone":"Europe/London","newsletter":false},"lastLogin":null}`,
+  overview: [
+    "JSON (JavaScript Object Notation) is the plain-text format most web APIs, configuration files and log pipelines use to exchange data. It is easy for programs to read, but a single response often arrives as one long line, and a missing comma or quote is hard to spot by eye.",
+    "A formatter adds consistent indentation and line breaks so you can read the structure, check that a field is where you expect it, and compare two payloads. Validation tells you exactly where the syntax breaks, and minifying does the reverse, removing whitespace to keep requests and stored documents small. The tree view helps with deeply nested data, such as API responses with arrays of objects, where you want to find one value without scrolling through hundreds of lines.",
+  ],
   howTo: [
     "Paste your JSON into the input panel, open a .json file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Choose an indent size and whether keys should be sorted alphabetically.",

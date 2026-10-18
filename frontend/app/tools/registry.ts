@@ -2,9 +2,11 @@ import type { ToolDefinition } from "./types";
 import { jsonFormatter } from "./defs/json-formatter";
 import { cssFormatter, cssMinifier } from "./defs/css";
 import { jsFormatter, jsMinifier } from "./defs/js";
-import { htmlFormatter } from "./defs/html";
+import { htmlFormatter, htmlMinifier } from "./defs/html";
 import { sqlFormatter } from "./defs/sql";
-import { base64, jwtDecoder } from "./defs/encoding";
+import { xmlFormatter } from "./defs/xml";
+import { yamlJson } from "./defs/yaml";
+import { base64, jwtDecoder, urlEncoder } from "./defs/encoding";
 import { csvToJson } from "./defs/csv";
 import { diffChecker, wordCounter } from "./defs/text";
 import { uuidGenerator } from "./defs/generators";
@@ -21,9 +23,12 @@ export const toolDefinitions: ToolDefinition[] = [
   jsFormatter,
   jsMinifier,
   htmlFormatter,
+  htmlMinifier,
+  xmlFormatter,
   sqlFormatter,
   base64,
   jwtDecoder,
+  urlEncoder,
   mergePdf,
   splitPdf,
   compressImage,
@@ -32,6 +37,7 @@ export const toolDefinitions: ToolDefinition[] = [
   wordCounter,
   diffChecker,
   csvToJson,
+  yamlJson,
   gradientGenerator,
   uuidGenerator,
   percentageCalculator,

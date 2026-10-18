@@ -44,6 +44,7 @@ export type WorkspaceTool = Pick<
   | "accept"
   | "downloadExtension"
   | "sample"
+  | "placeholder"
   | "tree"
 >;
 
@@ -116,6 +117,9 @@ export function ToolWorkspace({ tool }: { tool: WorkspaceTool }) {
     idle(() => warmUpWorker());
   }, [storageKey]);
 
+  // Which action produced the current output; picks the download extension.
+  const [outputAction, setOutputAction] = useState<EngineAction>();
+
   const run = useCallback(
     async (
       action: EngineAction,
@@ -132,7 +136,10 @@ export function ToolWorkspace({ tool }: { tool: WorkspaceTool }) {
       });
       const ms = Math.round(performance.now() - started);
       if (result.ok) {
-        if (result.output !== null) setOutput(result.output);
+        if (result.output !== null) {
+          setOutput(result.output);
+          setOutputAction(action);
+        }
         setStatus({
           kind: "success",
           action,
@@ -218,7 +225,10 @@ export function ToolWorkspace({ tool }: { tool: WorkspaceTool }) {
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = `output.${tool.downloadExtension}`;
+    const extension =
+      tool.actions.find((a) => a.id === outputAction)?.downloadExtension ??
+      tool.downloadExtension;
+    link.download = `output.${extension}`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -347,7 +357,10 @@ export function ToolWorkspace({ tool }: { tool: WorkspaceTool }) {
             // A paste that changes nothing fires no change event; clear the flag.
             setTimeout(() => (pasted.current = false), 0);
           }}
-          placeholder={`Paste ${tool.language} to ${primary.label.toLowerCase()} it instantly…`}
+          placeholder={
+            tool.placeholder ??
+            `Paste ${tool.language} to ${primary.label.toLowerCase()} it instantly…`
+          }
           errorLine={errorLine}
           markTone={status.kind === "error" ? "danger" : "warning"}
           textareaRef={inputRef}

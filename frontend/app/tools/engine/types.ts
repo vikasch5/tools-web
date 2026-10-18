@@ -6,14 +6,21 @@ export type EngineId =
   | "sql"
   | "base64"
   | "jwt"
-  | "csv";
+  | "csv"
+  | "html-minify"
+  | "xml"
+  | "yaml"
+  | "url";
 export type EngineAction =
   | "format"
   | "minify"
   | "validate"
   | "encode"
   | "decode"
-  | "convert";
+  | "convert"
+  | "to-json"
+  | "to-yaml"
+  | "parse";
 export type OptionValue = string | number | boolean;
 export type EngineOptions = Record<string, OptionValue>;
 

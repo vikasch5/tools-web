@@ -28,6 +28,12 @@ export const tools: Tool[] = [
   { slug: "js-minifier", name: "JavaScript Minifier", category: "developer-tools", description: "Minify JavaScript with Terser.", status: "live", popular: true, keywords: ["javascript", "compress", "uglify", "terser", "minify"] },
   { slug: "html-formatter", name: "HTML Formatter", category: "developer-tools", description: "Indent HTML, including inline CSS and JS.", status: "live", popular: true, keywords: ["beautify", "indent", "pretty", "markup"] },
 
+  // Added in batch 3
+  { slug: "html-minifier", name: "HTML Minifier", category: "developer-tools", description: "Strip comments and whitespace, compress inline CSS and JS.", status: "live", isNew: true, keywords: ["compress", "minify", "markup", "smaller", "optimize"] },
+  { slug: "xml-formatter", name: "XML Formatter & Validator", category: "developer-tools", description: "Indent, minify and check XML with error locations.", status: "live", isNew: true, keywords: ["beautify", "pretty print", "validate", "svg", "rss", "sitemap", "well-formed"] },
+  { slug: "yaml-to-json", name: "YAML ⇄ JSON Converter", category: "converters", description: "Convert YAML to JSON and JSON back to YAML.", status: "live", isNew: true, keywords: ["yml", "convert", "kubernetes", "docker compose", "config", "json to yaml"] },
+  { slug: "url-encoder", name: "URL Encode / Decode", category: "developer-tools", description: "Percent-encode text, decode escapes and parse URLs.", status: "live", isNew: true, keywords: ["percent encoding", "urlencode", "urldecode", "query string", "%20", "uri"] },
+
   // Added in batch 2
   { slug: "sql-formatter", name: "SQL Formatter", category: "developer-tools", description: "Format SQL for MySQL, PostgreSQL, SQL Server and more.", status: "live", isNew: true, keywords: ["query", "mysql", "postgres", "postgresql", "sqlite", "sql server", "tsql", "beautify"] },
   { slug: "base64", name: "Base64 Encode / Decode", category: "developer-tools", description: "Encode text to Base64 and decode it back.", status: "live", isNew: true, keywords: ["encode", "decode", "b64", "atob", "btoa"] },

@@ -10,6 +10,8 @@ import { runSql } from "./sql";
 import { runBase64 } from "./base64";
 import { decodeJwt } from "./jwt";
 import { csvToJson } from "./csv";
+import { runXml } from "./xml";
+import { runUrl } from "./url";
 
 /**
  * Single entry point for all processing. Heavy libraries are imported on
@@ -44,6 +46,18 @@ export async function runEngine({
         return decodeJwt(input);
       case "csv":
         return csvToJson(input, options);
+      case "yaml": {
+        const { runYaml } = await import("./yaml");
+        return await runYaml(action, input, options);
+      }
+      case "url":
+        return runUrl(action, input, options);
+      case "xml":
+        return runXml(action, input, options);
+      case "html-minify": {
+        const { minifyHtml } = await import("./html-minify");
+        return await minifyHtml(input, options);
+      }
     }
   } catch (error) {
     return { ok: false, error: toEngineError(error) };

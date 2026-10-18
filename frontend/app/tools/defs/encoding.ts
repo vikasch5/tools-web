@@ -120,3 +120,74 @@ export const jwtDecoder: TextToolDefinition = {
   ],
   related: ["base64", "json-formatter", "uuid-generator"],
 };
+
+export const urlEncoder: TextToolDefinition = {
+  workspace: "text",
+  slug: "url-encoder",
+  category: "developer-tools",
+  name: "URL Encode / Decode",
+  metaTitle: "URL Encode and Decode – Percent-Encoding Online",
+  description:
+    "Percent-encode text for URLs, decode %20-style escapes, and split a URL into its parts and query parameters. Full UTF-8 support, in your browser.",
+  engine: "url",
+  actions: [
+    { id: "encode", label: "Encode" },
+    { id: "decode", label: "Decode" },
+    { id: "parse", label: "Parse URL", downloadExtension: "json" },
+  ],
+  options: [
+    {
+      type: "segmented",
+      id: "mode",
+      label: "Style",
+      choices: [
+        { value: "component", label: "Component" },
+        { value: "uri", label: "Full URL" },
+        { value: "form", label: "Form (+)" },
+      ],
+      default: "component",
+    },
+  ],
+  language: "Text",
+  accept: [".txt"],
+  downloadExtension: "txt",
+  placeholder: "Paste text to encode, or an encoded URL to decode or parse…",
+  sample: `https://shop.example.com/search?q=red shoes&tag=sale&tag=new#results`,
+  howTo: [
+    "Paste text or a URL, open a file, or load the sample.",
+    "Pick how to encode: Component for a single query value or path segment, Full URL to keep : / ? & = intact, or Form to turn spaces into +.",
+    "Press Encode or Decode. Decoding reports the position of a broken % escape.",
+    "Press Parse URL to see the scheme, host, path, decoded query parameters and fragment as JSON.",
+  ],
+  examples: [
+    {
+      title: "Encode a query value",
+      input: `red shoes & bags`,
+      output: `red%20shoes%20%26%20bags`,
+    },
+    {
+      title: "Accented and non-Latin text becomes UTF-8 escapes",
+      input: `café/東京`,
+      output: `caf%C3%A9%2F%E6%9D%B1%E4%BA%AC`,
+    },
+  ],
+  limitations: [
+    "Component mode also escapes ! ' ( ) and *, following RFC 3986. Full URL mode cannot tell a literal & or = in a value from one that separates parameters, so encode values one by one in Component mode when that matters.",
+    "Parse URL needs a complete URL with a scheme, such as https://. Passwords in a URL are shown as (hidden).",
+    "Decoding does not turn + into a space unless Form is selected, because + is a literal plus sign outside form data.",
+  ],
+  faq: [
+    {
+      question: "What is the difference between %20 and +?",
+      answer:
+        "Both can mean a space. %20 works anywhere in a URL. + means a space only in form-encoded query strings (application/x-www-form-urlencoded); elsewhere it is a literal plus.",
+    },
+    {
+      question: "Why does decoding say the escapes are not valid UTF-8?",
+      answer:
+        "The text was probably encoded with an older character set such as Latin-1. Each % escape is a byte, and those bytes do not form valid UTF-8 characters.",
+    },
+    privacyFaq,
+  ],
+  related: ["base64", "jwt-decoder", "json-formatter"],
+};

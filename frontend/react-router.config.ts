@@ -8,6 +8,7 @@ export default {
   ssr: true,
   prerender: [
     "/",
+    ...["/tools", "/about", "/help", "/contact", "/privacy", "/terms"],
     ...categories.map((c) => `/${c.slug}`),
     ...liveTools.map(toolPath),
   ],

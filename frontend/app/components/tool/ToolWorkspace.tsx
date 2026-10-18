@@ -21,7 +21,7 @@ import {
   TriangleAlert,
   Sparkles,
 } from "lucide-react";
-import type { ToolDefinition, ToolOptionValues } from "~/tools/types";
+import type { TextToolDefinition, ToolOptionValues } from "~/tools/types";
 import type { EngineAction, EngineError } from "~/tools/engine/types";
 import { runInWorker, warmUpWorker } from "~/tools/engine/client";
 import { Button } from "~/components/ui/Button";
@@ -34,7 +34,7 @@ import { byteLength, formatBytes, lineRange } from "./format";
 
 /** Subset of the definition the workspace needs (keeps props serialisable). */
 export type WorkspaceTool = Pick<
-  ToolDefinition,
+  TextToolDefinition,
   | "slug"
   | "engine"
   | "actions"
@@ -44,6 +44,7 @@ export type WorkspaceTool = Pick<
   | "accept"
   | "downloadExtension"
   | "sample"
+  | "tree"
 >;
 
 type Status =
@@ -79,7 +80,7 @@ export function ToolWorkspace({ tool }: { tool: WorkspaceTool }) {
   );
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [copied, setCopied] = useState(false);
-  const supportsTree = tool.engine === "json";
+  const supportsTree = tool.tree === true;
   const [view, setView] = useState<"text" | "tree">("text");
   // User-chosen editor height (px); null = fit to the screen automatically.
   const [paneHeight, setPaneHeight] = useState<number | null>(null);
@@ -428,8 +429,8 @@ export function ToolWorkspace({ tool }: { tool: WorkspaceTool }) {
                   <p className="font-medium text-fg">Nothing to show yet</p>
                   <p className="max-w-xs text-sm text-fg-muted">
                     {status.kind === "error"
-                      ? "Fix the error in your input, then press Format to explore it as a tree."
-                      : "Paste JSON and press Format, Minify or Validate to explore it as a tree."}
+                      ? `Fix the error in your input, then press ${primary.label} to explore it as a tree.`
+                      : `Paste ${tool.language} and press ${primary.label} to explore the result as a tree.`}
                   </p>
                 </div>
               )

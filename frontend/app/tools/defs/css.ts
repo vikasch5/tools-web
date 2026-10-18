@@ -1,4 +1,4 @@
-import type { ToolDefinition } from "../types";
+import type { TextToolDefinition } from "../types";
 import { indentOption, printWidthOption, privacyFaq } from "./shared";
 
 const cssSample = `/* Card component */
@@ -36,7 +36,8 @@ const cssReadable = `/* Card component */
 }
 `;
 
-export const cssFormatter: ToolDefinition = {
+export const cssFormatter: TextToolDefinition = {
+  workspace: "text",
   slug: "css-formatter",
   category: "developer-tools",
   name: "CSS Formatter",
@@ -97,7 +98,8 @@ export const cssFormatter: ToolDefinition = {
   related: ["css-minifier", "html-formatter", "js-formatter"],
 };
 
-export const cssMinifier: ToolDefinition = {
+export const cssMinifier: TextToolDefinition = {
+  workspace: "text",
   slug: "css-minifier",
   category: "developer-tools",
   name: "CSS Minifier",

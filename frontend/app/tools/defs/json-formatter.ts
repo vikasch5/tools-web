@@ -1,7 +1,8 @@
-import type { ToolDefinition } from "../types";
+import type { TextToolDefinition } from "../types";
 import { indentOption, privacyFaq } from "./shared";
 
-export const jsonFormatter: ToolDefinition = {
+export const jsonFormatter: TextToolDefinition = {
+  workspace: "text",
   slug: "json-formatter",
   category: "developer-tools",
   name: "JSON Formatter & Validator",
@@ -9,6 +10,7 @@ export const jsonFormatter: ToolDefinition = {
   description:
     "Format, minify and validate JSON in your browser. Pinpoint errors by line and column, and explore your data in a searchable tree view.",
   engine: "json",
+  tree: true,
   actions: [
     { id: "format", label: "Format" },
     { id: "minify", label: "Minify" },

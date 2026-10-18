@@ -6,6 +6,10 @@ import type {
 } from "./types";
 import { runJson } from "./json";
 import { fixHtml, lintHtml } from "./html-lint";
+import { runSql } from "./sql";
+import { runBase64 } from "./base64";
+import { decodeJwt } from "./jwt";
+import { csvToJson } from "./csv";
 
 /**
  * Single entry point for all processing. Heavy libraries are imported on
@@ -32,6 +36,14 @@ export async function runEngine({
         return await runTerser(input, options);
       case "csso":
         return await runCsso(input, options);
+      case "sql":
+        return await runSql(input, options);
+      case "base64":
+        return runBase64(action, input, options);
+      case "jwt":
+        return decodeJwt(input);
+      case "csv":
+        return csvToJson(input, options);
     }
   } catch (error) {
     return { ok: false, error: toEngineError(error) };

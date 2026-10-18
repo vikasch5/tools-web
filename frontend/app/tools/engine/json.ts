@@ -82,7 +82,7 @@ export function runJson(
       return { ok: true, output: null, message: "Valid JSON" };
     case "minify":
       return { ok: true, output: JSON.stringify(parsed), message: "Minified" };
-    case "format":
+    default:
       return {
         ok: true,
         output: JSON.stringify(parsed, null, indentFor(options)),

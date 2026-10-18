@@ -16,7 +16,7 @@ export function meta({}: Route.MetaArgs) {
   return buildMeta({
     title: `${site.name} – Free online tools for developers, PDFs, images and text`,
     description:
-      "Format JSON, minify CSS and JavaScript, and more, in one focused workspace. Runs in your browser. No account needed.",
+      "Format code, merge and split PDFs, compress images, count words and more in one focused workspace. Runs in your browser. No account needed.",
     path: "/",
   });
 }
@@ -28,7 +28,7 @@ const promises = [
   {
     icon: ShieldCheck,
     title: "Private by design",
-    text: "Our code tools run entirely in your browser. Nothing you paste is uploaded or stored.",
+    text: "Every tool runs entirely in your browser. Nothing you paste or open is uploaded or stored.",
   },
   {
     icon: Gauge,
@@ -38,7 +38,7 @@ const promises = [
   {
     icon: Sparkles,
     title: "Built on trusted libraries",
-    text: "Formatting and minifying use open-source engines developers already rely on, like Prettier and Terser.",
+    text: "Processing uses open-source engines developers already rely on, like Prettier, Terser and pdf-lib.",
   },
 ];
 
@@ -63,8 +63,8 @@ export default function Home() {
               Small tools for <span className="text-brand">serious work</span>.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
-              Format JSON, beautify and minify CSS, JavaScript and HTML, with
-              PDF, image and text tools on the way. One clean workspace, no clutter.
+              Format code, merge PDFs, compress images, count words and more.
+              One clean workspace, no clutter.
             </p>
             <div className="mt-8 max-w-xl">
               <HeroSearch />

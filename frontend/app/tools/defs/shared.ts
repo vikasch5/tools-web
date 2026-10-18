@@ -29,3 +29,15 @@ export const privacyFaq = {
   answer:
     "No. Processing happens entirely in your browser, in a background thread. Your input is never sent to our servers or stored anywhere.",
 };
+
+export const textPrivacyFaq = {
+  question: "Is my text uploaded to a server?",
+  answer:
+    "No. Everything is processed in your browser. Your text is never sent to our servers or stored anywhere.",
+};
+
+export const filePrivacyFaq = {
+  question: "Are my files uploaded?",
+  answer:
+    "No. Files are opened and processed in your browser, in a background thread. Nothing is uploaded, so the tool also works for confidential documents.",
+};

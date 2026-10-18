@@ -2,7 +2,7 @@ import type { ToolDefinition } from "./types";
 import { jsonFormatter } from "./defs/json-formatter";
 import { cssFormatter, cssMinifier } from "./defs/css";
 import { jsFormatter, jsMinifier } from "./defs/js";
-import { htmlFormatter } from "./defs/html";
+import { htmlFormatter, htmlMinifier } from "./defs/html";
 import { sqlFormatter } from "./defs/sql";
 import { base64, jwtDecoder } from "./defs/encoding";
 import { csvToJson } from "./defs/csv";
@@ -21,6 +21,7 @@ export const toolDefinitions: ToolDefinition[] = [
   jsFormatter,
   jsMinifier,
   htmlFormatter,
+  htmlMinifier,
   sqlFormatter,
   base64,
   jwtDecoder,

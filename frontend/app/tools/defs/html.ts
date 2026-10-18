@@ -49,3 +49,91 @@ export const htmlFormatter: TextToolDefinition = {
   ],
   related: ["css-formatter", "js-formatter", "css-minifier"],
 };
+
+export const htmlMinifier: TextToolDefinition = {
+  workspace: "text",
+  slug: "html-minifier",
+  category: "developer-tools",
+  name: "HTML Minifier",
+  metaTitle: "HTML Minifier – Compress HTML, Inline CSS and JS",
+  description:
+    "Minify HTML: strip comments and extra whitespace, and compress inline <style> and <script> blocks. Pre and textarea content is kept. Runs in your browser.",
+  engine: "html-minify",
+  actions: [{ id: "minify", label: "Minify" }],
+  options: [
+    { type: "switch", id: "removeComments", label: "Remove comments", default: true },
+    { type: "switch", id: "minifyCss", label: "Minify inline CSS", default: true },
+    { type: "switch", id: "minifyJs", label: "Minify inline JS", default: true },
+  ],
+  language: "HTML",
+  accept: [".html", ".htm", ".txt"],
+  downloadExtension: "min.html",
+  sample: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Demo page</title>
+    <style>
+      body { margin: 0; font-family: system-ui, sans-serif; }
+      .card { padding: 16px; border-radius: 12px; }
+    </style>
+  </head>
+  <body>
+    <!-- Main content -->
+    <main class="card">
+      <h1>Hello</h1>
+      <p>This page is <strong>about to be</strong> minified.</p>
+      <pre>  Preformatted text
+    keeps its spacing.</pre>
+    </main>
+    <script>
+      const heading = document.querySelector("h1");
+      heading.textContent = "Minified";
+    </script>
+  </body>
+</html>`,
+  howTo: [
+    "Paste your markup, open an .html file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
+    "Choose whether to remove comments and compress inline CSS and JavaScript.",
+    "Press Minify. The status bar shows how many bytes were saved.",
+    "Copy the result or download it as .min.html.",
+  ],
+  examples: [
+    {
+      title: "Drop comments and whitespace between blocks",
+      input: `<ul>\n  <!-- links -->\n  <li><a href="/a">A</a></li>\n  <li><a href="/b">B</a></li>\n</ul>`,
+      output: `<ul><li><a href="/a">A</a></li><li><a href="/b">B</a></li></ul>`,
+    },
+    {
+      title: "Keep the space between inline elements",
+      input: `<p>\n  Read the <a href="/docs">docs</a>   or   <em>ask</em>.\n</p>`,
+      output: `<p>Read the <a href="/docs">docs</a> or <em>ask</em>.</p>`,
+    },
+    {
+      title: "Compress an inline style block",
+      input: `<style>\n  .btn { color: #ffffff; margin: 0px; }\n</style>`,
+      output: `<style>.btn{color:#fff;margin:0}</style>`,
+    },
+  ],
+  limitations: [
+    "Whitespace is removed only next to block-level tags such as <div>, <p> and <li>. Between inline elements it is collapsed to one space, because removing it would change the rendered text.",
+    "Content inside <pre> and <textarea> is kept exactly as written.",
+    "Conditional comments (<!--[if IE]>) and comments starting with <!--! are kept.",
+    "Inline scripts with a syntax error, and JSON scripts that do not parse, are left as is and listed as warnings.",
+    "Template syntax (Blade, Handlebars, JSX) is not understood and may be altered. Minify the rendered HTML instead.",
+  ],
+  faq: [
+    {
+      question: "Is it safe to minify inline JavaScript?",
+      answer:
+        "Yes for standard scripts. Top-level names are not renamed, so code in other scripts that uses them keeps working.",
+    },
+    {
+      question: "Does CSS white-space: pre still work after minifying?",
+      answer:
+        "Not for elements other than <pre> and <textarea>. If an element relies on white-space: pre or pre-wrap, its spacing will be collapsed.",
+    },
+    privacyFaq,
+  ],
+  related: ["html-formatter", "css-minifier", "js-minifier"],
+};

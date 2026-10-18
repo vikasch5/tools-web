@@ -28,6 +28,9 @@ export const tools: Tool[] = [
   { slug: "js-minifier", name: "JavaScript Minifier", category: "developer-tools", description: "Minify JavaScript with Terser.", status: "live", popular: true, keywords: ["javascript", "compress", "uglify", "terser", "minify"] },
   { slug: "html-formatter", name: "HTML Formatter", category: "developer-tools", description: "Indent HTML, including inline CSS and JS.", status: "live", popular: true, keywords: ["beautify", "indent", "pretty", "markup"] },
 
+  // Added in batch 3
+  { slug: "html-minifier", name: "HTML Minifier", category: "developer-tools", description: "Strip comments and whitespace, compress inline CSS and JS.", status: "live", isNew: true, keywords: ["compress", "minify", "markup", "smaller", "optimize"] },
+
   // Added in batch 2
   { slug: "sql-formatter", name: "SQL Formatter", category: "developer-tools", description: "Format SQL for MySQL, PostgreSQL, SQL Server and more.", status: "live", isNew: true, keywords: ["query", "mysql", "postgres", "postgresql", "sqlite", "sql server", "tsql", "beautify"] },
   { slug: "base64", name: "Base64 Encode / Decode", category: "developer-tools", description: "Encode text to Base64 and decode it back.", status: "live", isNew: true, keywords: ["encode", "decode", "b64", "atob", "btoa"] },

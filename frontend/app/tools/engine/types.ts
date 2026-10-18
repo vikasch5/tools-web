@@ -6,7 +6,8 @@ export type EngineId =
   | "sql"
   | "base64"
   | "jwt"
-  | "csv";
+  | "csv"
+  | "html-minify";
 export type EngineAction =
   | "format"
   | "minify"

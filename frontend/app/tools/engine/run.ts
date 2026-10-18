@@ -44,6 +44,10 @@ export async function runEngine({
         return decodeJwt(input);
       case "csv":
         return csvToJson(input, options);
+      case "html-minify": {
+        const { minifyHtml } = await import("./html-minify");
+        return await minifyHtml(input, options);
+      }
     }
   } catch (error) {
     return { ok: false, error: toEngineError(error) };

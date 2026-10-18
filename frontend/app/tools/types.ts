@@ -76,7 +76,8 @@ export type WidgetId =
   | "passport-photo"
   | "merge-pdf"
   | "split-pdf"
-  | "image-converter";
+  | "image-converter"
+  | "rotate-pdf";
 
 export type WidgetToolDefinition = ToolContentBase & { workspace: WidgetId };
 

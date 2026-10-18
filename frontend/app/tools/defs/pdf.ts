@@ -83,3 +83,40 @@ export const splitPdf: WidgetToolDefinition = {
   ],
   related: ["merge-pdf", "compress-image", "word-counter"],
 };
+
+export const rotatePdf: WidgetToolDefinition = {
+  workspace: "rotate-pdf",
+  slug: "rotate-pdf",
+  category: "pdf-tools",
+  name: "Rotate PDF",
+  metaTitle: "Rotate PDF – Turn Pages and Save, Free and Private",
+  description:
+    "Rotate single pages or a whole PDF by 90° steps with live page previews, then save it. Quality and text are kept. Runs in your browser, no upload.",
+  howTo: [
+    "Drop a PDF onto the page or choose one from your device. A preview of every page appears.",
+    "Use the arrows under a page to turn it left or right, or All left / All right to turn every page.",
+    "Press “Save rotated PDF” to download the result. Reset undoes all turns.",
+  ],
+  examples: [
+    { title: "Fix two sideways scans in a 5-page report", input: "turn 0, 90, 0, 90, 0", output: "report-rotated.pdf with page rotations 0°, 90°, 0°, 90°, 0°" },
+    { title: "Turns add up, and left is negative", input: "turn -90, 180, 450", output: "report-rotated.pdf with page rotations 270°, 180°, 90°" },
+  ],
+  limitations: [
+    "Pages turn in 90° steps. Straightening a slightly skewed scan needs an image editor.",
+    "Password-protected PDFs cannot be rotated. Remove the password in your PDF reader first.",
+    "Previews are drawn on your device, so very long documents take a moment to show every page. You can rotate and save before all previews have appeared.",
+  ],
+  faq: [
+    {
+      question: "Does rotating reduce quality?",
+      answer:
+        "No. Only each page's rotation setting changes; text, images and links are copied exactly, and text stays selectable.",
+    },
+    {
+      question: "Will the rotation stick when I open the file elsewhere?",
+      answer: "Yes. The rotation is saved in the PDF, so every reader and printer shows the pages the new way round.",
+    },
+    filePrivacyFaq,
+  ],
+  related: ["split-pdf", "merge-pdf", "compress-image"],
+};

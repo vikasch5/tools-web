@@ -13,7 +13,7 @@ import { uuidGenerator } from "./defs/generators";
 import { gradientGenerator } from "./defs/design";
 import { percentageCalculator } from "./defs/calculators";
 import { compressImage, imageConverter, passportPhoto, resizeImage } from "./defs/images";
-import { mergePdf, splitPdf } from "./defs/pdf";
+import { mergePdf, rotatePdf, splitPdf } from "./defs/pdf";
 
 /** Full definitions of working tools. Import from loaders only. */
 export const toolDefinitions: ToolDefinition[] = [
@@ -31,6 +31,7 @@ export const toolDefinitions: ToolDefinition[] = [
   urlEncoder,
   mergePdf,
   splitPdf,
+  rotatePdf,
   compressImage,
   resizeImage,
   passportPhoto,

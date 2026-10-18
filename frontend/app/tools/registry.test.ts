@@ -16,7 +16,7 @@ import {
   resizeDimensions,
   sheetLayout,
 } from "./engine/image-geometry";
-import { mergePdfs, splitPdf } from "./engine/pdf";
+import { mergePdfs, rotatePdf, splitPdf } from "./engine/pdf";
 import { parsePageRanges } from "./engine/page-ranges";
 import { describeConversion, targetFormats } from "./engine/image-format";
 
@@ -90,6 +90,11 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     const preset = passportPresets.find((p) => p.label === input)!;
     const sheet = sheetLayout(preset, { width: 152.4, height: 101.6 });
     return `${mmToPx(preset.widthMm)} × ${mmToPx(preset.heightMm)} px at 300 DPI; ${sheet.positions.length} photos fit on a 6 × 4 in sheet`;
+  },
+  "rotate-pdf": async (input) => {
+    const turns = input.replace("turn ", "").split(", ").map(Number);
+    const r = await rotatePdf({ name: "report.pdf", data: await blankPdf(turns.length) }, turns);
+    return `${r.name} with page rotations ${r.rotations.map((d) => `${d}°`).join(", ")}`;
   },
   "image-converter": (input) => {
     const [, name, label] = input.match(/^(.+) → (\w+)$/)!;

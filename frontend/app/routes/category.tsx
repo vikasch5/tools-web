@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { Route } from "./+types/category";
 import { Container } from "~/components/layout/Container";
 import { Breadcrumbs } from "~/components/layout/Breadcrumbs";
+import { AdSlot } from "~/components/layout/AdSlot";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { categories, categoryPath } from "~/data/categories";
 import { toolPath, toolsInCategory } from "~/data/tools";
@@ -123,6 +124,8 @@ export default function CategoryPage({ loaderData }: Route.ComponentProps) {
             </ul>
           </section>
         )}
+
+        {live.length > 0 && <AdSlot className="mt-14" />}
       </Container>
     </>
   );

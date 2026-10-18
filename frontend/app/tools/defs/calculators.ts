@@ -8,6 +8,10 @@ export const percentageCalculator: WidgetToolDefinition = {
   metaTitle: "Percentage Calculator – Percent of, Change and Increase",
   description:
     "Work out X% of a number, what percent one number is of another, the percentage change between two values, and price increases or discounts.",
+  overview: [
+    "Percentages come up constantly: discounts while shopping, tips and taxes, grade scores, salary rises, price changes, growth figures in reports and conversion rates in analytics. The formulas are simple, but it is easy to mix up which number to divide by.",
+    "This page puts the four most common questions side by side: what is X% of a number, what percentage one number is of another, the percentage change between two values, and the result of increasing or decreasing a value by a percentage. Each answer comes with a plain-English sentence and the formula, so you can check the working.",
+  ],
   howTo: [
     "Pick the question that matches yours: four calculators sit side by side.",
     "Type your two numbers. The answer, a plain-English sentence and the formula update as you type.",

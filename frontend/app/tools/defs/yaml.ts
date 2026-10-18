@@ -47,6 +47,10 @@ environments:
 features: [payments, coupons]
 maintenance: null
 `,
+  overview: [
+    "YAML is popular for configuration because it is easy to read and write: Kubernetes manifests, Docker Compose files, CI pipelines, OpenAPI specifications and many app settings use it. JSON is stricter and is what most programs and APIs consume.",
+    "Converting YAML to JSON shows exactly how a parser will interpret your file, which helps catch indentation mistakes and surprising values. Converting JSON to YAML is a quick way to start a readable configuration from an API response or an existing JSON file. Anchors, aliases, merge keys and multi-document files are supported.",
+  ],
   howTo: [
     "Paste YAML or JSON, open a .yaml, .yml or .json file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Press YAML → JSON to convert YAML, or JSON → YAML to go the other way.",

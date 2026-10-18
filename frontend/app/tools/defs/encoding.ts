@@ -22,6 +22,10 @@ export const base64: TextToolDefinition = {
   accept: [".txt", ".b64", ".json", ".csv", ".xml", ".html"],
   downloadExtension: "txt",
   sample: "Hello, world! Grüße aus Köln 👋",
+  overview: [
+    "Base64 represents any data using 64 safe characters (A–Z, a–z, 0–9, + and /), so it can travel through systems that only handle text. You meet it in email attachments, data: URLs, HTTP Basic authentication headers, JSON Web Tokens and many API payloads.",
+    "Encoding makes data about a third larger, so it is about compatibility, not compression or security. This tool encodes and decodes text as UTF-8, so accented letters, non-Latin scripts and emoji round-trip correctly. The URL-safe variant swaps + and / for - and _, which is what tokens and URL parameters use.",
+  ],
   howTo: [
     "Paste text into the input panel or open a text file. Pasted text is encoded immediately.",
     "Press Encode to turn text into Base64, or Decode to turn Base64 back into text.",
@@ -81,6 +85,10 @@ export const jwtDecoder: TextToolDefinition = {
   tree: true,
   sample:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzEwMjQiLCJuYW1lIjoiQWRhIExvdmVsYWNlIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkyMjgxNjAwLCJleHAiOjE3OTIyODUyMDB9.sj_mdtVW0-HSaWARdcfUltf1Y2TP8ymIf1QJe3aNtW0",
+  overview: [
+    "A JSON Web Token (JWT) is a compact, signed token that many sign-in systems and APIs use to carry identity and permissions. It has three parts separated by dots: a header describing the algorithm, a payload of claims such as the user ID and expiry time, and a signature.",
+    "The header and payload are only Base64URL-encoded, not encrypted, so anyone holding a token can read them. Decoding is useful when debugging authentication: checking which scopes a token grants, whether it has expired, or which issuer and audience it was made for. Because the decoding happens in your browser, the token is never sent to a server, which matters since a valid token can grant access to an account.",
+  ],
   howTo: [
     "Paste a token into the input panel. A leading “Bearer ” is removed for you.",
     "The header and payload are decoded straight away and shown as formatted JSON.",
@@ -153,6 +161,10 @@ export const urlEncoder: TextToolDefinition = {
   downloadExtension: "txt",
   placeholder: "Paste text to encode, or an encoded URL to decode or parse…",
   sample: `https://shop.example.com/search?q=red shoes&tag=sale&tag=new#results`,
+  overview: [
+    "URLs can only contain a limited set of characters. Spaces, accented letters and symbols like & or # must be percent-encoded (for example, a space becomes %20) or they break the address or change its meaning.",
+    "Encoding is needed when you build query strings by hand, pass a URL inside another URL (such as a redirect parameter), or prepare values for an API. Decoding turns escaped text from logs, analytics or browser address bars back into something readable. The URL parser splits an address into its scheme, host, path, query parameters and fragment, which helps when debugging tracking links or long redirect chains.",
+  ],
   howTo: [
     "Paste text or a URL, open a file, or load the sample.",
     "Pick how to encode: Component for a single query value or path segment, Full URL to keep : / ? & = intact, or Form to turn spaces into +.",

@@ -8,6 +8,10 @@ export const uuidGenerator: WidgetToolDefinition = {
   metaTitle: "UUID Generator – Create v4 and v7 UUIDs in Bulk",
   description:
     "Generate random v4 or time-ordered v7 UUIDs, up to 1,000 at a time, and check any UUID’s version and creation time.",
+  overview: [
+    "A UUID (universally unique identifier) is a 128-bit value used to label records, files, messages and requests without a central counter. Two systems can create IDs independently with practically no chance of a collision.",
+    "Version 4 UUIDs are completely random and are the usual default. Version 7 UUIDs start with a timestamp, so they sort in creation order, which keeps database indexes efficient and makes them a good choice for primary keys. Both are created with your browser's secure random number generator, and the checker tells you the version of any UUID and, for time-based versions, when it was made.",
+  ],
   howTo: [
     "Choose v4 for fully random IDs, or v7 for IDs that sort by creation time (better for database keys).",
     "Set how many you need, from 1 to 1,000, and press Generate.",
@@ -56,6 +60,10 @@ export const passwordGenerator: WidgetToolDefinition = {
   metaTitle: "Password Generator – Strong, Random and Private",
   description:
     "Create strong random passwords up to 128 characters with your browser’s secure generator. Choose the characters, avoid look-alikes and see the strength.",
+  overview: [
+    "Weak and reused passwords are behind most account takeovers. The strongest practical defence is a long, random, unique password for each account, kept in a password manager.",
+    "This generator uses your browser's cryptographically secure random number generator and avoids the subtle biases that make some generators less random than they look. You choose the length and character types to fit a site's rules, and the strength meter estimates how long an offline attack would take. Passwords are created on your device and never sent or stored anywhere.",
+  ],
   howTo: [
     "Set the length. 16 characters or more is a good default for accounts; use your password manager’s limit if it has one.",
     "Choose which characters to use. Turn on “Avoid look-alikes” if the password will be read or typed by hand.",
@@ -98,6 +106,10 @@ export const qrCodeGenerator: WidgetToolDefinition = {
   metaTitle: "QR Code Generator – Links and Wi-Fi, PNG or SVG",
   description:
     "Make QR codes for links, text or Wi-Fi logins. Choose error correction and colours, and download a crisp PNG or SVG. Free, no sign-up, no tracking.",
+  overview: [
+    "QR codes bridge print and the web: menus, posters, business cards, packaging, event tickets and shared Wi-Fi details can all be opened with a phone camera in a second.",
+    "The codes made here are static, meaning the content is stored in the pattern itself rather than behind a redirect service, so they never expire, cannot be switched to a different link later and do not track who scans them. Higher error correction keeps a code readable when it is printed small, smudged or partly covered. SVG output scales to any print size without blurring.",
+  ],
   howTo: [
     "Choose Link or text, or Wi-Fi to let guests join your network by scanning.",
     "Enter the content. The code updates as you type.",
@@ -141,6 +153,10 @@ export const loremIpsum: WidgetToolDefinition = {
   metaTitle: "Lorem Ipsum Generator – Paragraphs, Sentences, Words",
   description:
     "Generate lorem ipsum placeholder text by paragraphs, sentences or words, as plain text or HTML paragraphs. Copy or download it in one click.",
+  overview: [
+    "Lorem ipsum is placeholder text that designers, developers and publishers have used for decades to fill layouts before the real copy is ready. Its Latin-like words have a natural rhythm of word and sentence lengths, so a design can be judged without readers being distracted by meaningful text.",
+    "You can generate as many paragraphs, sentences or words as a mockup needs, with or without the classic opening line, and wrap paragraphs in HTML tags for templates and prototypes. Remember to replace placeholder text before anything goes live.",
+  ],
   howTo: [
     "Choose paragraphs, sentences or words, and how many.",
     "Keep “Start with Lorem ipsum” on for the classic opening, or turn it off for fully random text.",
@@ -165,7 +181,12 @@ export const loremIpsum: WidgetToolDefinition = {
     {
       question: "Where does lorem ipsum come from?",
       answer:
-        "It is a scrambled passage from Cicero’s “De finibus bonorum et malorum” (45 BC), used by typesetters since at least the 1500s.",
+        "It is a scrambled passage from Cicero’s “De finibus bonorum et malorum” (45 BC). It became the standard filler text through Letraset transfer sheets in the 1960s and, later, desktop publishing software.",
+    },
+    {
+      question: "Can I use the generated text in commercial projects?",
+      answer:
+        "Yes. The words come from a 2,000-year-old public domain text and are generated on your device, so there is nothing to credit or license.",
     },
   ],
   related: ["word-counter", "case-converter", "uuid-generator"],

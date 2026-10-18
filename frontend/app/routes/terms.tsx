@@ -39,6 +39,12 @@ export default function Terms() {
       <ContentSection id="fair-use" title="Fair use">
         <p>Do not try to disrupt the site, overload it with automated requests, or use it for anything unlawful.</p>
       </ContentSection>
+      <ContentSection id="ads-links" title="Ads and links to other sites">
+        <p>
+          The site may show ads and link to other websites. We do not control those sites or the products advertised, and their
+          own terms and privacy policies apply. See the <a href="/privacy#advertising">privacy policy</a> for how ads use cookies.
+        </p>
+      </ContentSection>
       <ContentSection id="open-source" title="Open-source software">
         <p>
           The tools are built on open-source libraries, including Prettier, Terser, csso, sql-formatter and pdf-lib, each under

@@ -65,6 +65,10 @@ export const cssFormatter: TextToolDefinition = {
   accept: [".css", ".scss", ".less", ".txt"],
   downloadExtension: "css",
   sample: cssSample,
+  overview: [
+    "Stylesheets drift out of shape over time: rules pasted from different sources, minified snippets copied from a library, or a file edited by several people with different habits. Inconsistent spacing makes CSS harder to review and to search.",
+    "Formatting rewrites the layout only, putting each selector and declaration on its own line with the same indentation everywhere, so the cascade is easier to follow and diffs in version control show real changes instead of whitespace. It is also the quickest way to read the CSS behind a minified file when you are debugging a style you did not write. SCSS and Less are supported, including nesting, variables and mixins.",
+  ],
   howTo: [
     "Paste your stylesheet, open a .css, .scss or .less file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Pick the syntax that matches your code, plus indent size and line width.",
@@ -116,6 +120,10 @@ export const cssMinifier: TextToolDefinition = {
   accept: [".css", ".txt"],
   downloadExtension: "min.css",
   sample: cssReadable,
+  overview: [
+    "Every byte of CSS has to download and be parsed before a page can render, because browsers block rendering until stylesheets are ready. Minifying removes what browsers do not need: comments, indentation, line breaks and redundant characters.",
+    "Beyond removing whitespace, the minifier rewrites values in shorter equivalent forms, such as #ffffff to #fff and 0px to 0, and can merge rules that share a selector or declarations. The result behaves the same but is noticeably smaller, even before the server compresses it. Minify a copy for production and keep your readable source for editing; most build tools do the same as part of a release.",
+  ],
   howTo: [
     "Paste your CSS, open a .css file, or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Leave “Merge rules” on for the smallest output, or turn it off to keep the original rule order.",

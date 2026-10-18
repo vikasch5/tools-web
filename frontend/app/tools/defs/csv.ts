@@ -36,6 +36,10 @@ export const csvToJson: TextToolDefinition = {
 1,Ada Lovelace,ada@example.com,Team,5,true
 2,"Hopper, Grace",grace@example.com,Business,25,true
 3,Alan Turing,alan@example.com,Free,1,false`,
+  overview: [
+    "CSV is how spreadsheets, databases and many business systems export data, while JSON is what web apps, APIs and scripts expect. Converting between them by hand is tedious and easy to break when fields contain commas, quotes or line breaks.",
+    "This converter follows the CSV rules for quoted fields, detects whether your file uses commas, semicolons or tabs, and turns each row into an object keyed by the header row. Numbers and true or false values can be converted to proper JSON types, while values such as ZIP codes and long IDs are kept as text so no leading zeros or digits are lost.",
+  ],
   howTo: [
     "Paste rows copied from a spreadsheet, open a .csv or .tsv file, or load the sample. It converts straight away.",
     "Leave the delimiter on Auto, or pick one if your file uses semicolons (common in European Excel exports) or tabs.",

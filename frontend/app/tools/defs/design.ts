@@ -8,6 +8,10 @@ export const gradientGenerator: WidgetToolDefinition = {
   metaTitle: "CSS Gradient Generator – Linear, Radial and Conic",
   description:
     "Design linear, radial and conic CSS gradients with a live preview. Add colour stops, set opacity, and copy ready-to-use CSS.",
+  overview: [
+    "Gradients add depth to backgrounds, buttons, cards and hero sections, and CSS can draw them without any image file, so they stay sharp at every size and cost nothing to download.",
+    "Writing gradient syntax by hand is fiddly, especially with several colour stops, transparency or radial and conic shapes. This generator lets you adjust angles, colours, positions and opacity with a live preview, then copy CSS that works in all current browsers. You can also paste an existing gradient to edit it.",
+  ],
   howTo: [
     "Start from a preset or keep the default, then choose Linear, Radial or Conic.",
     "Set the angle (or the shape for radial gradients) in the toolbar.",

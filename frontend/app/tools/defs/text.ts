@@ -9,6 +9,10 @@ export const wordCounter: WidgetToolDefinition = {
   metaTitle: "Word Counter – Count Words, Characters and Reading Time",
   description:
     "Count words, characters, sentences and paragraphs as you type, with reading and speaking time and your most used words.",
+  overview: [
+    "Word and character limits are everywhere: essays and applications, meta descriptions, social posts, ad copy, abstracts and translation quotes. A live count lets you edit to the limit without guessing.",
+    "Beyond words and characters, the counter shows sentences, paragraphs and lines, plus estimated reading and speaking time, which helps when planning a blog post, newsletter, presentation or video script. The list of most used words highlights repetition, so you can vary your wording or check that a key term appears often enough. Your text stays in your browser and is not saved.",
+  ],
   howTo: [
     "Type or paste your text into the box. Every count updates as you type.",
     "Read words, characters (with and without spaces), sentences, paragraphs and lines on the right.",
@@ -61,6 +65,10 @@ export const diffChecker: WidgetToolDefinition = {
   metaTitle: "Diff Checker – Compare Two Texts and Find Differences",
   description:
     "Compare two versions of a text or code line by line. See added and removed lines side by side, and ignore whitespace or case if you like.",
+  overview: [
+    "When two versions of a document, configuration file or piece of code look almost the same, finding what changed by eye is slow and error-prone. A diff lines them up and marks exactly which lines were added, removed or kept.",
+    "This is useful for checking edits to a contract or article, comparing configuration between servers, reviewing code outside a version control system, or confirming that a tool's output matches what you expected. Options to ignore whitespace and case hide changes that do not matter, and the result can be copied as a standard unified diff.",
+  ],
   howTo: [
     "Paste the original text on the left and the changed version on the right, or load the sample.",
     "Press Compare (or Ctrl+Enter). Removed lines are marked with a minus and added lines with a plus.",
@@ -108,6 +116,10 @@ export const caseConverter: WidgetToolDefinition = {
   metaTitle: "Case Converter – UPPER, lower, Title, camelCase and More",
   description:
     "Convert text to UPPER, lower, Title or Sentence case, or to camelCase, snake_case, kebab-case and other code styles. Every result at once, ready to copy.",
+  overview: [
+    "Text often arrives in the wrong case: headings typed in capitals, product names in lower case, or a list of labels that needs to become variable names. Retyping is slow and easy to get wrong.",
+    "This converter shows every common case at once. Title Case follows common style-guide rules for short words, and Sentence case suits headings and UI copy. For code, it produces camelCase, PascalCase, snake_case, CONSTANT_CASE, kebab-case and dot.case, splitting words and acronyms sensibly, and converts each line separately so you can process a whole list of names in one go.",
+  ],
   howTo: [
     "Type or paste your text. Every case is shown at once and updates as you type.",
     "Press the copy button next to the case you need.",

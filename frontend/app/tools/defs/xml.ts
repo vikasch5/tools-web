@@ -23,6 +23,10 @@ export const xmlFormatter: TextToolDefinition = {
   accept: [".xml", ".svg", ".rss", ".atom", ".xsd", ".xsl", ".plist", ".txt"],
   downloadExtension: "xml",
   sample: `<?xml version="1.0" encoding="UTF-8"?><catalog><!-- Two books --><book id="bk101" available="true"><title>XML Developer's Guide</title><author>Gambardella, Matthew</author><price currency="USD">44.95</price></book><book id="bk102" available="false"><title>Midnight Rain</title><author>Ralls, Kim</author><price currency="USD">5.95</price><tags><tag>fantasy</tag><tag>bestseller</tag></tags></book></catalog>`,
+  overview: [
+    "XML is still behind many everyday files and integrations: RSS and Atom feeds, sitemaps, SVG images, Office documents, Android layouts, SOAP APIs and countless configuration formats. Unlike HTML, XML must be well-formed, so a single unescaped ampersand or mismatched tag makes the whole document unreadable to a parser.",
+    "Formatting indents the element tree so you can read it, and the checker reports the first well-formedness error with its line and column. Minify removes whitespace between tags for compact storage or transmission, while keeping text content as written.",
+  ],
   howTo: [
     "Paste your XML, open a file (.xml, .svg, .rss and more), or load the sample. Pasting, opening a file or loading the sample runs it automatically.",
     "Choose an indent size.",

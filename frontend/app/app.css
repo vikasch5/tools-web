@@ -1,15 +1,325 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+/* Dark mode follows the resolved data-theme attribute set in root.tsx. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------
+   Design tokens. Bright neutral canvas, ink primary actions, a warm
+   orange→pink brand gradient for highlights, soft depth and rounded
+   corners. Components use only these semantic names; the default
+   Tailwind palette is disabled so ad hoc colours fail to compile.
+   Contrast: text ≥ 4.5:1, control borders/focus/icons ≥ 3:1.
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  --bg: #fafafb;
+  --surface: #ffffff;
+  --surface-2: #f2f2f5;
+  --overlay: rgb(11 11 15 / 0.45);
+
+  --fg: #0b0b0f;
+  --fg-muted: #52525c;
+  --fg-subtle: #6a6a75;
+
+  --border: #e6e6eb;
+  --border-strong: #8f8f9a;
+  --ring: #f4511e;
+
+  --accent: #f4511e;
+  --accent-fg: #d1410b;
+  --accent-soft: #fff1ea;
+  --on-accent: #0b0b0f;
+  --brand-from: #ff7a1a;
+  --brand-to: #ec3a76;
+
+  --success: #13704f;
+  --success-soft: #e6f6ee;
+  --warning: #8f520a;
+  --warning-soft: #fdf2df;
+  --danger: #c22a2a;
+  --danger-soft: #fdecec;
+
+  --code-key: #7c3aed;
+  --code-string: #047857;
+  --code-number: #c2410c;
+  --code-punct: #6a6a75;
+
+  /* Category hues: icon tiles only (graphics, ≥ 3:1). */
+  --cat-dev: #4f46e5;
+  --cat-dev-soft: #eef0ff;
+  --cat-pdf: #dc2626;
+  --cat-pdf-soft: #fef0f0;
+  --cat-image: #059669;
+  --cat-image-soft: #e8f8f1;
+  --cat-text: #c2410c;
+  --cat-text-soft: #fff3e8;
+  --cat-convert: #0891b2;
+  --cat-convert-soft: #e6f7fb;
+  --cat-design: #db2777;
+  --cat-design-soft: #fdedf5;
+  --cat-generate: #7c3aed;
+  --cat-generate-soft: #f3edff;
+  --cat-calc: #475569;
+  --cat-calc-soft: #eef1f5;
+
+  --scrollbar: #c9c9d1;
+  --scrollbar-hover: #9d9da8;
+  --shadow-color: 240 10% 20%;
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+[data-theme="dark"] {
+  color-scheme: dark;
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+  --bg: #09090b;
+  --surface: #121216;
+  --surface-2: #1a1a20;
+  --overlay: rgb(0 0 0 / 0.6);
+
+  --fg: #f4f4f6;
+  --fg-muted: #a1a1ab;
+  --fg-subtle: #868691;
+
+  --border: #26262d;
+  --border-strong: #666673;
+  --ring: #ff7a45;
+
+  --accent: #ff6a3a;
+  --accent-fg: #ff7a45;
+  --accent-soft: #2b1610;
+  --on-accent: #09090b;
+  --brand-from: #ff8a3a;
+  --brand-to: #ff4d8d;
+
+  --success: #4ade80;
+  --success-soft: #0f2a1d;
+  --warning: #fbbf24;
+  --warning-soft: #2c210c;
+  --danger: #ff7b7b;
+  --danger-soft: #331515;
+
+  --code-key: #c4b5fd;
+  --code-string: #6ee7b7;
+  --code-number: #fdba74;
+  --code-punct: #868691;
+
+  --cat-dev: #a5a3ff;
+  --cat-dev-soft: #1b1a3a;
+  --cat-pdf: #ff8a8a;
+  --cat-pdf-soft: #3a1515;
+  --cat-image: #4ade80;
+  --cat-image-soft: #0f2a1d;
+  --cat-text: #fdba74;
+  --cat-text-soft: #33200f;
+  --cat-convert: #67e8f9;
+  --cat-convert-soft: #0c2a31;
+  --cat-design: #f9a8d4;
+  --cat-design-soft: #3a1328;
+  --cat-generate: #c4b5fd;
+  --cat-generate-soft: #24183f;
+  --cat-calc: #cbd5e1;
+  --cat-calc-soft: #1e2430;
+
+  --scrollbar: #3a3a44;
+  --scrollbar-hover: #55555f;
+  --shadow-color: 0 0% 0%;
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-overlay: var(--overlay);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ring: var(--ring);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-brand-from: var(--brand-from);
+  --color-brand-to: var(--brand-to);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-code-key: var(--code-key);
+  --color-code-string: var(--code-string);
+  --color-code-number: var(--code-number);
+  --color-code-punct: var(--code-punct);
+  --color-cat-dev: var(--cat-dev);
+  --color-cat-dev-soft: var(--cat-dev-soft);
+  --color-cat-pdf: var(--cat-pdf);
+  --color-cat-pdf-soft: var(--cat-pdf-soft);
+  --color-cat-image: var(--cat-image);
+  --color-cat-image-soft: var(--cat-image-soft);
+  --color-cat-text: var(--cat-text);
+  --color-cat-text-soft: var(--cat-text-soft);
+  --color-cat-convert: var(--cat-convert);
+  --color-cat-convert-soft: var(--cat-convert-soft);
+  --color-cat-design: var(--cat-design);
+  --color-cat-design-soft: var(--cat-design-soft);
+  --color-cat-generate: var(--cat-generate);
+  --color-cat-generate-soft: var(--cat-generate-soft);
+  --color-cat-calc: var(--cat-calc);
+  --color-cat-calc-soft: var(--cat-calc-soft);
+
+  --shadow-*: initial;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.06);
+  --shadow-md: 0 1px 2px hsl(var(--shadow-color) / 0.05),
+    0 6px 16px -4px hsl(var(--shadow-color) / 0.12);
+  --shadow-lg: 0 2px 4px hsl(var(--shadow-color) / 0.04),
+    0 20px 48px -12px hsl(var(--shadow-color) / 0.22);
+}
+
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Geist", ui-sans-serif, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  --radius-*: initial;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+
+  /* Fluid display sizes; body sizes use Tailwind's default scale. */
+  --text-hero: clamp(2.5rem, 1.4rem + 5vw, 4.75rem);
+  --text-hero--line-height: 1;
+  --text-hero--letter-spacing: -0.04em;
+  --text-h1: clamp(2rem, 1.5rem + 2vw, 3rem);
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h2: clamp(1.625rem, 1.2rem + 1.4vw, 2.5rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.03em;
+
+  --container-site: 80rem;
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Named stacking order. */
+@utility z-header {
+  z-index: 40;
+}
+@utility z-popover {
+  z-index: 50;
+}
+
+/* Small uppercase mono label used for eyebrows, codes and meta. */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Brand gradient fill and gradient text. */
+@utility bg-brand {
+  background-image: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+}
+@utility text-brand {
+  background-image: linear-gradient(100deg, var(--brand-from), var(--brand-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Faint dotted grid used behind hero sections. */
+@utility bg-dots {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in oklab, var(--fg) 14%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 22px 22px;
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    color: var(--fg);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply min-h-dvh font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Slim, rounded scrollbars that follow the theme (no arrow buttons). */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-hover);
+  }
+  ::-webkit-scrollbar-button,
+  ::-webkit-scrollbar-corner {
+    display: none;
+    background: transparent;
+  }
+
+  /* Modal drawer open: freeze page scroll behind it. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--accent) 25%, transparent);
+    color: var(--fg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

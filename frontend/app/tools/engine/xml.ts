@@ -143,7 +143,7 @@ function serialize(nodes: XmlNode[], indent: string | null, keepComments: boolea
         lines.push(`${pad}${open}${node.selfClosing ? "/>" : `></${node.name}>`}`);
       } else if (indent !== null && node.children.every((c) => c.kind !== "element" && !(c.kind === "raw" && c.comment))) {
         // Text-only elements stay on one line.
-        const body = node.children.map((c) => (c.kind === "text" ? c.value : c.value)).join("").trim();
+        const body = node.children.map((c) => (c.kind === "element" ? "" : c.value)).join("").trim();
         lines.push(`${pad}${open}>${body}</${node.name}>`);
       } else {
         lines.push(`${pad}${open}>`);

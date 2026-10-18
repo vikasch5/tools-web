@@ -8,14 +8,17 @@ export type EngineId =
   | "jwt"
   | "csv"
   | "html-minify"
-  | "xml";
+  | "xml"
+  | "yaml";
 export type EngineAction =
   | "format"
   | "minify"
   | "validate"
   | "encode"
   | "decode"
-  | "convert";
+  | "convert"
+  | "to-json"
+  | "to-yaml";
 export type OptionValue = string | number | boolean;
 export type EngineOptions = Record<string, OptionValue>;
 

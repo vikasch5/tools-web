@@ -5,6 +5,7 @@ import { jsFormatter, jsMinifier } from "./defs/js";
 import { htmlFormatter, htmlMinifier } from "./defs/html";
 import { sqlFormatter } from "./defs/sql";
 import { xmlFormatter } from "./defs/xml";
+import { yamlJson } from "./defs/yaml";
 import { base64, jwtDecoder } from "./defs/encoding";
 import { csvToJson } from "./defs/csv";
 import { diffChecker, wordCounter } from "./defs/text";
@@ -35,6 +36,7 @@ export const toolDefinitions: ToolDefinition[] = [
   wordCounter,
   diffChecker,
   csvToJson,
+  yamlJson,
   gradientGenerator,
   uuidGenerator,
   percentageCalculator,

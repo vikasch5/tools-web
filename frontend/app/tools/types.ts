@@ -3,6 +3,8 @@ import type { EngineAction, EngineId, OptionValue } from "./engine/types";
 export type ToolAction = {
   id: EngineAction;
   label: string;
+  /** Download extension when this action produced the output. */
+  downloadExtension?: string;
 };
 
 export type ToolOption =
@@ -53,6 +55,8 @@ export type TextToolDefinition = ToolContentBase & {
   /** Extension used for "Download". */
   downloadExtension: string;
   sample: string;
+  /** Input placeholder, when "Paste <language> to <action> it" reads badly. */
+  placeholder?: string;
   /** Offer the JSON tree view for the output. */
   tree?: boolean;
 };

@@ -45,6 +45,10 @@ export async function runEngine({
         return decodeJwt(input);
       case "csv":
         return csvToJson(input, options);
+      case "yaml": {
+        const { runYaml } = await import("./yaml");
+        return await runYaml(action, input, options);
+      }
       case "xml":
         return runXml(action, input, options);
       case "html-minify": {

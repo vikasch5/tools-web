@@ -21,7 +21,8 @@
     "react-dom": "^19.2.8",
     "react-router": "^8.4.0",
     "sql-formatter": "^15.9.0",
-    "terser": "^5.51.2"
+    "terser": "^5.51.2",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@react-router/dev": "^8.4.0",

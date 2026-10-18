@@ -115,6 +115,7 @@ export default function ToolPage({ loaderData }: Route.ComponentProps) {
               accept: tool.accept,
               downloadExtension: tool.downloadExtension,
               sample: tool.sample,
+              placeholder: tool.placeholder,
               tree: tool.tree,
             }}
           />

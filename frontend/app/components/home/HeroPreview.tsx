@@ -23,7 +23,7 @@ export function HeroPreview() {
   return (
     <div aria-hidden className="relative">
       {/* Soft brand glow behind the window. */}
-      <div className="absolute -inset-8 rounded-full bg-brand opacity-25 blur-3xl dark:opacity-20" />
+      <div className="absolute -inset-8 rounded-full bg-brand opacity-25 blur-3xl" />
       <div className="relative overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
         <div className="flex items-center gap-3 border-b border-border bg-surface-2/60 px-4 py-3">
           <span className="flex gap-1.5">

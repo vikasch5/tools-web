@@ -1,9 +1,9 @@
 import { Link } from "react-router";
+import { Check, ShieldCheck } from "lucide-react";
 import { categories, categoryPath } from "~/data/categories";
 import { ads, companyNav, legalNav, site, type NavLink } from "~/config/site";
 import { Container } from "./Container";
-import { LogoMark } from "./Logo";
-import { ThemeSelect } from "./ThemeToggle";
+import { Logo } from "./Logo";
 
 declare global {
   interface Window {
@@ -21,11 +21,13 @@ function openConsentSettings() {
 const footerLinkClass =
   "inline-flex min-h-8 items-center text-sm text-fg-muted transition-colors hover:text-fg pointer-coarse:min-h-11";
 
+const highlights = ["No sign-up or account", "Files stay on your device", "Free for personal and commercial use"];
+
 function FooterColumn({ title, links, extra }: { title: string; links: NavLink[]; extra?: React.ReactNode }) {
   return (
     <div>
-      <h2 className="label-mono font-sans text-fg-subtle">{title}</h2>
-      <ul className="mt-4 space-y-1">
+      <h2 className="font-sans text-sm font-semibold text-fg">{title}</h2>
+      <ul className="mt-4 space-y-1.5">
         {links.map((link) => (
           <li key={link.to + link.label}>
             <Link to={link.to} className={footerLinkClass}>
@@ -47,14 +49,22 @@ const half = Math.ceil(categoryLinks.length / 2);
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-border">
-      <Container className="pt-14 pb-8 lg:pt-20">
+    <footer className="mt-auto border-t border-border bg-surface">
+      <Container className="pt-14 pb-10 lg:pt-16">
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-[1.6fr_repeat(4,1fr)] lg:gap-10">
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <LogoMark />
-            <p className="mt-5 max-w-xs font-display text-xl leading-snug font-semibold tracking-tight text-fg">
-              {site.tagline}
+            <Logo />
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-fg-muted">
+              {site.tagline} Format, convert and edit files right in your browser.
             </p>
+            <ul className="mt-5 space-y-2">
+              {highlights.map((item) => (
+                <li key={item} className="flex items-center gap-2 text-sm text-fg-muted">
+                  <Check aria-hidden size={15} strokeWidth={2.25} className="shrink-0 text-success" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
           <nav aria-label="Tool categories" className="contents">
             <FooterColumn title="Tools" links={categoryLinks.slice(0, half)} />
@@ -78,18 +88,14 @@ export function SiteFooter() {
           </nav>
         </div>
 
-        <p
-          aria-hidden
-          className="mt-16 overflow-hidden font-display text-[clamp(3.5rem,16vw,13rem)] leading-[0.8] font-extrabold tracking-[-0.05em] whitespace-nowrap text-surface-2 select-none"
-        >
-          {site.name.toLowerCase()}
-        </p>
-
-        <div className="mt-6 flex flex-col-reverse gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="label-mono text-fg-subtle">
-            © {new Date().getFullYear()} {site.name} · Design prototype
+        <div className="mt-14 flex flex-col gap-3 border-t border-border pt-6 text-sm text-fg-subtle sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
-          <ThemeSelect />
+          <p className="inline-flex items-center gap-1.5">
+            <ShieldCheck aria-hidden size={15} strokeWidth={1.75} />
+            Your files are processed in your browser and never uploaded.
+          </p>
         </div>
       </Container>
     </footer>

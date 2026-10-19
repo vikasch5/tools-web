@@ -47,8 +47,8 @@ export function CategoriesMenu() {
         aria-controls={panelId}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "inline-flex h-16 items-center gap-1 px-3 text-sm font-medium transition-colors",
-          open ? "text-fg" : "text-fg-muted hover:text-fg",
+          "inline-flex h-9 items-center gap-1 rounded-md pr-2 pl-3 text-sm font-medium transition-colors duration-150",
+          open ? "bg-surface-2 text-fg" : "text-fg-muted hover:bg-surface-2 hover:text-fg",
         )}
       >
         Categories

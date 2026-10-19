@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* Dark mode follows the resolved data-theme attribute set in root.tsx. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
 /* ------------------------------------------------------------------
    Design tokens. Bright neutral canvas, ink primary actions, a warm
    orange→pink brand gradient for highlights, soft depth and rounded
@@ -66,63 +63,6 @@
   --scrollbar: #c9c9d1;
   --scrollbar-hover: #9d9da8;
   --shadow-color: 240 10% 20%;
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --bg: #09090b;
-  --surface: #121216;
-  --surface-2: #1a1a20;
-  --overlay: rgb(0 0 0 / 0.6);
-
-  --fg: #f4f4f6;
-  --fg-muted: #a1a1ab;
-  --fg-subtle: #868691;
-
-  --border: #26262d;
-  --border-strong: #666673;
-  --ring: #ff7a45;
-
-  --accent: #ff6a3a;
-  --accent-fg: #ff7a45;
-  --accent-soft: #2b1610;
-  --on-accent: #09090b;
-  --brand-from: #ff8a3a;
-  --brand-to: #ff4d8d;
-
-  --success: #4ade80;
-  --success-soft: #0f2a1d;
-  --warning: #fbbf24;
-  --warning-soft: #2c210c;
-  --danger: #ff7b7b;
-  --danger-soft: #331515;
-
-  --code-key: #c4b5fd;
-  --code-string: #6ee7b7;
-  --code-number: #fdba74;
-  --code-punct: #868691;
-
-  --cat-dev: #a5a3ff;
-  --cat-dev-soft: #1b1a3a;
-  --cat-pdf: #ff8a8a;
-  --cat-pdf-soft: #3a1515;
-  --cat-image: #4ade80;
-  --cat-image-soft: #0f2a1d;
-  --cat-text: #fdba74;
-  --cat-text-soft: #33200f;
-  --cat-convert: #67e8f9;
-  --cat-convert-soft: #0c2a31;
-  --cat-design: #f9a8d4;
-  --cat-design-soft: #3a1328;
-  --cat-generate: #c4b5fd;
-  --cat-generate-soft: #24183f;
-  --cat-calc: #cbd5e1;
-  --cat-calc-soft: #1e2430;
-
-  --scrollbar: #3a3a44;
-  --scrollbar-hover: #55555f;
-  --shadow-color: 0 0% 0%;
 }
 
 @theme inline {
@@ -192,14 +132,14 @@
   --radius-xl: 1.25rem;
 
   /* Fluid display sizes; body sizes use Tailwind's default scale. */
-  --text-hero: clamp(2.5rem, 1.4rem + 5vw, 4.75rem);
-  --text-hero--line-height: 1;
-  --text-hero--letter-spacing: -0.04em;
-  --text-h1: clamp(2rem, 1.5rem + 2vw, 3rem);
-  --text-h1--line-height: 1.05;
-  --text-h1--letter-spacing: -0.03em;
-  --text-h2: clamp(1.625rem, 1.2rem + 1.4vw, 2.5rem);
-  --text-h2--line-height: 1.1;
+  --text-hero: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+  --text-hero--line-height: 1.05;
+  --text-hero--letter-spacing: -0.035em;
+  --text-h1: clamp(1.75rem, 1.45rem + 1.2vw, 2.25rem);
+  --text-h1--line-height: 1.15;
+  --text-h1--letter-spacing: -0.025em;
+  --text-h2: clamp(1.5rem, 1.25rem + 0.9vw, 2rem);
+  --text-h2--line-height: 1.2;
   --text-h2--letter-spacing: -0.03em;
 
   --container-site: 80rem;

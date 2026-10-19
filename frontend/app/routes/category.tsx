@@ -67,8 +67,8 @@ export default function CategoryPage({ loaderData }: Route.ComponentProps) {
       <Container className="py-12 sm:py-16">
         {live.length > 0 ? (
           <section aria-labelledby="live-title">
-            <h2 id="live-title" className="label-mono text-fg-subtle">
-              Available now · {live.length}
+            <h2 id="live-title" className="font-sans text-sm font-medium text-fg-muted">
+              {live.length} {live.length === 1 ? "tool" : "tools"}
             </h2>
             <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {live.map((tool) => (

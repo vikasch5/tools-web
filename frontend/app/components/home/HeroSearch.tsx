@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Form, Link } from "react-router";
 import { ArrowRight, Search } from "lucide-react";
-import { Kbd } from "~/components/ui/Kbd";
 import { tools, toolPath } from "~/data/tools";
 
 const suggestions = ["merge-pdf", "compress-image", "json-formatter", "word-counter"]
@@ -46,7 +45,6 @@ export function HeroSearch() {
             placeholder="Try “merge pdf”"
             className="h-full min-w-0 flex-1 bg-transparent px-3 text-base text-fg outline-none placeholder:text-fg-subtle sm:text-lg [&::-webkit-search-cancel-button]:hidden"
           />
-          <Kbd className="mr-2 hidden sm:inline-flex">/</Kbd>
           <button
             type="submit"
             aria-label="Search"

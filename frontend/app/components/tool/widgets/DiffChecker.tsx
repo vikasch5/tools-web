@@ -146,7 +146,6 @@ export function DiffChecker() {
             size="sm"
             onClick={() => compare()}
             disabled={state === "working"}
-            title="Compare (Ctrl+Enter)"
             aria-keyshortcuts="Control+Enter Meta+Enter"
           >
             {state === "working" && <LoaderCircle aria-hidden size={15} className="animate-spin" />}

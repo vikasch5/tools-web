@@ -16,7 +16,6 @@ import { ButtonLink } from "~/components/ui/Button";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { categories, categoryPath } from "~/data/categories";
 import { Link } from "react-router";
-import { themeInitScript } from "~/lib/theme";
 import { ads } from "~/config/site";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
@@ -34,12 +33,10 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    // data-theme is set before paint by themeInitScript.
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {ads.client && (
           <>
             {/* Site verification, plus the AdSense loader. Google's consent

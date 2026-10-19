@@ -6,7 +6,6 @@ import { Container } from "~/components/layout/Container";
 import { Breadcrumbs } from "~/components/layout/Breadcrumbs";
 import { ToolCard } from "~/components/tool/ToolCard";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
-import { Kbd } from "~/components/ui/Kbd";
 import { categories, categoryPath } from "~/data/categories";
 import { tools } from "~/data/tools";
 import { searchTools } from "~/lib/search";
@@ -120,7 +119,7 @@ export default function ToolsPage() {
                 aria-controls="tools-results"
                 className="h-full min-w-0 flex-1 bg-transparent text-base text-fg outline-none placeholder:text-fg-subtle [&::-webkit-search-cancel-button]:hidden"
               />
-              {query ? (
+              {query && (
                 <button
                   type="button"
                   aria-label="Clear search"
@@ -133,8 +132,6 @@ export default function ToolsPage() {
                 >
                   <X aria-hidden size={17} />
                 </button>
-              ) : (
-                <Kbd className="mr-2 hidden sm:inline-flex">/</Kbd>
               )}
             </div>
             {category && <input type="hidden" name="category" value={category} />}

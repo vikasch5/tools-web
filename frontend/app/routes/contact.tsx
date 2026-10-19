@@ -32,10 +32,13 @@ export default function Contact() {
       path="/contact"
       intro={<p>Found a bug, missing a tool, or have a question? We read every message.</p>}
       notice={
-        <>
-          <strong>Before launch:</strong> {site.email} is a placeholder address. This form opens your own email app with
-          your message filled in; nothing is sent from this website.
-        </>
+        // Shown only while the address is still the placeholder.
+        site.email.endsWith(".example") && (
+          <>
+            <strong>Before launch:</strong> {site.email} is a placeholder address. This form opens your own email app
+            with your message filled in; nothing is sent from this website.
+          </>
+        )
       }
     >
       <ContentSection id="write" title="Write to us">

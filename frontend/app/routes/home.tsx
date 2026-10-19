@@ -24,6 +24,13 @@ export function meta({}: Route.MetaArgs) {
 const categoryBySlug = new Map(categories.map((c) => [c.slug, c]));
 const popular = tools.filter((t) => t.popular && t.status === "live");
 
+const stats = [
+  { value: String(tools.filter((t) => t.status === "live").length), label: "Free tools" },
+  { value: String(categories.length), label: "Categories" },
+  { value: "0", label: "Files uploaded" },
+  { value: "No", label: "Sign-up needed" },
+];
+
 const promises = [
   {
     icon: ShieldCheck,
@@ -73,6 +80,20 @@ export default function Home() {
           <div className="hidden md:block lg:pl-6">
             <HeroPreview />
           </div>
+        </Container>
+      </section>
+
+      {/* At a glance */}
+      <section aria-label={`${site.name} at a glance`} className="border-y border-border bg-surface">
+        <Container>
+          <dl className="grid grid-cols-2 divide-border lg:grid-cols-4 lg:divide-x">
+            {stats.map(({ value, label }) => (
+              <div key={label} className="flex flex-col-reverse gap-1 py-6 lg:px-8 lg:first:pl-0">
+                <dt className="text-sm text-fg-muted">{label}</dt>
+                <dd className="font-display text-3xl font-bold tracking-tight text-fg">{value}</dd>
+              </div>
+            ))}
+          </dl>
         </Container>
       </section>
 

@@ -1,8 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { ArrowRight, CornerDownLeft, Search } from "lucide-react";
+import { ArrowRight, CornerDownLeft, Search, X } from "lucide-react";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
-import { Kbd } from "~/components/ui/Kbd";
 import { categories } from "~/data/categories";
 import { tools, toolPath } from "~/data/tools";
 import { searchTools } from "~/lib/search";
@@ -75,12 +74,7 @@ export function CommandPalette({ triggers }: { triggers: { className: string; co
           className={className}
         >
           <Search aria-hidden size={compact ? 18 : 15} strokeWidth={1.75} />
-          {!compact && (
-            <>
-              <span className="flex-1">Search tools</span>
-              <Kbd>Ctrl K</Kbd>
-            </>
-          )}
+          {!compact && <span className="flex-1">Search tools</span>}
         </Link>
       ))}
 
@@ -120,7 +114,14 @@ export function CommandPalette({ triggers }: { triggers: { className: string; co
             autoComplete="off"
             className="h-full min-w-0 flex-1 bg-transparent text-base text-fg outline-none placeholder:text-fg-subtle"
           />
-          <Kbd>Esc</Kbd>
+          <button
+            type="button"
+            aria-label="Close search"
+            onClick={close}
+            className="-mr-1.5 inline-flex size-8 shrink-0 items-center justify-center rounded-md text-fg-subtle transition-colors hover:bg-surface-2 hover:text-fg pointer-coarse:size-11"
+          >
+            <X aria-hidden size={17} strokeWidth={1.75} />
+          </button>
         </div>
 
         <p className="label-mono px-4 pt-3 pb-1 text-fg-subtle">{query.trim() ? "Results" : "Popular"}</p>
@@ -154,9 +155,8 @@ export function CommandPalette({ triggers }: { triggers: { className: string; co
           <p className="px-4 pb-4 text-sm text-fg-muted">No tools match “{query.trim()}”.</p>
         )}
         <div className="flex items-center justify-between gap-3 border-t border-border bg-surface-2/50 px-4 py-2.5 text-xs text-fg-subtle">
-          <span className="hidden items-center gap-1.5 sm:inline-flex">
-            <Kbd>↑</Kbd>
-            <Kbd>↓</Kbd> to move · <Kbd>Enter</Kbd> to open
+          <span>
+            {live.length} free tools
           </span>
           <Link
             to={query.trim() ? `/tools?q=${encodeURIComponent(query.trim())}` : "/tools"}

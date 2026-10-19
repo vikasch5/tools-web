@@ -31,8 +31,9 @@ export const ads = {
 export type NavLink = { label: string; to: string };
 
 export const primaryNav: NavLink[] = [
-  { label: "All tools", to: "/tools" },
+  { label: "About", to: "/about" },
   { label: "Help", to: "/help" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export const companyNav: NavLink[] = [

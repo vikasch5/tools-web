@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router";
-import { ArrowUpRight, Menu, Search, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Menu, Search, X } from "lucide-react";
 import { categories, categoryPath } from "~/data/categories";
 import { companyNav, legalNav } from "~/config/site";
 import { IconButton } from "~/components/ui/IconButton";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { Logo } from "./Logo";
-import { ThemeSelect } from "./ThemeToggle";
+import { ButtonLink } from "~/components/ui/Button";
 
-const moreLinks = [{ label: "All tools", to: "/tools" }, ...companyNav, ...legalNav];
+const moreLinks = [...companyNav, ...legalNav];
 
 /**
  * Mobile navigation sheet built on a native modal <dialog>: the browser
@@ -94,9 +94,10 @@ export function MobileNav() {
             </nav>
           </div>
 
-          <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border px-4 py-3 sm:px-6">
-            <span className="label-mono text-fg-subtle">Theme</span>
-            <ThemeSelect />
+          <div className="shrink-0 border-t border-border px-4 py-3 sm:px-6">
+            <ButtonLink to="/tools" variant="primary" size="lg" icon={ArrowRight} className="w-full">
+              Browse all tools
+            </ButtonLink>
           </div>
         </div>
       </dialog>

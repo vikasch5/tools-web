@@ -2,7 +2,6 @@ import { Link } from "react-router";
 import { Plus } from "lucide-react";
 import type { Route } from "./+types/help";
 import { ContentPage, ContentSection } from "~/components/layout/ContentPage";
-import { Kbd } from "~/components/ui/Kbd";
 import { buildMeta } from "~/lib/seo";
 import { site } from "~/config/site";
 
@@ -29,21 +28,14 @@ const faqs = [
   },
   {
     q: "Does the site remember anything?",
-    a: "Only your preferences, such as theme, indent size and editor height, stored in your browser. Your input text and files are never stored.",
+    a: "Only your tool preferences, such as indent size and editor height, stored in your browser. Your input text and files are never stored.",
   },
-];
-
-const shortcuts: [string[], string][] = [
-  [["Ctrl", "K"], "Open quick search from any page (⌘K on Mac)"],
-  [["/"], "Focus the search box on the home and All tools pages"],
-  [["Ctrl", "Enter"], "Run the main action in code and text tools (⌘Enter on Mac)"],
-  [["Esc"], "Close a menu or the search dialog"],
 ];
 
 export function meta({}: Route.MetaArgs) {
   return buildMeta({
     title: `Help Center – ${site.name}`,
-    description: "Answers about privacy, file limits, browsers and keyboard shortcuts for all tools.",
+    description: "Answers about privacy, file limits and supported browsers for every tool.",
     path: "/help",
   });
 }
@@ -71,20 +63,6 @@ export default function Help() {
             </details>
           ))}
         </div>
-      </ContentSection>
-      <ContentSection id="shortcuts" title="Keyboard shortcuts">
-        <dl className="divide-y divide-border rounded-lg border border-border bg-surface">
-          {shortcuts.map(([keys, label]) => (
-            <div key={label} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-              <dt className="flex items-center gap-1">
-                {keys.map((k) => (
-                  <Kbd key={k}>{k}</Kbd>
-                ))}
-              </dt>
-              <dd className="text-sm">{label}</dd>
-            </div>
-          ))}
-        </dl>
       </ContentSection>
       <ContentSection id="more" title="Still stuck?">
         <p>

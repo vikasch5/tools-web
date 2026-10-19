@@ -276,7 +276,6 @@ export function ToolWorkspace({ tool }: { tool: WorkspaceTool }) {
               size="sm"
               onClick={() => run(action.id)}
               disabled={working}
-              title={index === 0 ? `${action.label} (Ctrl+Enter)` : undefined}
               aria-keyshortcuts={
                 index === 0 ? "Control+Enter Meta+Enter" : undefined
               }

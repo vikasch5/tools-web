@@ -90,7 +90,7 @@ export default function ToolPage({ loaderData }: Route.ComponentProps) {
           />
           <div className="mt-3 flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
             <div className="min-w-0">
-              <h1 className="font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-tight font-bold tracking-tight text-fg">
+              <h1 className="font-display text-[clamp(1.375rem,1.2rem+0.6vw,1.75rem)] leading-tight font-bold tracking-tight text-fg">
                 {tool.name}
               </h1>
               <p className="mt-1 max-w-3xl text-[0.9375rem] leading-relaxed text-fg-muted">{tool.description}</p>

@@ -34,7 +34,6 @@ export default function Privacy() {
       </ContentSection>
       <ContentSection id="device" title="What is stored on your device">
         <ul>
-          <li>Your theme choice (light, dark or system).</li>
           <li>Tool preferences, such as indent size or editor height.</li>
         </ul>
         <p>

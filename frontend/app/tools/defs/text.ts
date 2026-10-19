@@ -71,7 +71,7 @@ export const diffChecker: WidgetToolDefinition = {
   ],
   howTo: [
     "Paste the original text on the left and the changed version on the right, or load the sample.",
-    "Press Compare (or Ctrl+Enter). Removed lines are marked with a minus and added lines with a plus.",
+    "Press Compare. Removed lines are marked with a minus and added lines with a plus.",
     "Switch between Side by side and Unified views. Turn on Ignore whitespace or Ignore case to hide changes that do not matter.",
     "Copy the result as a unified diff to paste into a ticket or code review.",
   ],

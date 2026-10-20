@@ -131,7 +131,7 @@ export function ToolContent({ tool }: { tool: ToolDefinition }) {
               {tool.examples.map((example, i) => (
                 <figure key={example.title}>
                   <figcaption className="flex items-center gap-2.5 font-medium text-fg">
-                    <span className="inline-flex size-6 items-center justify-center rounded-md bg-fg text-xs font-semibold text-bg">
+                    <span className="inline-flex size-6 items-center justify-center rounded-md bg-accent text-xs font-semibold text-on-accent">
                       {i + 1}
                     </span>
                     {example.title}
@@ -213,11 +213,11 @@ export function ToolContent({ tool }: { tool: ToolDefinition }) {
             </ul>
           </nav>
 
-          <div className="relative overflow-hidden rounded-xl bg-fg p-5 text-bg">
+          <div className="relative overflow-hidden rounded-xl bg-accent p-5 text-on-accent">
             <div aria-hidden className="absolute -top-12 -right-12 size-32 rounded-full bg-brand opacity-40 blur-2xl" />
             <ShieldCheck aria-hidden size={22} strokeWidth={1.75} className="relative" />
             <p className="relative mt-3 font-semibold">Private by design</p>
-            <p className="relative mt-1 text-sm leading-relaxed text-bg/70">
+            <p className="relative mt-1 text-sm leading-relaxed text-on-accent/80">
               Everything runs in your browser. Your data is never uploaded or stored.
             </p>
           </div>

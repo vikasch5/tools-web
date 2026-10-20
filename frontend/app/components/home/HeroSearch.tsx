@@ -48,7 +48,7 @@ export function HeroSearch() {
           <button
             type="submit"
             aria-label="Search"
-            className="inline-flex h-full shrink-0 items-center gap-2 rounded-lg bg-fg px-3.5 text-sm font-medium text-bg transition-colors hover:bg-fg/85 sm:px-5"
+            className="inline-flex h-full shrink-0 items-center gap-2 rounded-lg bg-accent px-3.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-fg sm:px-5"
           >
             <span className="hidden sm:inline">Search</span>
             <ArrowRight aria-hidden size={17} strokeWidth={1.75} />

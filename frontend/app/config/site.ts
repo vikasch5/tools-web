@@ -1,11 +1,10 @@
-/** Brand and navigation config. "Toolbench" is a placeholder name. */
+/** Brand and navigation config. */
 export const site = {
-  name: "Toolbench",
-  /** Production origin for canonical URLs. Placeholder until a domain is chosen. */
-  url: import.meta.env.VITE_SITE_URL ?? "https://toolbench.example",
+  name: "AllToolsDesk",
+  /** Production origin for canonical URLs. */
+  url: import.meta.env.VITE_SITE_URL ?? "https://alltoolsdesk.com",
   tagline: "Small, sharp tools for the jobs in between.",
-  /** Placeholder until launch; pages that show it say so. */
-  email: "hello@toolbench.example",
+  email: "hello@alltoolsdesk.com",
 } as const;
 
 /**

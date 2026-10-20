@@ -27,8 +27,14 @@ import "./app.css";
 // Fonts are self-hosted (bundled from @fontsource), so no request goes to
 // a third party. The Latin files used above the fold are preloaded.
 export const links: Route.LinksFunction = () => [
+  // Font preloads
   { rel: "preload", href: geistLatin, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   { rel: "preload", href: bricolageLatin, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  // Favicons
+  { rel: "icon", href: "/favicon.ico", sizes: "48x48" },
+  { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+  { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+  { rel: "manifest", href: "/site.webmanifest" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -37,6 +43,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#4338CA" />
+        <meta property="og:image" content="https://alltoolsdesk.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
         {ads.client && (
           <>
             {/* Site verification, plus the AdSense loader. Google's consent

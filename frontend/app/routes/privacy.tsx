@@ -38,7 +38,8 @@ export default function Privacy() {
         </ul>
         <p>
           These are kept in your browser’s local storage, never sent to us, and you can clear them at any time in your browser
-          settings. We do not use our own analytics or tracking cookies.
+          settings. We use Google Analytics to understand visits to the site, including pages viewed and basic browser/device
+          information. Google may use cookies or similar technologies to measure usage.
         </p>
       </ContentSection>
       <ContentSection id="advertising" title="Advertising and cookies">
@@ -88,8 +89,8 @@ export default function Privacy() {
         <p>
           Fonts, scripts and the data used to display PDFs are all served from our own site.{" "}
           {ads.enabled
-            ? "The only third-party requests are those made by Google’s ad and consent scripts described above."
-            : "Your browser makes no requests to font services, analytics or advertising networks."}
+            ? "Third-party requests include Google Analytics and Google’s ad and consent scripts described above."
+            : "Your browser also sends page-view information to Google Analytics; it does not request fonts or advertising scripts from third parties."}
         </p>
         <p>Like any website, our hosting provider may keep standard server logs (IP address, page requested, time) for security.</p>
       </ContentSection>

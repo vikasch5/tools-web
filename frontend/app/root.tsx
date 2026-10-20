@@ -5,7 +5,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from "react-router";
+import { useEffect } from "react";
 import { ArrowLeft, LayoutGrid, SearchX, TriangleAlert } from "lucide-react";
 
 import type { Route } from "./+types/root";
@@ -16,13 +18,19 @@ import { ButtonLink } from "~/components/ui/Button";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { categories, categoryPath } from "~/data/categories";
 import { Link } from "react-router";
-import { ads } from "~/config/site";
+import { ads, googleAnalyticsId } from "~/config/site";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
 import "@fontsource-variable/bricolage-grotesque/opsz.css";
 import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
 import bricolageLatin from "@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2?url";
 import "./app.css";
+
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void;
+  }
+}
 
 // Fonts are self-hosted (bundled from @fontsource), so no request goes to
 // a third party. The Latin files used above the fold are preloaded.
@@ -46,6 +54,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#4338CA" />
         <meta property="og:image" content="https://alltoolsdesk.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              window.gtag = gtag;
+              gtag('js', new Date());
+              gtag('config', '${googleAnalyticsId}', { send_page_view: false });
+            `,
+          }}
+        />
         {ads.client && (
           <>
             {/* Site verification, plus the AdSense loader. Google's consent
@@ -82,6 +105,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.gtag("event", "page_view", {
+      page_path: `${location.pathname}${location.search}${location.hash}`,
+      page_title: document.title,
+      page_location: window.location.href,
+    });
+  }, [location.pathname, location.search, location.hash]);
+
   return <Outlet />;
 }
 

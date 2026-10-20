@@ -7,8 +7,6 @@ export const site = {
   email: "hello@alltoolsdesk.com",
 } as const;
 
-export const googleAnalyticsId = "G-PN2TBNWQE3";
-
 /**
  * Google AdSense. Everything is off until a publisher ID is set at build time,
  * so no ad script, ad slot or ads.txt record ships before the account exists.

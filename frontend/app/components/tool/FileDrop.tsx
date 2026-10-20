@@ -38,9 +38,10 @@ export function FileDrop({
       onReject(`“${tooBig.name}” is ${formatBytes(tooBig.size)}. The limit is ${formatBytes(maxBytes)}.`);
       return;
     }
-    const wrong = files.find(
-      (f) => !accept.some((a) => (a.startsWith(".") ? f.name.toLowerCase().endsWith(a) : f.type === a)),
-    );
+    // An empty accept list takes any file.
+    const wrong = accept.length
+      ? files.find((f) => !accept.some((a) => (a.startsWith(".") ? f.name.toLowerCase().endsWith(a) : f.type === a)))
+      : undefined;
     if (wrong) {
       onReject(`“${wrong.name}” is not a supported file. Use ${accept.filter((a) => a.startsWith(".")).join(", ")}.`);
       return;

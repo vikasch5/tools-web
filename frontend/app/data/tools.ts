@@ -28,6 +28,15 @@ export const tools: Tool[] = [
   { slug: "js-minifier", name: "JavaScript Minifier", category: "developer-tools", description: "Minify JavaScript with Terser.", status: "live", popular: true, keywords: ["javascript", "compress", "uglify", "terser", "minify"] },
   { slug: "html-formatter", name: "HTML Formatter", category: "developer-tools", description: "Indent HTML, including inline CSS and JS.", status: "live", popular: true, keywords: ["beautify", "indent", "pretty", "markup"] },
 
+  // Added in batch 4
+  { slug: "image-to-pdf", name: "JPG to PDF", category: "pdf-tools", description: "Turn images into a PDF, one per page.", status: "live", popular: true, isNew: true, keywords: ["image to pdf", "jpg to pdf", "png to pdf", "photo to pdf", "convert", "scan", "jpeg"] },
+  { slug: "timestamp-converter", name: "Unix Timestamp Converter", category: "developer-tools", description: "Epoch seconds or milliseconds to dates and back.", status: "live", isNew: true, keywords: ["epoch", "unix time", "date", "milliseconds", "iso 8601", "utc", "time zone"] },
+  { slug: "hash-generator", name: "Hash Generator", category: "developer-tools", description: "MD5, SHA-1 and SHA-256 of text or files.", status: "live", isNew: true, keywords: ["md5", "sha1", "sha256", "sha512", "checksum", "digest", "verify file"] },
+  { slug: "color-converter", name: "Color Converter", category: "web-design-tools", description: "HEX, RGB, HSL, HSV and CMYK, with contrast check.", status: "live", isNew: true, keywords: ["hex to rgb", "rgb to hex", "hsl", "cmyk", "colour", "color picker", "contrast", "wcag"] },
+  { slug: "age-calculator", name: "Age Calculator", category: "calculators", description: "Exact age in years, months and days.", status: "live", isNew: true, keywords: ["birthday", "date of birth", "how old", "years old", "days alive"] },
+  { slug: "bmi-calculator", name: "BMI Calculator", category: "calculators", description: "Body mass index in metric or US units.", status: "live", isNew: true, keywords: ["body mass index", "healthy weight", "weight", "height", "obesity"] },
+  { slug: "loan-calculator", name: "Loan & EMI Calculator", category: "calculators", description: "Monthly payment, interest and schedule.", status: "live", isNew: true, keywords: ["emi", "mortgage", "car loan", "personal loan", "interest", "amortization", "repayment"] },
+
   // Added in batch 3
   { slug: "html-minifier", name: "HTML Minifier", category: "developer-tools", description: "Strip comments and whitespace, compress inline CSS and JS.", status: "live", isNew: true, keywords: ["compress", "minify", "markup", "smaller", "optimize"] },
   { slug: "xml-formatter", name: "XML Formatter & Validator", category: "developer-tools", description: "Indent, minify and check XML with error locations.", status: "live", isNew: true, keywords: ["beautify", "pretty print", "validate", "svg", "rss", "sitemap", "well-formed"] },

@@ -149,12 +149,12 @@ export default function ToolsPage() {
                       className={cn(
                         "inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium transition-colors pointer-coarse:h-11",
                         category === c.slug
-                          ? "border-fg bg-fg text-bg"
+                          ? "border-accent bg-accent text-on-accent"
                           : "border-border bg-surface text-fg-muted hover:border-border-strong hover:text-fg",
                       )}
                     >
                       {c.name}
-                      <span className={cn("font-mono text-xs", category === c.slug ? "text-bg/70" : "text-fg-subtle")}>{c.count}</span>
+                      <span className={cn("font-mono text-xs", category === c.slug ? "text-on-accent/70" : "text-fg-subtle")}>{c.count}</span>
                     </Link>
                   </li>
                 ),

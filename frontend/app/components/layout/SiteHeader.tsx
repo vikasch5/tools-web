@@ -67,7 +67,7 @@ export function SiteHeader() {
           />
           <Link
             to="/tools"
-            className="group hidden h-9 shrink-0 items-center gap-1.5 rounded-lg bg-fg pr-3 pl-4 text-sm font-medium whitespace-nowrap text-bg transition-colors duration-150 hover:bg-fg/85 sm:inline-flex"
+            className="group hidden h-9 shrink-0 items-center gap-1.5 rounded-lg bg-accent pr-3 pl-4 text-sm font-medium whitespace-nowrap text-on-accent transition-colors duration-150 hover:bg-accent-fg sm:inline-flex"
           >
             All tools
             <ArrowRight

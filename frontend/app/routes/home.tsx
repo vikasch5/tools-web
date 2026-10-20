@@ -61,7 +61,7 @@ export default function Home() {
         <Container className="relative grid grid-cols-1 items-center gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16 lg:py-24">
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/80 py-1 pr-3 pl-1 text-sm text-fg-muted shadow-sm backdrop-blur">
-              <span className="rounded-full bg-fg px-2 py-0.5 text-xs font-semibold text-bg">
+              <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">
                 Free
               </span>
               No sign-up. Works in your browser.
@@ -196,20 +196,20 @@ export default function Home() {
       {/* Call-out */}
       <section aria-labelledby="cta-title">
         <Container className="pb-20 sm:pb-24">
-          <div className="relative overflow-hidden rounded-xl bg-fg px-6 py-12 text-bg sm:px-12 sm:py-16">
+          <div className="relative overflow-hidden rounded-xl bg-accent px-6 py-12 text-on-accent sm:px-12 sm:py-16">
             <div aria-hidden className="absolute -top-24 -right-24 size-72 rounded-full bg-brand opacity-50 blur-3xl" />
             <div aria-hidden className="absolute -bottom-32 left-1/3 size-72 rounded-full bg-brand opacity-25 blur-3xl" />
             <div className="relative max-w-xl">
               <h2 id="cta-title" className="text-h2 font-bold">
                 Start with the JSON Formatter
               </h2>
-              <p className="mt-3 text-lg text-bg/70">
+              <p className="mt-3 text-lg text-on-accent/80">
                 Paste messy JSON and get clean, validated output in a click,
                 with errors pinpointed by line and column.
               </p>
               <ButtonLink
                 to="/developer-tools/json-formatter"
-                variant="accent"
+                variant="secondary"
                 size="lg"
                 className="mt-8"
                 icon={ArrowRight}

@@ -96,7 +96,7 @@ export function Switch({
         onClick={() => onChange(!checked)}
         className={cn(
           "relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors",
-          checked ? "border-fg bg-fg" : "border-border-strong bg-surface",
+          checked ? "border-accent bg-accent" : "border-border-strong bg-surface",
         )}
       >
         <span
@@ -104,7 +104,7 @@ export function Switch({
           className={cn(
             "size-3.5 rounded-full transition-transform duration-150",
             checked
-              ? "translate-x-[1.0625rem] bg-bg"
+              ? "translate-x-[1.0625rem] bg-white"
               : "translate-x-0.5 bg-border-strong",
           )}
         />

@@ -67,7 +67,7 @@ export default function Home() {
               No sign-up. Works in your browser.
             </p>
             <h1 id="hero-title" className="mt-6 text-hero font-bold text-fg">
-              Large tools for <span className="text-brand">serious work</span>.
+              Small tools for <span className="text-brand">serious work</span>.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
               Format code, merge PDFs, compress images, count words and more.

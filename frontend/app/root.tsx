@@ -46,6 +46,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#4338CA" />
         <meta property="og:image" content="https://alltoolsdesk.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-PN2TBNWQE3"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-PN2TBNWQE3');
+            `,
+          }}
+        />
         {ads.client && (
           <>
             {/* Site verification, plus the AdSense loader. Google's consent

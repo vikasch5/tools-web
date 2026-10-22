@@ -6,7 +6,7 @@ import { site } from "~/config/site";
 export function meta({}: Route.MetaArgs) {
   return buildMeta({
     title: `Terms of Use – ${site.name}`,
-    description: `The terms for using ${site.name}'s free online tools.`,
+    description: `Terms for accessing and using ${site.name}'s free browser-based online tools.`,
     path: "/terms",
   });
 }
@@ -16,43 +16,63 @@ export default function Terms() {
     <ContentPage
       title="Terms of use"
       path="/terms"
-      intro={<p>Plain-language terms for using the tools on this site.</p>}
-      notice={
-        <>
-          <strong>Draft.</strong> These terms have not been reviewed by a lawyer and will be finalised, with the operator’s
-          legal details, before launch.
-        </>
-      }
+      intro={<p>These terms explain the basic rules for using {site.name} and its online tools.</p>}
     >
       <ContentSection id="use" title="Using the tools">
         <p>
-          The tools are free for personal and commercial use. You are responsible for the files and content you process, and for
-          having the right to use them.
+          The tools are provided free of charge for lawful personal or commercial use, subject to these terms. You are responsible
+          for the content and files you choose to process and must have the rights and permissions needed to use them.
         </p>
       </ContentSection>
-      <ContentSection id="results" title="No guarantees">
+      <ContentSection id="results" title="Accuracy and responsibility">
         <p>
-          We work hard to make the tools accurate, but they are provided “as is”, without warranty. Check important results,
-          such as converted data, formatted code or passport photos, before relying on them. Keep a copy of your original files.
+          We aim to make the tools useful and reliable, but outputs may contain errors or differ because of browser support,
+          file structure, input quality or tool limitations. The tools are provided on an “as is” and “as available” basis to the
+          extent permitted by law, without guarantees that they will be uninterrupted, error-free or suitable for a particular purpose.
         </p>
-      </ContentSection>
-      <ContentSection id="fair-use" title="Fair use">
-        <p>Do not try to disrupt the site, overload it with automated requests, or use it for anything unlawful.</p>
-      </ContentSection>
-      <ContentSection id="ads-links" title="Ads and links to other sites">
         <p>
-          The site may show ads and link to other websites. We do not control those sites or the products advertised, and their
-          own terms and privacy policies apply. See the <a href="/privacy#advertising">privacy policy</a> for how ads use cookies.
+          You are responsible for checking results before relying on them, especially for financial calculations, code, converted
+          data, identity or passport photos, and other important uses. Keep a copy of your original files.
         </p>
       </ContentSection>
-      <ContentSection id="open-source" title="Open-source software">
+      <ContentSection id="acceptable-use" title="Acceptable use">
         <p>
-          The tools are built on open-source libraries, including Prettier, Terser, csso, sql-formatter and pdf-lib, each under
-          its own licence.
+          Do not use the site unlawfully, attempt to gain unauthorised access, interfere with its operation, introduce malicious
+          code, abuse automated requests, or infringe another person's rights. We may restrict access where reasonably necessary
+          to protect the service, visitors or infrastructure.
         </p>
       </ContentSection>
-      <ContentSection id="changes" title="Changes">
-        <p>We may update these terms. The current version is always on this page.</p>
+      <ContentSection id="privacy" title="Privacy">
+        <p>
+          Your use of the site is also covered by our <a href="/privacy">Privacy Policy</a>, which explains browser-side tool
+          processing, analytics, technical logs and advertising technologies when enabled.
+        </p>
+      </ContentSection>
+      <ContentSection id="ads-links" title="Advertising and external links">
+        <p>
+          The site may display third-party advertisements and link to external websites. Advertisers and external website
+          operators are responsible for their own content, services and privacy practices. An advertisement or link does not
+          necessarily mean that {site.name} endorses the advertised product or linked website.
+        </p>
+      </ContentSection>
+      <ContentSection id="intellectual-property" title="Intellectual property">
+        <p>
+          The site's branding, design and original site content belong to their respective rights holders. The tools may use
+          open-source libraries and other third-party components, each governed by its own licence. These terms do not replace
+          those licences or transfer ownership of content you provide or generate.
+        </p>
+      </ContentSection>
+      <ContentSection id="availability" title="Changes and availability">
+        <p>
+          We may change, suspend or discontinue a tool or part of the site to maintain or improve the service. We may update these
+          terms from time to time; the current version will be published on this page.
+        </p>
+      </ContentSection>
+      <ContentSection id="contact" title="Contact">
+        <p>
+          Questions about these terms can be sent to <a href={`mailto:${site.email}`}>{site.email}</a> or through our{" "}
+          <a href="/contact">contact page</a>.
+        </p>
       </ContentSection>
     </ContentPage>
   );

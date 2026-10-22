@@ -6,102 +6,112 @@ import { ads, site } from "~/config/site";
 export function meta({}: Route.MetaArgs) {
   return buildMeta({
     title: `Privacy Policy – ${site.name}`,
-    description: `How ${site.name} handles your data: tools run in your browser, your files are never uploaded, and how ads and cookies work.`,
+    description: `Learn how ${site.name} handles tool inputs, analytics, cookies, advertising and privacy choices.`,
     path: "/privacy",
   });
 }
 
-const lastUpdated = "18 October 2026";
+const lastUpdated = "22 October 2026";
 
 export default function Privacy() {
   return (
     <ContentPage
       title="Privacy policy"
       path="/privacy"
-      intro={<p>The short version: your files and text never leave your device.</p>}
-      notice={
-        <>
-          <strong>Draft.</strong> This policy describes how the site works today. It has not been reviewed by a lawyer and
-          will be finalised, with the operator’s legal details, before launch.
-        </>
-      }
+      intro={<p>This policy explains what information may be processed when you visit {site.name} and use its browser-based tools.</p>}
     >
       <ContentSection id="files" title="Files and text you use in the tools">
         <p>
-          Every tool processes your input inside your browser. Files you open and text you paste are <strong>not uploaded</strong>{" "}
-          to our servers, not stored and not shared. When you close or reload the page, they are gone.
+          The tools are designed to process supported text and files in your browser. For these client-side tools, the content you
+          enter or the files you select are processed on your device and are not intentionally uploaded to our application servers.
+          Your browser still makes ordinary requests to load the website and may send technical information described below.
+        </p>
+        <p>
+          Results may exist temporarily in the current page or browser memory. Do not rely on this site as the only copy of an
+          important file or result; keep your own original and verify important outputs before using them.
         </p>
       </ContentSection>
-      <ContentSection id="device" title="What is stored on your device">
-        <ul>
-          <li>Tool preferences, such as indent size or editor height.</li>
-        </ul>
+      <ContentSection id="device" title="Preferences stored on your device">
         <p>
-          These are kept in your browser’s local storage, never sent to us, and you can clear them at any time in your browser
-          settings. We do not use our own analytics or tracking cookies.
+          Some tool preferences, such as editor settings, may be saved in your browser's local storage so they remain available
+          when you return. These values remain in your browser unless you clear them through your browser settings.
+        </p>
+      </ContentSection>
+      <ContentSection id="analytics" title="Analytics and technical logs">
+        <p>
+          We use Google Analytics to understand how visitors use the website, such as which pages are visited and general
+          interactions with the site. Google Analytics may process information such as online identifiers, browser and device
+          details, approximate location, referral information and usage events. Google processes this information under its own
+          terms and policies. Learn more in{" "}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a>
+          {" "}and{" "}
+          <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer">Google Analytics safeguards and data practices</a>.
+        </p>
+        <p>
+          Our hosting provider may also process standard server logs, which can include an IP address, requested URL, timestamp
+          and technical details, for delivery, reliability, abuse prevention and security.
         </p>
       </ContentSection>
       <ContentSection id="advertising" title="Advertising and cookies">
         {ads.enabled ? (
           <>
             <p>
-              The site is free because it shows ads served by Google AdSense. Ads appear around the tools, never inside them, and
-              ad services never see the files or text you use in a tool.
+              This site is configured to use Google AdSense. Google and its advertising partners may use cookies, device identifiers
+              or similar technologies to deliver, measure and limit the frequency of ads, prevent fraud, and, where permitted,
+              personalise advertising. Advertising partners may process information about your browser, device and visits to this
+              and other websites. They do not need the text or files you process inside a client-side tool to serve ads.
             </p>
-            <ul>
-              <li>
-                Google and its partners, as third-party vendors, use cookies and similar technologies to serve ads based on your
-                visits to this and other websites.
-              </li>
-              <li>
-                Google’s advertising cookies let it and its partners serve ads to you based on those visits, and to measure and
-                limit how often you see an ad. Read{" "}
-                <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
-                  how Google uses information from sites that use its services
-                </a>
-                .
-              </li>
-              <li>
-                You can turn off personalised ads in{" "}
-                <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">
-                  Google’s My Ad Center
-                </a>
-                , or opt out of other vendors’ personalised ads at{" "}
-                <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
-                  aboutads.info
-                </a>
-                .
-              </li>
-            </ul>
             <p>
-              If you are in the European Economic Area, the UK or Switzerland, we ask for your consent before personalised ads or
-              non-essential cookies are used, through a consent message provided by Google. Without consent you may still see
-              non-personalised ads. You can change or withdraw your choice at any time with the “Privacy and cookie settings”
-              link at the bottom of every page.
+              You can review or manage Google's advertising personalisation choices through{" "}
+              <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">Google My Ad Center</a>
+              {" "}and read{" "}
+              <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">how Google uses information from sites and apps that use its services</a>.
+              Other advertising partners may provide their own privacy and opt-out controls.
+            </p>
+            <p>
+              Where required by applicable law and Google policy, consent or other privacy choices must be collected using an
+              appropriately configured consent-management solution before relevant cookies or advertising technologies are used.
+              Availability of a consent message and the choices it offers depends on the site's advertising and consent configuration.
             </p>
           </>
         ) : (
-          <p>The site does not show ads today. If that changes, this section will explain what ad partners collect and how to opt out, before any ad appears.</p>
+          <p>
+            Google AdSense is not enabled in this build. If advertising is introduced, this policy will be updated to describe the
+            relevant advertising services, cookies and privacy choices before ads are served.
+          </p>
         )}
       </ContentSection>
-      <ContentSection id="third-parties" title="Third parties">
+      <ContentSection id="third-parties" title="Service providers and external links">
         <p>
-          Fonts, scripts and the data used to display PDFs are all served from our own site.{" "}
-          {ads.enabled
-            ? "The only third-party requests are those made by Google’s ad and consent scripts described above."
-            : "Your browser makes no requests to font services, analytics or advertising networks."}
+          The website uses third-party services described in this policy, including Google Analytics and, when enabled, Google
+          advertising services. External links open websites operated by others; their own terms and privacy policies apply.
         </p>
-        <p>Like any website, our hosting provider may keep standard server logs (IP address, page requested, time) for security.</p>
       </ContentSection>
       <ContentSection id="children" title="Children">
-        <p>The site is not directed at children under 13, and we do not knowingly collect personal information from them.</p>
+        <p>
+          This website is a general-purpose utility site and is not directed at children under 13. We do not knowingly ask children
+          to provide personal information.
+        </p>
+      </ContentSection>
+      <ContentSection id="retention" title="Retention and security">
+        <p>
+          We do not intentionally store the contents of files or text processed by the browser-based tools on our application
+          servers. Analytics providers and hosting providers may retain their own data under their policies and settings. No
+          internet service can guarantee absolute security, so avoid sharing sensitive information unnecessarily.
+        </p>
       </ContentSection>
       <ContentSection id="changes" title="Changes to this policy">
-        <p>We will update this page when the way the site works changes. The date below shows the latest revision.</p>
+        <p>
+          We may update this policy when the site, its service providers or applicable requirements change. The date below shows
+          when this page was last revised.
+        </p>
         <p>Last updated: {lastUpdated}.</p>
       </ContentSection>
-      <ContentSection id="contact" title="Questions">
-        <p>Contact us through the contact page with any privacy question.</p>
+      <ContentSection id="contact" title="Contact">
+        <p>
+          For privacy questions, contact us at{" "}
+          <a href={`mailto:${site.email}`}>{site.email}</a> or use the <a href="/contact">contact page</a>.
+        </p>
       </ContentSection>
     </ContentPage>
   );

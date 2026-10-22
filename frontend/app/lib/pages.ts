@@ -6,5 +6,14 @@ export const staticPaths = ["/tools", "/about", "/help", "/contact", "/privacy",
 
 /** Every public, indexable page: prerendered at build time and listed in the sitemap. */
 export function publicPaths() {
-  return ["/", ...staticPaths, ...categories.map((c) => `/${c.slug}`), ...liveTools.map(toolPath)];
+  const categoriesWithLiveTools = categories.filter((category) =>
+    liveTools.some((tool) => tool.category === category.slug),
+  );
+
+  return [
+    "/",
+    ...staticPaths,
+    ...categoriesWithLiveTools.map((category) => `/${category.slug}`),
+    ...liveTools.map(toolPath),
+  ];
 }

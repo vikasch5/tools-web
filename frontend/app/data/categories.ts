@@ -48,7 +48,7 @@ export const categories: Category[] = [
     slug: "pdf-tools",
     name: "PDF Tools",
     shortName: "PDF",
-    description: "Merge, split, rotate and convert PDFs, and turn images into a PDF.",
+    description: "Compress, merge, split and organise PDFs, convert to and from Word and images, and add or remove passwords.",
     icon: FileText,
     code: "PDF",
     hue: "pdf",

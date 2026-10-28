@@ -17,3 +17,16 @@ export function parsePageRanges(input: string, pageCount: number): number[][] {
     return Array.from({ length: to - from + 1 }, (_, i) => from - 1 + i);
   });
 }
+
+/** Writes 0-based page indexes as 1-based ranges: [0, 1, 2, 4] → "1-3, 5". */
+export function formatPageRanges(indexes: Iterable<number>) {
+  const sorted = [...new Set(indexes)].sort((a, b) => a - b);
+  const parts: string[] = [];
+  for (let i = 0; i < sorted.length; i++) {
+    let j = i;
+    while (j + 1 < sorted.length && sorted[j + 1] === sorted[j] + 1) j++;
+    parts.push(j > i ? `${sorted[i] + 1}-${sorted[j] + 1}` : `${sorted[i] + 1}`);
+    i = j;
+  }
+  return parts.join(", ");
+}

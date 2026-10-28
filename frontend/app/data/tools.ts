@@ -28,6 +28,17 @@ export const tools: Tool[] = [
   { slug: "js-minifier", name: "JavaScript Minifier", category: "developer-tools", description: "Minify JavaScript with Terser.", status: "live", popular: true, keywords: ["javascript", "compress", "uglify", "terser", "minify"] },
   { slug: "html-formatter", name: "HTML Formatter", category: "developer-tools", description: "Indent HTML, including inline CSS and JS.", status: "live", popular: true, keywords: ["beautify", "indent", "pretty", "markup"] },
 
+  // Added in batch 5: the most-used PDF tools
+  { slug: "compress-pdf", name: "Compress PDF", category: "pdf-tools", description: "Shrink PDFs for email and upload limits.", status: "live", popular: true, isNew: true, keywords: ["reduce pdf size", "shrink pdf", "pdf compressor", "make pdf smaller", "optimize pdf", "1mb", "200kb", "email"] },
+  { slug: "word-to-pdf", name: "Word to PDF", category: "pdf-tools", description: "Convert .docx documents to PDF.", status: "live", popular: true, isNew: true, keywords: ["docx to pdf", "doc to pdf", "convert word", "microsoft word", "resume to pdf", "cv"] },
+  { slug: "pdf-to-word", name: "PDF to Word", category: "pdf-tools", description: "Get a PDF's text into an editable .docx.", status: "live", popular: true, isNew: true, keywords: ["pdf to docx", "pdf to doc", "edit pdf text", "convert pdf", "editable", "microsoft word"] },
+  { slug: "organize-pdf", name: "Organize PDF", category: "pdf-tools", description: "Reorder, turn and remove pages with previews.", status: "live", isNew: true, keywords: ["reorder pages", "rearrange pdf", "sort pages", "move pages", "page order"] },
+  { slug: "delete-pdf-pages", name: "Delete PDF Pages", category: "pdf-tools", description: "Remove pages you do not need.", status: "live", isNew: true, keywords: ["remove pages", "delete page", "blank pages", "cut pages", "pdf page remover"] },
+  { slug: "add-page-numbers", name: "Add Page Numbers", category: "pdf-tools", description: "Number PDF pages at the top or bottom.", status: "live", isNew: true, keywords: ["page numbers", "pagination", "number pages", "footer", "page x of y", "bates"] },
+  { slug: "watermark-pdf", name: "Watermark PDF", category: "pdf-tools", description: "Stamp text or a logo on PDF pages.", status: "live", isNew: true, keywords: ["add watermark", "confidential", "draft", "stamp", "logo", "brand"] },
+  { slug: "protect-pdf", name: "Protect PDF", category: "pdf-tools", description: "Lock a PDF with an AES-256 password.", status: "live", isNew: true, keywords: ["password protect", "encrypt pdf", "lock pdf", "secure pdf", "add password"] },
+  { slug: "unlock-pdf", name: "Unlock PDF", category: "pdf-tools", description: "Remove a PDF password you know.", status: "live", isNew: true, keywords: ["remove password", "decrypt pdf", "pdf password remover", "unprotect", "restrictions", "bank statement"] },
+
   // Added in batch 4
   { slug: "image-to-pdf", name: "JPG to PDF", category: "pdf-tools", description: "Turn images into a PDF, one per page.", status: "live", popular: true, isNew: true, keywords: ["image to pdf", "jpg to pdf", "png to pdf", "photo to pdf", "convert", "scan", "jpeg"] },
   { slug: "timestamp-converter", name: "Unix Timestamp Converter", category: "developer-tools", description: "Epoch seconds or milliseconds to dates and back.", status: "live", isNew: true, keywords: ["epoch", "unix time", "date", "milliseconds", "iso 8601", "utc", "time zone"] },

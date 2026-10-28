@@ -31,6 +31,29 @@ import { describeTimestamp } from "./engine/timestamp";
 import { describeHash } from "./engine/hash";
 import { describeColor } from "./engine/color";
 import { describeLayout, type ImagesPdfOptions } from "./engine/images-pdf";
+import { createRequire } from "node:module";
+import { arrangePdf, pagesAfterDeleting, planPageNumbers, addWatermark, watermarkPlacements, type NumberFormat } from "./engine/pdf-pages";
+import { describeLevel, type CompressLevel } from "./engine/pdf-compress";
+import { protectPdf, setQpdfWasmLocation, unlockPdf } from "./engine/qpdf";
+import { describeOutline, describeWordLayout, textToWordPages, type TextItem } from "./engine/pdf-word";
+
+setQpdfWasmLocation(createRequire(import.meta.url).resolve("@neslinesli93/qpdf-wasm/dist/qpdf.wasm"));
+
+/** Pages whose width is 100 + their 1-based number, so their order can be read back. */
+async function numberedPdf(pages: number) {
+  const doc = await PDFDocument.create();
+  for (let i = 1; i <= pages; i++) doc.addPage([100 + i, 200]);
+  return { name: "report.pdf", data: await doc.save() };
+}
+const pageNumbersOf = async (data: Uint8Array) =>
+  (await PDFDocument.load(data)).getPages().map((p) => {
+    const turn = p.getRotation().angle;
+    return `${Math.round(p.getWidth()) - 100}${turn ? ` (${turn}°)` : ""}`;
+  });
+const tiny = Uint8Array.from(
+  atob("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="),
+  (c) => c.charCodeAt(0),
+);
 
 const defaults = (def: TextToolDefinition) => ({
   ...def.engineOptions,
@@ -172,6 +195,78 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     const [, name, label] = input.match(/^(.+) → (\w+)$/)!;
     return describeConversion(name, targetFormats.find((f) => f.label === label)!.value);
   },
+  "organize-pdf": async (input) => {
+    const plan = input
+      .replace("order ", "")
+      .split(", ")
+      .map((part) => {
+        const [, n, turn] = part.match(/^(\d+)(?: \(turn (-?\d+)\))?$/)!;
+        return { index: Number(n) - 1, turn: Number(turn ?? 0) };
+      });
+    const r = await arrangePdf(await numberedPdf(4), plan);
+    return `${r.name} with pages ${(await pageNumbersOf(r.data)).join(", ")}`;
+  },
+  "delete-pdf-pages": async (input) => {
+    const [, ranges, total] = input.match(/^delete (.+) from (\d+) pages$/)!;
+    const keep = pagesAfterDeleting(ranges, Number(total));
+    const r = await arrangePdf(await numberedPdf(Number(total)), keep.map((index) => ({ index, turn: 0 })), "pages-removed");
+    return `${r.name} with pages ${(await pageNumbersOf(r.data)).join(", ")}`;
+  },
+  "add-page-numbers": (input) => {
+    const [, total, label, pages, start] = input.match(/^(\d+) pages, format (.+), pages (.+), start (\d+)$/)!;
+    const format = ({ "1": "n", "Page 1": "page-n", "1 of 12": "n-of-total", "Page 1 of 12": "page-n-of-total" } as Record<string, NumberFormat>)[label];
+    const plan = planPageNumbers(Number(total), { format, pages: pages === "all" ? "" : pages, start: Number(start) });
+    const first = plan[0];
+    const last = plan[plan.length - 1];
+    return `${plan.length} numbered: page ${first.index + 1} shows “${first.label}”, page ${last.index + 1} shows “${last.label}”`;
+  },
+  "watermark-pdf": async (input) => {
+    const pages = input.match(/^pages (.+) of (\d+)$/);
+    if (pages) {
+      const r = await addWatermark(
+        await numberedPdf(Number(pages[2])),
+        { data: tiny, type: "image/png", width: 1, height: 1 },
+        { scale: 0.5, opacity: 0.25, angle: 45, layout: "center", pages: pages[1] },
+      );
+      return `${r.marked} pages watermarked`;
+    }
+    const [, w, h] = input.match(/^a (\d+) × (\d+) pt mark, flat, repeated on A4$/)!;
+    const copies = watermarkPlacements({ width: 595.28, height: 841.89 }, { width: Number(w), height: Number(h) }, 0, "tile");
+    return `${copies.length} copies on the page`;
+  },
+  "compress-pdf": (input) => {
+    const level = ({ Lossless: "low", Recommended: "medium", Strong: "high" } as Record<string, CompressLevel>)[input];
+    return describeLevel(level);
+  },
+  "protect-pdf": async (input) => {
+    const r = await protectPdf(await numberedPdf(1), "abcd");
+    await expect(PDFDocument.load(r.data)).rejects.toThrow(/encrypted/i);
+    expect(input).toContain("4 characters or more");
+    return `${r.name}, encrypted with AES-256`;
+  },
+  "unlock-pdf": async (input) => {
+    const locked = await protectPdf(await numberedPdf(1), "abcd");
+    const r = await unlockPdf({ name: input.split(" ")[0], data: locked.data }, "abcd");
+    expect((await PDFDocument.load(r.data)).isEncrypted).toBe(false);
+    return `${r.name}, opens without a password`;
+  },
+  "pdf-to-word": (input) => {
+    let y = 720;
+    const items: TextItem[] = [];
+    for (const line of input.split("\n")) {
+      if (!line) {
+        y -= 20;
+        continue;
+      }
+      const sized = line.match(/^\[(\d+)pt\] (.+)$/);
+      const size = sized ? Number(sized[1]) : 11;
+      const text = sized ? sized[2] : line;
+      items.push({ text, x: 72, y, width: text.length * size * 0.5, size, bold: false, italic: false });
+      y -= size * 1.3;
+    }
+    return describeOutline(textToWordPages([{ width: 612, height: 792, items }]));
+  },
+  "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),
   "merge-pdf": async (input) => {
     const files = await Promise.all(
       input.split("\n").map(async (line) => {

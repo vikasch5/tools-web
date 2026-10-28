@@ -91,7 +91,16 @@ export type WidgetId =
   | "loan-calculator"
   | "timestamp-converter"
   | "hash-generator"
-  | "color-converter";
+  | "color-converter"
+  | "compress-pdf"
+  | "word-to-pdf"
+  | "pdf-to-word"
+  | "organize-pdf"
+  | "delete-pdf-pages"
+  | "add-page-numbers"
+  | "watermark-pdf"
+  | "protect-pdf"
+  | "unlock-pdf";
 
 export type WidgetToolDefinition = ToolContentBase & { workspace: WidgetId };
 

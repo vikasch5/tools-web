@@ -54,6 +54,25 @@ With no AdSense variables set, the site ships with no ad code at all.
 
 ## Deployment
 
+### Apache (static files)
+
+Every page is prerendered, so the site is plain files in `build/client/`.
+Point the domain's document root at `frontend/build/client`. The build
+includes an `.htaccess` that sets the `.mjs` and `.wasm` file types the
+PDF tools need and serves pages with or without a trailing slash.
+
+To update after pulling new code, always install before building:
+
+```bash
+cd frontend
+npm ci          # installs any new dependencies from package-lock.json
+npm run build   # replaces build/client
+```
+
+If `npm run build` fails, it leaves no `build/client`, and Apache shows its
+own default page or a file list instead of the site. Fix the error (usually
+a missing `npm ci`) and build again.
+
 ### Docker Deployment
 
 To build and run using Docker:

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, FileText, LoaderCircle, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Download, FileText, Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/Button";
 import { IconButton } from "~/components/ui/IconButton";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import type { PdfFile } from "~/tools/engine/pdf";
 import { FileDrop } from "../FileDrop";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { MAX_PDF_BYTES, PDF_ACCEPT, pdfBlob, toPdfFile } from "./pdf-shared";
 
@@ -68,25 +68,25 @@ export function MergePdf() {
 
   return (
     <Panel
+      action={
+        <PrimaryAction
+          icon={Download}
+          busy={working}
+          onClick={merge}
+          disabled={usable.length < 2}
+          hint={usable.length < 2 ? "Add at least two PDFs to merge." : `${usable.length} files · ${totalPages} pages`}
+        >
+          Merge and download
+        </PrimaryAction>
+      }
       toolbar={
-        <>
-          <Button variant="primary" size="sm" onClick={merge} disabled={working || usable.length < 2}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Merge and download
-          </Button>
-          {items.length > 0 && (
-            <p className="text-sm text-fg-muted">
-              {usable.length} {usable.length === 1 ? "file" : "files"} · {totalPages} pages
-            </p>
-          )}
-          {items.length > 0 && (
-            <div className="ml-auto">
-              <Button size="sm" variant="ghost" onClick={() => setItems([])}>
-                Clear all
-              </Button>
-            </div>
-          )}
-        </>
+        items.length > 0 ? (
+          <div className="ml-auto">
+            <Button size="sm" variant="ghost" onClick={() => setItems([])}>
+              Clear all
+            </Button>
+          </div>
+        ) : undefined
       }
       status={
         working ? (

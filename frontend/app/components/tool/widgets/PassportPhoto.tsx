@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Download, LoaderCircle, Move, X } from "lucide-react";
-import { Button } from "~/components/ui/Button";
+import { Download, Move, X } from "lucide-react";
 import { IconButton } from "~/components/ui/IconButton";
 import { RangeField, SelectField } from "~/components/ui/Field";
 import { coverCrop, mmToPx, passportPresets, sheetLayout } from "~/tools/engine/image-geometry";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import { Segmented } from "../OptionControls";
 import { FileDrop } from "../FileDrop";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { IMAGE_ACCEPT, MAX_IMAGE_BYTES, useImageSource } from "./image-shared";
 
@@ -104,12 +103,13 @@ export function PassportPhoto() {
 
   return (
     <Panel
+      action={
+        <PrimaryAction icon={Download} busy={working} onClick={save}>
+          Download photo
+        </PrimaryAction>
+      }
       toolbar={
         <>
-          <Button variant="primary" size="sm" icon={working ? undefined : Download} onClick={save} disabled={working}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Download
-          </Button>
           <Segmented
             label="Output"
             value={output}

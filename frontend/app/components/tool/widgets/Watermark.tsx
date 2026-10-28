@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { ImageUp, LoaderCircle, X } from "lucide-react";
-import { Button } from "~/components/ui/Button";
+import { Download, ImageUp, X } from "lucide-react";
 import { IconButton } from "~/components/ui/IconButton";
 import { RangeField, TextField } from "~/components/ui/Field";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
@@ -10,7 +9,7 @@ import { watermarkInks, watermarkPlacements, type WatermarkImage, type Watermark
 import { cn } from "~/lib/cn";
 import { FileDrop } from "../FileDrop";
 import { Segmented } from "../OptionControls";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { pdfBlob, toPdfFile } from "./pdf-shared";
 import { usePdfDocument } from "./usePdfDocument";
@@ -214,12 +213,13 @@ export function Watermark() {
 
   return (
     <Panel
+      action={
+        <PrimaryAction icon={Download} busy={working} onClick={save} disabled={!!problem}>
+          Add watermark and download
+        </PrimaryAction>
+      }
       toolbar={
         <>
-          <Button variant="primary" size="sm" onClick={save} disabled={working || !!problem}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Add watermark and download
-          </Button>
           <Segmented
             label="Watermark"
             value={kind}

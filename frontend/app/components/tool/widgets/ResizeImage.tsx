@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import { Download, LoaderCircle, RefreshCw, X } from "lucide-react";
-import { Button } from "~/components/ui/Button";
+import { Download, RefreshCw, Scaling, X } from "lucide-react";
 import { IconButton } from "~/components/ui/IconButton";
 import { RangeField, TextField } from "~/components/ui/Field";
 import { resizeDimensions } from "~/tools/engine/image-geometry";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import { Segmented, Switch } from "../OptionControls";
 import { FileDrop } from "../FileDrop";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import {
   IMAGE_ACCEPT,
@@ -104,12 +103,19 @@ export function ResizeImage() {
 
   return (
     <Panel
+      action={
+        result ? (
+          <PrimaryAction icon={Download} onClick={() => downloadBlob(result.blob, result.name)}>
+            Download resized image ({result.width} × {result.height} px)
+          </PrimaryAction>
+        ) : (
+          <PrimaryAction icon={Scaling} busy={working} onClick={resize} disabled={!target}>
+            Resize image
+          </PrimaryAction>
+        )
+      }
       toolbar={
         <>
-          <Button variant="primary" size="sm" onClick={resize} disabled={working || !target}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Resize
-          </Button>
           <Segmented
             label="Size by"
             value={mode}
@@ -218,9 +224,6 @@ export function ResizeImage() {
             result && (
               <>
                 <IconButton icon={RefreshCw} label="Show original" size="sm" onClick={() => setResult(null)} />
-                <Button size="sm" variant="primary" icon={Download} onClick={() => downloadBlob(result.blob, result.name)}>
-                  Download
-                </Button>
               </>
             )
           }

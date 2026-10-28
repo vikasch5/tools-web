@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, LoaderCircle, Trash2 } from "lucide-react";
-import { Button } from "~/components/ui/Button";
+import { ArrowDown, ArrowUp, Download, Trash2 } from "lucide-react";
 import { IconButton } from "~/components/ui/IconButton";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import { jpegOrientation, type ImagesPdfOptions, type PdfImage } from "~/tools/engine/images-pdf";
 import { Segmented } from "../OptionControls";
 import { FileDrop } from "../FileDrop";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { MAX_IMAGE_BYTES } from "./image-shared";
 import { pdfBlob } from "./pdf-shared";
@@ -100,12 +99,13 @@ export function ImageToPdf() {
 
   return (
     <Panel
+      action={
+        <PrimaryAction icon={Download} busy={working} onClick={create} disabled={items.length === 0}>
+          {items.length > 1 ? `Create PDF from ${items.length} images` : "Create PDF and download"}
+        </PrimaryAction>
+      }
       toolbar={
         <>
-          <Button variant="primary" size="sm" onClick={create} disabled={working || items.length === 0}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Create PDF
-          </Button>
           <Segmented
             label="Page"
             value={options.pageSize}

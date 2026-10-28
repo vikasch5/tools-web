@@ -3,11 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prebuild": "node scripts/check-deps.mjs",
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "deploy": "sh scripts/deploy.sh"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",

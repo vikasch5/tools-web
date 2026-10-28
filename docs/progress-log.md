@@ -165,3 +165,9 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
 - The preview now shows exactly the pages that will be saved.
 - New dependency: `modern-screenshot` 4.7.0, loaded only by Word to PDF.
 - Verified: 202 tests, typecheck and build pass; browser run 17/17, including a direct download of a 3-page Word file (headers on every page, text layer reads as sentences) and no print call.
+
+### Clearer actions and safe deploys
+- **Main button in a bar at the bottom of every file tool** (`Panel` `action` + `PrimaryAction`): large, full width on phones, and it stays at the bottom of the screen while the tool is in view, so it never scrolls out of reach on long settings. Options stay in the top toolbar. Disabled buttons say why next to them ("Add at least two PDFs", "Turn at least one page first"). Two-step tools (Compress PDF, Resize Image) show one button that changes to "Download …" when the result is ready. Used by all 18 file tools; instant tools (text, generators, calculators) are unchanged.
+- **Deploys can no longer take the site down.** `prebuild` (`scripts/check-deps.mjs`) stops `npm run build` before it deletes `build/` when dependencies are missing or differ from the lockfile. `npm run deploy` (`scripts/deploy.sh`) runs `npm ci`, builds into `build-next/`, checks it, then swaps it in and keeps `build-previous/` for rollback. `buildDirectory` reads `BUILD_DIR`.
+- Apache `.htaccess` in the build (`.mjs`/`.wasm` types, trailing-slash handling, no directory listings).
+- Verified: 202 tests, typecheck and build; browser run 17/17 for the batch 5 tools plus a download check of all nine older file tools; deploy tested end to end and with a missing dependency (site left intact).

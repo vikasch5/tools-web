@@ -25,7 +25,7 @@ export const compressPdf: WidgetToolDefinition = {
     "Drop a PDF onto the page or choose one from your device.",
     "Pick a level: Lossless changes nothing visible, Recommended suits most files, and Strong makes the smallest file with softer photos.",
     "Press “Compress PDF”. The sizes before and after are shown.",
-    "Press Download to save the smaller file, or pick another level and compress again.",
+    "Press “Download compressed PDF” to save it, or pick another level and compress again.",
   ],
   examples: [
     { title: "The Recommended level", input: "Recommended", output: describeLevel("medium") },
@@ -121,8 +121,8 @@ export const pdfToWord: WidgetToolDefinition = {
   ],
   howTo: [
     "Drop a PDF onto the page or choose one from your device.",
-    "Press “Convert to Word”. Each page is read in turn.",
-    "The .docx downloads when it is ready. Open it in Word, Google Docs or LibreOffice.",
+    "Press “Convert and download Word file”. The .docx downloads when every page has been read.",
+    "Open it in Word, Google Docs or LibreOffice.",
   ],
   examples: [
     {

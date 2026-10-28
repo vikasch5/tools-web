@@ -1,12 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Eye, EyeOff, LoaderCircle } from "lucide-react";
-import { Button } from "~/components/ui/Button";
+import { Eye, EyeOff, LockKeyhole, LockKeyholeOpen } from "lucide-react";
 import { IconButton } from "~/components/ui/IconButton";
 import { TextField } from "~/components/ui/Field";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import type { PdfFile } from "~/tools/engine/pdf";
 import { MIN_PASSWORD_LENGTH } from "~/tools/engine/qpdf";
-import { Panel, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { pdfBlob, toPdfFile } from "./pdf-shared";
 import { FileSummary, PdfDropPanel, type Status } from "./PdfChrome";
@@ -108,6 +107,11 @@ export function ProtectPdf() {
 
   return (
     <Panel
+      action={
+        <PrimaryAction type="submit" form="protect-pdf-form" icon={LockKeyhole} busy={working} disabled={!!problem}>
+          Protect and download
+        </PrimaryAction>
+      }
       status={
         working ? (
           <StatusMessage tone="working">Encrypting…</StatusMessage>
@@ -125,7 +129,7 @@ export function ProtectPdf() {
           setStatus(IDLE);
         }}
       />
-      <form onSubmit={protect} className="space-y-4 border-t border-border p-4">
+      <form id="protect-pdf-form" onSubmit={protect} className="space-y-4 border-t border-border p-4">
         <PasswordField
           label="Password"
           value={password}
@@ -147,10 +151,6 @@ export function ProtectPdf() {
           Anyone opening the PDF will need this password. It is not stored anywhere, so if it is lost the file cannot be
           opened again. Keep an unprotected copy if you might need one.
         </p>
-        <Button type="submit" variant="primary" size="sm" disabled={working || !!problem}>
-          {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-          Protect and download
-        </Button>
       </form>
     </Panel>
   );
@@ -197,6 +197,18 @@ export function UnlockPdf() {
 
   return (
     <Panel
+      action={
+        <PrimaryAction
+          type="submit"
+          form="unlock-pdf-form"
+          icon={LockKeyholeOpen}
+          busy={working}
+          disabled={kind === "password" && !password}
+          hint={kind === "password" && !password ? "Type the password first." : undefined}
+        >
+          {kind === "password" ? "Unlock and download" : "Remove restrictions and download"}
+        </PrimaryAction>
+      }
       status={
         working ? (
           <StatusMessage tone="working">Unlocking…</StatusMessage>
@@ -220,7 +232,7 @@ export function UnlockPdf() {
           setStatus(IDLE);
         }}
       />
-      <form onSubmit={unlock} className="space-y-4 border-t border-border p-4">
+      <form id="unlock-pdf-form" onSubmit={unlock} className="space-y-4 border-t border-border p-4">
         {kind === "password" ? (
           <>
             <PasswordField
@@ -247,10 +259,6 @@ export function UnlockPdf() {
             documents you have the right to change.
           </p>
         )}
-        <Button type="submit" variant="primary" size="sm" disabled={working || (kind === "password" && !password)}>
-          {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-          {kind === "password" ? "Unlock and download" : "Remove restrictions and download"}
-        </Button>
       </form>
     </Panel>
   );

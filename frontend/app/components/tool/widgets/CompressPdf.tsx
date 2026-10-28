@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { Download, LoaderCircle } from "lucide-react";
-import { Button } from "~/components/ui/Button";
+import { Download, Minimize2 } from "lucide-react";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import type { PdfFile } from "~/tools/engine/pdf";
 import { compressLevels, sizeChange, type CompressLevel } from "~/tools/engine/pdf-compress";
 import { Segmented } from "../OptionControls";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { pdfBlob, toPdfFile } from "./pdf-shared";
 import { FileSummary, PdfDropPanel, type Status } from "./PdfChrome";
@@ -85,19 +84,24 @@ export function CompressPdf() {
 
   return (
     <Panel
+      action={
+        fresh && useful ? (
+          <PrimaryAction icon={Download} onClick={() => downloadBlob(pdfBlob(result.data), result.name)}>
+            Download compressed PDF ({formatBytes(result.after)})
+          </PrimaryAction>
+        ) : (
+          <PrimaryAction icon={Minimize2} busy={working} onClick={compress}>
+            {working ? "Compressing…" : fresh ? "Compress again" : "Compress PDF"}
+          </PrimaryAction>
+        )
+      }
       toolbar={
-        <>
-          <Button variant="primary" size="sm" onClick={compress} disabled={working}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            {fresh ? "Compress again" : "Compress PDF"}
-          </Button>
-          <Segmented
-            label="Level"
-            value={level}
-            onChange={(v) => setLevel(v as CompressLevel)}
-            choices={levels.map(({ value, label }) => ({ value, label }))}
-          />
-        </>
+        <Segmented
+          label="Level"
+          value={level}
+          onChange={(v) => setLevel(v as CompressLevel)}
+          choices={levels.map(({ value, label }) => ({ value, label }))}
+        />
       }
       status={
         working ? (
@@ -119,11 +123,6 @@ export function CompressPdf() {
         <PanelSection
           title="Result"
           className="border-t border-border"
-          actions={
-            <Button size="sm" variant="primary" icon={Download} onClick={() => downloadBlob(pdfBlob(result.data), result.name)}>
-              Download
-            </Button>
-          }
         >
           <StatGrid
             stats={[
@@ -135,7 +134,7 @@ export function CompressPdf() {
           />
           {!fresh && (
             <p className="border-t border-border px-4 py-3 text-sm text-fg-muted">
-              This result is from the {levels.find((l) => l.value === result.level)!.label} level. Press Compress again to try this one.
+              This result is from the {levels.find((l) => l.value === result.level)!.label} level. Press Compress PDF to try this one.
             </p>
           )}
         </PanelSection>

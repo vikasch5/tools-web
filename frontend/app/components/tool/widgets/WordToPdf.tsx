@@ -1,9 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FileDown, LoaderCircle } from "lucide-react";
-import { Button } from "~/components/ui/Button";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import { describeWordLayout, portableBullets } from "~/tools/engine/pdf-word";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { pdfBlob } from "./pdf-shared";
 import { FileSummary, PdfDropPanel, pageWord, type Status } from "./PdfChrome";
@@ -158,11 +157,10 @@ export function WordToPdf() {
         />
       ) : (
         <Panel
-          toolbar={
-            <Button variant="primary" size="sm" icon={progress ? undefined : FileDown} onClick={convert} disabled={busy || !pageCount}>
-              {progress && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
+          action={
+            <PrimaryAction icon={FileDown} busy={busy} onClick={convert} disabled={!pageCount}>
               Convert and download PDF
-            </Button>
+            </PrimaryAction>
           }
           status={
             laying ? (

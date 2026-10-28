@@ -1,5 +1,5 @@
 import { useEffect, useState, type DragEvent } from "react";
-import { ArrowLeft, ArrowRight, LoaderCircle, RotateCw, Trash2, Undo2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Download, LoaderCircle, RotateCw, Trash2, Undo2, X } from "lucide-react";
 import { Button } from "~/components/ui/Button";
 import { IconButton } from "~/components/ui/IconButton";
 import { TextField } from "~/components/ui/Field";
@@ -8,7 +8,7 @@ import { formatPageRanges, parsePageRanges } from "~/tools/engine/page-ranges";
 import type { PdfFile } from "~/tools/engine/pdf";
 import { normalizeAngle, type PagePlan } from "~/tools/engine/pdf-pages";
 import { cn } from "~/lib/cn";
-import { Panel, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { pdfBlob, toPdfFile } from "./pdf-shared";
 import { usePdfDocument } from "./usePdfDocument";
@@ -124,20 +124,20 @@ export function OrganizePdf() {
   return (
     <Panel
       toolbar={
-        <>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => save(items.map(({ index, turn }) => ({ index, turn })), "organized")}
-            disabled={working || !changed || items.length === 0}
-          >
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Save organized PDF
-          </Button>
-          <Button size="sm" variant="ghost" icon={Undo2} onClick={reset} disabled={!changed}>
-            Reset
-          </Button>
-        </>
+        <Button size="sm" variant="ghost" icon={Undo2} onClick={reset} disabled={!changed}>
+          Reset
+        </Button>
+      }
+      action={
+        <PrimaryAction
+          icon={Download}
+          busy={working}
+          onClick={() => save(items.map(({ index, turn }) => ({ index, turn })), "organized")}
+          disabled={!changed || items.length === 0}
+          hint={changed ? undefined : "Change the order, turn or remove a page first."}
+        >
+          Save organized PDF
+        </PrimaryAction>
       }
       status={
         working ? (
@@ -251,20 +251,20 @@ export function DeletePdfPages() {
   return (
     <Panel
       toolbar={
-        <>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => save(keep.map((index) => ({ index, turn: 0 })), "pages-removed")}
-            disabled={working || marked.size === 0 || !!problem}
-          >
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Delete pages and download
-          </Button>
-          <Button size="sm" variant="ghost" icon={Undo2} onClick={() => apply(new Set())} disabled={marked.size === 0}>
-            Clear selection
-          </Button>
-        </>
+        <Button size="sm" variant="ghost" icon={Undo2} onClick={() => apply(new Set())} disabled={marked.size === 0}>
+          Clear selection
+        </Button>
+      }
+      action={
+        <PrimaryAction
+          icon={Download}
+          busy={working}
+          onClick={() => save(keep.map((index) => ({ index, turn: 0 })), "pages-removed")}
+          disabled={marked.size === 0 || !!problem}
+          hint={marked.size === 0 ? "Click the pages to delete first." : undefined}
+        >
+          {marked.size ? `Delete ${pageWord(marked.size)} and download` : "Delete pages and download"}
+        </PrimaryAction>
       }
       status={
         working ? (

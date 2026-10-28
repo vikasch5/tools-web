@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { FileText, LoaderCircle, RotateCcw, RotateCw, Undo2, X } from "lucide-react";
+import { Download, FileText, LoaderCircle, RotateCcw, RotateCw, Undo2, X } from "lucide-react";
 import { Button } from "~/components/ui/Button";
 import { IconButton } from "~/components/ui/IconButton";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import type { PdfFile } from "~/tools/engine/pdf";
 import { FileDrop } from "../FileDrop";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { MAX_PDF_BYTES, PDF_ACCEPT, pdfBlob, toPdfFile } from "./pdf-shared";
 import { usePdfDocument } from "./usePdfDocument";
@@ -77,12 +77,19 @@ export function RotatePdf() {
 
   return (
     <Panel
+      action={
+        <PrimaryAction
+          icon={Download}
+          busy={working}
+          onClick={save}
+          disabled={changed === 0}
+          hint={changed === 0 ? "Turn at least one page first." : undefined}
+        >
+          Save rotated PDF
+        </PrimaryAction>
+      }
       toolbar={
         <>
-          <Button variant="primary" size="sm" onClick={save} disabled={working || changed === 0}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Save rotated PDF
-          </Button>
           <div className="flex items-center gap-1.5">
             <Button size="sm" icon={RotateCcw} onClick={() => turn("all", -90)}>
               All left

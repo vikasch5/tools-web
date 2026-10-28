@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Download, LoaderCircle, Trash2 } from "lucide-react";
-import { Button } from "~/components/ui/Button";
 import { IconButton } from "~/components/ui/IconButton";
 import { RangeField, SelectField } from "~/components/ui/Field";
 import { limitLongEdge, type Size } from "~/tools/engine/image-geometry";
@@ -8,7 +7,7 @@ import { createZip } from "~/tools/engine/zip";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import { Segmented } from "../OptionControls";
 import { FileDrop } from "../FileDrop";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import {
   IMAGE_ACCEPT,
@@ -147,6 +146,17 @@ export function CompressImage() {
 
   return (
     <Panel
+      action={
+        <PrimaryAction
+          icon={Download}
+          busy={working}
+          onClick={downloadAll}
+          disabled={finished.length === 0}
+          hint={finished.length === 0 ? "Add images to start." : undefined}
+        >
+          {finished.length > 1 ? `Download ${finished.length} compressed images (.zip)` : "Download compressed image"}
+        </PrimaryAction>
+      }
       toolbar={
         <>
           <Segmented
@@ -185,13 +195,6 @@ export function CompressImage() {
             <option value="1280">1280 px</option>
             <option value="800">800 px</option>
           </SelectField>
-          {finished.length > 0 && (
-            <div className="ml-auto">
-              <Button size="sm" variant="primary" icon={Download} onClick={downloadAll} disabled={working}>
-                {finished.length > 1 ? `Download all (.zip)` : "Download"}
-              </Button>
-            </div>
-          )}
         </>
       }
       status={

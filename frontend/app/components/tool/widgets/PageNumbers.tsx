@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { LoaderCircle } from "lucide-react";
-import { Button } from "~/components/ui/Button";
+import { Download } from "lucide-react";
 import { SelectField, TextField } from "~/components/ui/Field";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import type { PdfFile } from "~/tools/engine/pdf";
@@ -13,7 +12,7 @@ import {
   type PageNumberOptions,
 } from "~/tools/engine/pdf-pages";
 import { Segmented } from "../OptionControls";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { pdfBlob, toPdfFile } from "./pdf-shared";
 import { usePdfDocument } from "./usePdfDocument";
@@ -135,11 +134,10 @@ export function PageNumbers() {
 
   return (
     <Panel
-      toolbar={
-        <Button variant="primary" size="sm" onClick={save} disabled={working || !!problem}>
-          {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
+      action={
+        <PrimaryAction icon={Download} busy={working} onClick={save} disabled={!!problem}>
           Add numbers and download
-        </Button>
+        </PrimaryAction>
       }
       status={
         working ? (

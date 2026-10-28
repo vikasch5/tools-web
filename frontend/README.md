@@ -61,17 +61,20 @@ Point the domain's document root at `frontend/build/client`. The build
 includes an `.htaccess` that sets the `.mjs` and `.wasm` file types the
 PDF tools need and serves pages with or without a trailing slash.
 
-To update after pulling new code, always install before building:
+To update after pulling new code, run one command:
 
 ```bash
 cd frontend
-npm ci          # installs any new dependencies from package-lock.json
-npm run build   # replaces build/client
+npm run deploy
 ```
 
-If `npm run build` fails, it leaves no `build/client`, and Apache shows its
-own default page or a file list instead of the site. Fix the error (usually
-a missing `npm ci`) and build again.
+It installs dependencies (`npm ci`), builds into `build-next/`, checks the
+result, and only then swaps it in as `build/`. If anything fails, the live
+site keeps running unchanged. The previous build is kept in
+`build-previous/`; to roll back: `rm -rf build && mv build-previous build`.
+
+`npm run build` on its own also checks first that every dependency is
+installed, and stops with "run npm ci" (leaving `build/` untouched) if not.
 
 ### Docker Deployment
 

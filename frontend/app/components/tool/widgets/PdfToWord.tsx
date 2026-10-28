@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { LoaderCircle } from "lucide-react";
+import { FileDown } from "lucide-react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
-import { Button } from "~/components/ui/Button";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import { bodyTextSize, describeBlocks, DOCX_TYPE, textToWordPages, turnUpright, type TextItem, type TextPage } from "~/tools/engine/pdf-word";
 import { pdfBaseName } from "~/tools/engine/pdf";
-import { Panel, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { pdfBlob } from "./pdf-shared";
 import { openPdfForRendering } from "./pdf-render";
@@ -116,11 +115,10 @@ export function PdfToWord() {
 
   return (
     <Panel
-      toolbar={
-        <Button variant="primary" size="sm" onClick={convert} disabled={progress !== null}>
-          {progress !== null && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-          Convert to Word
-        </Button>
+      action={
+        <PrimaryAction icon={FileDown} busy={progress !== null} onClick={convert}>
+          Convert and download Word file
+        </PrimaryAction>
       }
       status={
         progress ? (

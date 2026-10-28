@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { FileText, LoaderCircle, X } from "lucide-react";
-import { Button } from "~/components/ui/Button";
+import { Download, FileText, X } from "lucide-react";
 import { IconButton } from "~/components/ui/IconButton";
 import { TextField } from "~/components/ui/Field";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
@@ -8,7 +7,7 @@ import { parsePageRanges } from "~/tools/engine/page-ranges";
 import type { PdfFile, SplitMode } from "~/tools/engine/pdf";
 import { Segmented } from "../OptionControls";
 import { FileDrop } from "../FileDrop";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { MAX_PDF_BYTES, PDF_ACCEPT, pdfBlob, toPdfFile } from "./pdf-shared";
 
@@ -102,19 +101,18 @@ export function SplitPdf() {
   const help = modes.find((m) => m.value === mode)!.help;
   return (
     <Panel
+      action={
+        <PrimaryAction icon={Download} busy={working} onClick={split} disabled={!!rangeError}>
+          Split and download
+        </PrimaryAction>
+      }
       toolbar={
-        <>
-          <Button variant="primary" size="sm" onClick={split} disabled={working || !!rangeError}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            Split and download
-          </Button>
-          <Segmented
-            label="Mode"
-            value={mode}
-            onChange={(v) => setMode(v as SplitMode)}
-            choices={modes.map(({ value, label }) => ({ value, label }))}
-          />
-        </>
+        <Segmented
+          label="Mode"
+          value={mode}
+          onChange={(v) => setMode(v as SplitMode)}
+          choices={modes.map(({ value, label }) => ({ value, label }))}
+        />
       }
       status={
         working ? (

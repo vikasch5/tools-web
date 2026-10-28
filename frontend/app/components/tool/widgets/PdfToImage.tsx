@@ -7,7 +7,7 @@ import { createZip } from "~/tools/engine/zip";
 import { cn } from "~/lib/cn";
 import { Segmented } from "../OptionControls";
 import { FileDrop } from "../FileDrop";
-import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { MAX_PDF_BYTES, PDF_ACCEPT, toPdfFile } from "./pdf-shared";
 import { canvasToBlob, renderPdfPage } from "./pdf-render";
@@ -124,12 +124,19 @@ export function PdfToImage() {
   const first = pages[0];
   return (
     <Panel
+      action={
+        <PrimaryAction
+          icon={Download}
+          busy={working}
+          onClick={convert}
+          disabled={!pages.length}
+          hint={!pages.length ? "Select at least one page." : undefined}
+        >
+          {pages.length > 1 ? `Convert ${pages.length} pages and download (.zip)` : "Convert and download"}
+        </PrimaryAction>
+      }
       toolbar={
         <>
-          <Button variant="primary" size="sm" icon={working ? undefined : Download} onClick={convert} disabled={working || !pages.length}>
-            {working && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
-            {pages.length > 1 ? `Convert ${pages.length} pages (.zip)` : "Convert and download"}
-          </Button>
           <Segmented label="Format" value={format} onChange={setFormat} choices={formats.map(({ value, label }) => ({ value, label }))} />
           <Segmented label="Resolution" value={dpi} onChange={setDpi} choices={resolutions} />
         </>
@@ -164,7 +171,7 @@ export function PdfToImage() {
           <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-cat-pdf-soft text-cat-pdf">
             <FileText aria-hidden size={18} strokeWidth={1.75} />
           </span>
-          <div className="min-w-0 flex-1">
+          <div className="min-w-48 flex-1">
             <p className="truncate text-sm font-medium text-fg">{doc.file.name}</p>
             <p className="text-xs text-fg-muted">
               {pdf.numPages} {pdf.numPages === 1 ? "page" : "pages"} · {formatBytes(doc.file.size)}

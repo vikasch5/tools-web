@@ -1,17 +1,26 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { CircleAlert, CircleCheck, LoaderCircle, TriangleAlert, type LucideIcon } from "lucide-react";
+import { Button } from "~/components/ui/Button";
 import { cn } from "~/lib/cn";
 
 /** The framed workspace every non-text tool sits in (matches ToolWorkspace). */
 export function Panel({
   label = "Tool workspace",
   toolbar,
+  action,
   status,
   children,
   className,
 }: {
   label?: string;
+  /** Options and secondary buttons, above the content. */
   toolbar?: ReactNode;
+  /**
+   * The one thing to press to get the result (a PrimaryAction). It sits in
+   * a bar under the content that stays at the bottom of the screen while
+   * the panel is in view, so it is never scrolled out of reach.
+   */
+  action?: ReactNode;
   status?: ReactNode;
   children: ReactNode;
   className?: string;
@@ -19,7 +28,9 @@ export function Panel({
   return (
     <section
       aria-label={label}
-      className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-md"
+      // overflow-clip (not hidden) keeps the rounded corners without
+      // breaking the sticky action bar.
+      className="flex flex-col overflow-clip rounded-xl border border-border bg-surface shadow-md"
     >
       {toolbar && (
         <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-border bg-surface-2/50 px-2.5 py-2 sm:px-3">
@@ -27,6 +38,11 @@ export function Panel({
         </div>
       )}
       <div className={cn("min-w-0", className)}>{children}</div>
+      {action && (
+        <div className="sticky bottom-0 z-10 flex flex-wrap items-center gap-3 border-t border-border bg-surface-2/95 px-3 py-3 backdrop-blur-sm sm:px-4">
+          {action}
+        </div>
+      )}
       {status !== undefined && (
         <div
           role="status"
@@ -36,6 +52,44 @@ export function Panel({
         </div>
       )}
     </section>
+  );
+}
+
+/**
+ * The main button of a tool: large, full width on phones, with a spinner
+ * while it works. One per panel, passed as Panel's `action`.
+ */
+export function PrimaryAction({
+  icon,
+  busy = false,
+  disabled = false,
+  hint,
+  children,
+  ...rest
+}: {
+  icon?: LucideIcon;
+  busy?: boolean;
+  disabled?: boolean;
+  /** Short note next to the button, e.g. what will be saved. */
+  hint?: ReactNode;
+  children: ReactNode;
+} & Omit<ComponentPropsWithoutRef<"button">, "children" | "disabled">) {
+  return (
+    <>
+      <Button
+        variant="primary"
+        size="lg"
+        icon={busy ? undefined : icon}
+        disabled={disabled || busy}
+        aria-busy={busy || undefined}
+        className="w-full sm:w-auto"
+        {...rest}
+      >
+        {busy && <LoaderCircle aria-hidden size={18} className="animate-spin" />}
+        {children}
+      </Button>
+      {hint && <span className="text-sm text-fg-muted">{hint}</span>}
+    </>
   );
 }
 

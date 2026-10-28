@@ -318,3 +318,27 @@ describe("Word to PDF: portable bullets", () => {
     expect(out).toContain("font-family: Courier New");
   });
 });
+
+describe("Word to PDF: pages to PDF", () => {
+  it("puts each page picture in a PDF with an invisible, searchable text layer", async () => {
+    const { pagesToPdf } = await import("./docx-pdf");
+    // Smallest valid JPEG: 1 × 1 white pixel.
+    const jpeg = Uint8Array.from(
+      atob(
+        "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=",
+      ),
+      (c) => c.charCodeAt(0),
+    );
+    const r = await pagesToPdf(
+      [
+        { jpeg, width: 612, height: 792, words: [{ text: "Quarterly", x: 72, y: 72, width: 60, height: 14 }, { text: "नमस्ते", x: 140, y: 72, width: 40, height: 14 }] },
+        { jpeg, width: 612, height: 792, words: [] },
+      ],
+      "report.docx",
+    );
+    expect(r).toMatchObject({ name: "report.pdf", pageCount: 2, searchable: 50 });
+    const out = await PDFDocument.load(r.data);
+    expect(out.getPages().map((p) => [p.getWidth(), p.getHeight()])).toEqual([[612, 792], [612, 792]]);
+    await expect(pagesToPdf([], "x.docx")).rejects.toThrow("no pages");
+  });
+});

@@ -66,15 +66,15 @@ export const wordToPdf: WidgetToolDefinition = {
   name: "Word to PDF",
   metaTitle: "Word to PDF – Convert DOCX to PDF in Your Browser",
   description:
-    "Convert a Word document (.docx) to PDF with a live preview. The file is laid out on your device and saved through your browser's print to PDF. No upload.",
+    "Convert a Word document (.docx) to a PDF that downloads straight away, with a preview of every page first. Runs in your browser; your file is never uploaded.",
   overview: [
     "A PDF looks the same on every device and cannot be edited by accident, which is why CVs, applications, invoices and reports are usually sent as PDF rather than as a Word file. Converting is also the usual answer when a form says “PDF only”.",
-    "This tool opens the .docx in your browser, lays out its pages with their fonts, tables, images, headers and footers, and shows you a preview. Saving uses your browser's own “Save as PDF” printer, which writes a proper PDF with real, selectable text. Your document is never uploaded. Layout is drawn by the browser rather than by Microsoft Word, so complex documents can differ in small ways; check the preview before saving.",
+    "This tool opens the .docx in your browser and lays out its pages with their fonts, tables, images, headers and footers, so you can check every page before converting. Each page is then drawn at 192 DPI, sharp on screen and in print, and saved into a PDF that downloads straight away. A hidden text layer is added under the pages so Latin-script text can still be searched and copied. Your document never leaves your device. Layout is done by your browser rather than by Microsoft Word, so complex documents can differ in small ways.",
   ],
   howTo: [
-    "Drop a .docx file onto the page or choose one from your device. A preview of the pages appears.",
-    "Check the preview, then press “Save as PDF”.",
-    "In the print window, choose “Save as PDF” (or “Microsoft Print to PDF” on Windows) as the printer, and save.",
+    "Drop a .docx file onto the page or choose one from your device. A preview of every page appears.",
+    "Check the pages, then press “Convert and download PDF”.",
+    "The PDF downloads when every page has been drawn.",
   ],
   examples: [
     { title: "A document saved by Microsoft Word", input: "report.docx with saved page breaks", output: describeWordLayout(true) },
@@ -82,29 +82,29 @@ export const wordToPdf: WidgetToolDefinition = {
   ],
   limitations: [
     "Only .docx files. Save older .doc files as .docx in Word, LibreOffice or Google Docs first.",
+    "Pages are saved as high-resolution pictures with hidden text, so the PDF is larger than one exported from Word, and text in non-Latin scripts (such as Hindi) is visible but not searchable.",
     "Fonts that are not installed on your device are replaced by similar ones, which can move line and page breaks.",
-    "Text boxes, shapes, charts, equations and tracked changes may not appear exactly as in Word.",
-    "Saving goes through the print window, so there are two clicks instead of a direct download.",
+    "Text boxes, shapes, charts, equations and tracked changes may not appear exactly as in Word. Links in the document are not clickable in the PDF.",
   ],
   faq: [
     {
-      question: "Why does it open a print window?",
+      question: "Can I select and copy text in the PDF?",
       answer:
-        "Your browser's “Save as PDF” printer creates a real PDF with selectable text and embedded fonts, from the pages laid out on your device. Doing it this way means the document never has to be sent to a server.",
+        "Yes, for text in Latin script: an invisible text layer sits under each page, so you can search, select and copy it. Text in other scripts is shown correctly but is part of the page picture only.",
     },
     {
       question: "Will the PDF look exactly like Word?",
       answer:
-        "Simple and medium documents (text, headings, lists, tables, pictures) usually come out very close. Complex layouts and missing fonts can shift things, so the preview shows the pages before you save.",
+        "Simple and medium documents (text, headings, lists, tables, pictures) usually come out very close. Complex layouts and missing fonts can shift things, so the preview shows every page before you convert.",
     },
     {
-      question: "Can I convert on my phone?",
+      question: "Why is the PDF bigger than the Word file?",
       answer:
-        "Yes. Android's print window offers “Save as PDF”. On iPhone or iPad, tap the share button in the print options and choose Save to Files.",
+        "Each page is stored as a sharp picture so it looks the same everywhere. Pages with photos take the most space. Run the result through Compress PDF if you need it smaller.",
     },
     filePrivacyFaq,
   ],
-  related: ["pdf-to-word", "merge-pdf", "compress-pdf", "image-to-pdf"],
+  related: ["pdf-to-word", "compress-pdf", "merge-pdf", "image-to-pdf"],
 };
 
 export const pdfToWord: WidgetToolDefinition = {

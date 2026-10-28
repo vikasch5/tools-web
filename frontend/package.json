@@ -20,6 +20,7 @@
     "docx-preview": "^0.4.1",
     "isbot": "^5.1.36",
     "lucide-react": "^1.59.0",
+    "modern-screenshot": "^4.7.0",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.4.299",
     "prettier": "^3.9.10",

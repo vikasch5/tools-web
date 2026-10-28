@@ -159,3 +159,9 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
 - **Protect PDF** (AES-256 open password) and **Unlock PDF** (needs the password; files that only restrict printing or copying are detected and unlocked without one).
 - New dependencies: `@neslinesli93/qpdf-wasm` 0.3.0 (qpdf 12.2, ISC/Apache-2.0, 1.3 MB wasm, loaded only by Compress/Protect/Unlock) and `docx-preview` 0.4.1 (Apache-2.0, Word to PDF only).
 - Verified: typecheck, 201 tests and the build pass; every published example is checked against real engine output (including real AES-256 encrypt/decrypt through qpdf). Browser run on the production build (18/18): downloads checked with pypdf (page order, rotations, numbers on the right pages, encryption, decryption), the .docx contents, a real PDF printed from a Word file (text, Hindi, table, image, bullets), no horizontal scroll at 375 px, no console errors.
+
+### Batch 5 follow-up: Word to PDF downloads directly
+- No print window any more. The document is laid out with docx-preview, split into page-sized boxes at paragraph and table-row boundaries (headers and footers repeated on every page, also for files without Word's saved page breaks), drawn at 192 DPI with `modern-screenshot` (MIT, no dependencies), and written to a PDF in the worker with an invisible Helvetica text layer, one run per line, so Latin-script text can be searched and copied.
+- The preview now shows exactly the pages that will be saved.
+- New dependency: `modern-screenshot` 4.7.0, loaded only by Word to PDF.
+- Verified: 202 tests, typecheck and build pass; browser run 17/17, including a direct download of a 3-page Word file (headers on every page, text layer reads as sentences) and no print call.

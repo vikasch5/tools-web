@@ -1,105 +1,61 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { LoaderCircle, Printer } from "lucide-react";
+import { FileDown, LoaderCircle } from "lucide-react";
 import { Button } from "~/components/ui/Button";
+import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import { describeWordLayout, portableBullets } from "~/tools/engine/pdf-word";
-import { Panel, PanelSection, StatusMessage } from "../Panel";
+import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
+import { formatBytes } from "../format";
+import { pdfBlob } from "./pdf-shared";
 import { FileSummary, PdfDropPanel, pageWord, type Status } from "./PdfChrome";
+import { hasSavedPageBreaks, paginate, renderPages } from "./docx-pages";
 
 const IDLE: Status = { tone: "idle", text: "Your document stays on your device." };
 const DOCX_ACCEPT = [".docx"];
+/** 2 × 96 = 192 DPI: sharp on screen and in print, at a reasonable file size. */
+const SCALE = 2;
 
 /**
  * The site's base styles reset images and tables; restore what Word
- * documents expect inside the preview and the printed copy.
+ * documents expect, and frame the pages in the preview.
  */
 const HOST_CSS = `
-.docx-host .docx-wrapper { background: var(--surface-2); padding: 24px; }
-.docx-host .docx-wrapper > section.docx { box-shadow: var(--shadow-md); margin-bottom: 24px; }
 .docx-host img, .docx-host svg, .docx-host video { display: inline; max-width: none; }
 .docx-host table { border-collapse: collapse; }
+.docx-host section.docx { overflow: hidden; }
+.docx-stage .docx-wrapper { background: none; padding: 0; display: block; }
+.docx-stage .docx-wrapper > section.docx { box-shadow: none; margin: 0; }
+.docx-preview .docx-wrapper { background: var(--surface-2); padding: 24px; }
+.docx-preview .docx-wrapper > section.docx { box-shadow: var(--shadow-md); margin-bottom: 24px; }
 `;
-
-type Layout = {
-  /** Page size and margins of the first section, as CSS lengths. */
-  width: string;
-  height: string;
-  margins: [string, string, string, string];
-  /** page: each section is one page, as Word laid it out. flow: the browser paginates. */
-  mode: "page" | "flow";
-  pages: number;
-};
-
-function measure(host: HTMLElement): Layout {
-  const sections = [...host.querySelectorAll<HTMLElement>(".docx-wrapper > section.docx")];
-  const first = sections[0];
-  // A page box only has a minimum height, so it grows with its content. One
-  // taller than the page size Word set means the file has no saved page
-  // breaks, and the browser must split it into pages instead.
-  const fits = sections.every((s) => {
-    const probe = document.createElement("div");
-    probe.style.height = s.style.minHeight || "11in";
-    probe.style.position = "absolute";
-    probe.style.visibility = "hidden";
-    s.parentElement!.appendChild(probe);
-    const pageHeight = probe.getBoundingClientRect().height;
-    probe.remove();
-    return s.getBoundingClientRect().height <= pageHeight + 2;
-  });
-  return {
-    width: first?.style.width || "8.5in",
-    height: first?.style.minHeight || "11in",
-    margins: [
-      first?.style.paddingTop || "1in",
-      first?.style.paddingRight || "1in",
-      first?.style.paddingBottom || "1in",
-      first?.style.paddingLeft || "1in",
-    ],
-    mode: fits ? "page" : "flow",
-    pages: sections.length,
-  };
-}
-
-function printCss(layout: Layout) {
-  const page =
-    layout.mode === "page"
-      ? `@page { size: ${layout.width} ${layout.height}; margin: 0; }
-#docx-print-root section.docx { break-after: page; overflow: visible; }`
-      : `@page { size: ${layout.width} ${layout.height}; margin: ${layout.margins.join(" ")}; }
-#docx-print-root section.docx { padding: 0 !important; min-height: 0 !important; width: auto !important; overflow: visible; }
-#docx-print-root section.docx > header, #docx-print-root section.docx > footer { display: none; }
-#docx-print-root section.docx + section.docx { break-before: page; }`;
-  return `@media print {
-html.docx-printing body > *:not(#docx-print-root) { display: none !important; }
-html.docx-printing, html.docx-printing body { background: none !important; margin: 0 !important; padding: 0 !important; }
-#docx-print-root .docx-wrapper { background: none !important; padding: 0 !important; display: block !important; }
-#docx-print-root section.docx { box-shadow: none !important; margin: 0 !important; }
-#docx-print-root section.docx:last-child { break-after: auto; }
-${page}
-}
-@media screen { #docx-print-root { display: none; } }`;
-}
 
 export function WordToPdf() {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>(IDLE);
-  const [rendering, setRendering] = useState(false);
-  const [layout, setLayout] = useState<Layout | null>(null);
+  const [laying, setLaying] = useState(false);
+  const [progress, setProgress] = useState<string | null>(null);
+  const [pageCount, setPageCount] = useState(0);
   const [zoom, setZoom] = useState(1);
-  const host = useRef<HTMLDivElement>(null);
+  // Off-screen, unscaled copy used for measuring and drawing pages.
+  const source = useRef<HTMLDivElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const preview = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLDivElement>(null);
+  const pages = useRef<HTMLElement[]>([]);
 
-  // Draw the document into the preview whenever a new file is chosen.
+  useEffect(() => warmUpWorker(), []);
+
+  // Lay the document out into pages whenever a new file is chosen.
   useEffect(() => {
-    if (!file || !host.current) return;
+    if (!file || !source.current || !stage.current || !preview.current) return;
     let cancelled = false;
-    const target = host.current;
-    setRendering(true);
-    setLayout(null);
+    const [src, stg, view] = [source.current, stage.current, preview.current];
+    setLaying(true);
+    setPageCount(0);
     (async () => {
       try {
         const { renderAsync } = await import("docx-preview");
-        target.replaceChildren();
-        await renderAsync(file, target, target, {
+        src.replaceChildren();
+        await renderAsync(file, src, src, {
           className: "docx",
           inWrapper: true,
           breakPages: true,
@@ -113,21 +69,21 @@ export function WordToPdf() {
           renderChanges: false,
         });
         if (cancelled) return;
-        for (const style of target.querySelectorAll("style"))
-          style.textContent = portableBullets(style.textContent ?? "");
-        // Let web fonts and images settle before measuring the pages.
+        for (const style of src.querySelectorAll("style")) style.textContent = portableBullets(style.textContent ?? "");
+        // Let fonts and images settle before measuring.
         await document.fonts?.ready;
         await new Promise((r) => requestAnimationFrame(() => r(null)));
         if (cancelled) return;
-        const measured = measure(target);
-        setLayout(measured);
+        const saved = hasSavedPageBreaks(src);
+        pages.current = paginate(src, stg);
+        view.replaceChildren(stg.firstElementChild!.cloneNode(true));
+        setPageCount(pages.current.length);
         setStatus(
-          measured.mode === "page"
-            ? { tone: "idle", text: `Ready: ${pageWord(measured.pages)}. ${describeWordLayout(true)}.` }
-            // In flow mode the browser decides the page count when printing.
+          saved
+            ? { tone: "idle", text: `Ready: ${pageWord(pages.current.length)}. ${describeWordLayout(true)}.` }
             : {
                 tone: "warning",
-                text: `This file has no saved page layout. ${describeWordLayout(false)}.`,
+                text: `Ready: ${pageWord(pages.current.length)}. This file has no saved page layout. ${describeWordLayout(false)}.`,
               },
         );
       } catch {
@@ -138,7 +94,7 @@ export function WordToPdf() {
           text: "This file could not be read as a Word document. Only .docx files work; save old .doc files as .docx first.",
         });
       } finally {
-        if (!cancelled) setRendering(false);
+        if (!cancelled) setLaying(false);
       }
     })();
     return () => {
@@ -148,99 +104,98 @@ export function WordToPdf() {
 
   // Scale the preview so a whole page width fits the panel.
   useLayoutEffect(() => {
-    if (!layout || !frame.current || !host.current) return;
-    const page = host.current.querySelector<HTMLElement>(".docx-wrapper > section.docx");
-    if (!page) return;
-    const fit = () => {
-      const available = frame.current!.clientWidth;
-      setZoom(Math.min(1, available / (page.offsetWidth + 48)));
-    };
+    if (!pageCount || !frame.current || !pages.current[0]) return;
+    const width = pages.current[0].offsetWidth;
+    const fit = () => setZoom(Math.min(1, frame.current!.clientWidth / (width + 48)));
     fit();
     const observer = new ResizeObserver(fit);
     observer.observe(frame.current);
     return () => observer.disconnect();
-  }, [layout]);
+  }, [pageCount]);
 
-  const print = () => {
-    if (!layout || !host.current || !file) return;
-    const wrapper = host.current.querySelector(".docx-wrapper");
-    if (!wrapper) return;
-    const root = document.createElement("div");
-    root.id = "docx-print-root";
-    root.className = "docx-host";
-    root.appendChild(wrapper.cloneNode(true));
-    const style = document.createElement("style");
-    style.textContent = printCss(layout);
-    const title = document.title;
-    // Browsers suggest the page title as the PDF's file name.
-    document.title = file.name.replace(/\.docx$/i, "") || "document";
-    document.head.appendChild(style);
-    document.body.appendChild(root);
-    document.documentElement.classList.add("docx-printing");
-    const cleanup = () => {
-      document.documentElement.classList.remove("docx-printing");
-      root.remove();
-      style.remove();
-      document.title = title;
-    };
-    window.addEventListener("afterprint", cleanup, { once: true });
-    window.print();
-    setStatus({
-      tone: "idle",
-      text: "In the print window, choose “Save as PDF” (or “Microsoft Print to PDF”) as the printer, then save.",
-    });
+  const convert = async () => {
+    if (!file || !pages.current.length) return;
+    try {
+      const rendered = await renderPages(pages.current, SCALE, (n) =>
+        setProgress(`Drawing page ${n} of ${pages.current.length}…`),
+      );
+      setProgress("Writing the PDF…");
+      const r = await runTaskInWorker({ type: "docx-pdf", pages: rendered, name: file.name });
+      setProgress(null);
+      if (!r.ok) return setStatus({ tone: "error", text: r.message });
+      downloadBlob(pdfBlob(r.value.data), r.value.name);
+      setStatus({
+        tone: "success",
+        text: `Saved ${r.value.name}: ${pageWord(r.value.pageCount)}, ${formatBytes(r.value.data.length)}.`,
+      });
+    } catch {
+      setProgress(null);
+      setStatus({ tone: "error", text: "The pages could not be drawn. Try again, or reload the page if it keeps failing." });
+    }
   };
 
-  if (!file)
-    return (
-      <PdfDropPanel
-        status={status}
-        accept={DOCX_ACCEPT}
-        title="Drop a Word document here"
-        hint=".docx, up to 100 MB."
-        onFile={(f) => {
-          setStatus(IDLE);
-          setFile(f);
-        }}
-        onReject={(text) => setStatus({ tone: "error", text })}
-      />
-    );
+  const busy = laying || progress !== null;
 
   return (
-    <Panel
-      toolbar={
-        <Button variant="primary" size="sm" icon={Printer} onClick={print} disabled={rendering || !layout}>
-          Save as PDF
-        </Button>
-      }
-      status={
-        rendering ? (
-          <StatusMessage tone="working">Laying out the document…</StatusMessage>
-        ) : (
-          <StatusMessage tone={status.tone}>{status.text}</StatusMessage>
-        )
-      }
-    >
+    <>
       <style>{HOST_CSS}</style>
-      <FileSummary
-        file={file}
-        detail={layout?.mode === "page" ? pageWord(layout.pages) : undefined}
-        onRemove={() => {
-          setFile(null);
-          setLayout(null);
-          setStatus(IDLE);
-        }}
-      />
-      <PanelSection title="Preview" className="border-t border-border">
-        <div ref={frame} className="relative max-h-[36rem] min-h-48 overflow-auto bg-surface-2">
-          {rendering && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <LoaderCircle aria-label="Laying out the document" size={20} className="animate-spin text-fg-subtle" />
+      {/* Must be laid out (not hidden) to be measured and drawn, so it sits off-screen. */}
+      <div aria-hidden className="pointer-events-none fixed top-0 -left-[100000px]">
+        <div ref={source} className="docx-host" />
+        <div ref={stage} className="docx-host docx-stage" />
+      </div>
+      {!file ? (
+        <PdfDropPanel
+          status={status}
+          accept={DOCX_ACCEPT}
+          title="Drop a Word document here"
+          hint=".docx, up to 100 MB."
+          onFile={(f) => {
+            setStatus(IDLE);
+            setFile(f);
+          }}
+          onReject={(text) => setStatus({ tone: "error", text })}
+        />
+      ) : (
+        <Panel
+          toolbar={
+            <Button variant="primary" size="sm" icon={progress ? undefined : FileDown} onClick={convert} disabled={busy || !pageCount}>
+              {progress && <LoaderCircle aria-hidden size={15} className="animate-spin" />}
+              Convert and download PDF
+            </Button>
+          }
+          status={
+            laying ? (
+              <StatusMessage tone="working">Laying out the pages…</StatusMessage>
+            ) : progress ? (
+              <StatusMessage tone="working">{progress}</StatusMessage>
+            ) : (
+              <StatusMessage tone={status.tone}>{status.text}</StatusMessage>
+            )
+          }
+        >
+          <FileSummary
+            file={file}
+            detail={pageCount ? pageWord(pageCount) : undefined}
+            onRemove={() => {
+              setFile(null);
+              setPageCount(0);
+              pages.current = [];
+              setStatus(IDLE);
+            }}
+          />
+          <PanelSection title="Preview" className="border-t border-border">
+            <div ref={frame} className="relative max-h-[36rem] min-h-48 overflow-auto bg-surface-2">
+              {laying && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <LoaderCircle aria-label="Laying out the pages" size={20} className="animate-spin text-fg-subtle" />
+                </div>
+              )}
+              <div ref={preview} className="docx-host docx-preview" style={{ zoom }} />
             </div>
-          )}
-          <div ref={host} className="docx-host" style={{ zoom }} />
-        </div>
-      </PanelSection>
-    </Panel>
+          </PanelSection>
+        </Panel>
+      )}
+    </>
   );
 }

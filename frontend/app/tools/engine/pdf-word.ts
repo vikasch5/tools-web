@@ -241,8 +241,8 @@ export function describeOutline(pages: WordPage[]) {
 /** How a Word file becomes PDF pages, depending on whether it carries Word's own page breaks. */
 export function describeWordLayout(savedPageBreaks: boolean) {
   return savedPageBreaks
-    ? "Pages break where Word breaks them; headers and footers are kept"
-    : "Your browser splits the text into pages; headers and footers are left out";
+    ? "Pages break where Word breaks them, with headers and footers on every page"
+    : "Pages are split between paragraphs, so breaks can differ from Word; headers and footers are on every page";
 }
 
 /**

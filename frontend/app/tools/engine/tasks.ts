@@ -6,6 +6,7 @@ import type { HashAlgorithm } from "./hash";
 import type { PageNumberOptions, PagePlan, WatermarkImage, WatermarkOptions } from "./pdf-pages";
 import type { CompressLevel } from "./pdf-compress";
 import type { WordPage } from "./pdf-word";
+import type { RenderedPage } from "./docx-pdf";
 
 /** Binary and structured jobs for the engine worker (files in, files out). */
 export type Task =
@@ -23,6 +24,7 @@ export type Task =
   | { type: "pdf-unlock"; file: PdfFile; password: string }
   | { type: "pdf-encryption"; file: PdfFile }
   | { type: "docx-build"; pages: WordPage[]; bodySize: number }
+  | { type: "docx-pdf"; pages: RenderedPage[]; name: string }
   | { type: "hash"; data: Uint8Array }
   | { type: "image"; job: ImageJob };
 
@@ -41,6 +43,7 @@ export type TaskOutputs = {
   "pdf-unlock": { name: string; data: Uint8Array };
   "pdf-encryption": "none" | "restricted" | "password";
   "docx-build": Uint8Array;
+  "docx-pdf": { name: string; data: Uint8Array; pageCount: number; searchable: number };
   hash: Record<HashAlgorithm, string>;
   image: Blob;
 };
@@ -90,6 +93,8 @@ async function dispatch(task: Task) {
       return (await import("./qpdf")).encryptionStatus(task.file);
     case "docx-build":
       return (await import("./pdf-word")).buildDocx(task.pages, task.bodySize);
+    case "docx-pdf":
+      return (await import("./docx-pdf")).pagesToPdf(task.pages, task.name);
     case "hash":
       return (await import("./hash")).hashAll(task.data);
     case "image":

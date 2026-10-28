@@ -3,7 +3,7 @@ import { parsePageRanges } from "./page-ranges";
 
 export type PdfFile = { name: string; data: Uint8Array };
 
-async function load(file: PdfFile) {
+export async function loadPdf(file: PdfFile) {
   const { PDFDocument } = await import("pdf-lib");
   try {
     return await PDFDocument.load(file.data, { updateMetadata: false });
@@ -16,7 +16,7 @@ async function load(file: PdfFile) {
 }
 
 export async function pdfPageCount(file: PdfFile) {
-  return (await load(file)).getPageCount();
+  return (await loadPdf(file)).getPageCount();
 }
 
 /** Copies every page of each file, in order, into one new PDF. */
@@ -25,7 +25,7 @@ export async function mergePdfs(files: PdfFile[]) {
   const { PDFDocument } = await import("pdf-lib");
   const out = await PDFDocument.create();
   for (const file of files) {
-    const doc = await load(file);
+    const doc = await loadPdf(file);
     const pages = await out.copyPages(doc, doc.getPageIndices());
     for (const page of pages) out.addPage(page);
   }
@@ -34,7 +34,7 @@ export async function mergePdfs(files: PdfFile[]) {
 
 export type SplitMode = "extract" | "ranges" | "every";
 
-const baseName = (name: string) => name.replace(/\.pdf$/i, "") || "document";
+export const pdfBaseName = (name: string) => name.replace(/\.pdf$/i, "") || "document";
 
 /**
  * extract: chosen pages into one PDF · ranges: one PDF per range ·
@@ -42,7 +42,7 @@ const baseName = (name: string) => name.replace(/\.pdf$/i, "") || "document";
  */
 export async function splitPdf(file: PdfFile, mode: SplitMode, ranges: string) {
   const { PDFDocument } = await import("pdf-lib");
-  const doc = await load(file);
+  const doc = await loadPdf(file);
   const count = doc.getPageCount();
   const groups =
     mode === "every"
@@ -51,7 +51,7 @@ export async function splitPdf(file: PdfFile, mode: SplitMode, ranges: string) {
         ? [parsePageRanges(ranges, count).flat()]
         : parsePageRanges(ranges, count);
 
-  const base = baseName(file.name);
+  const base = pdfBaseName(file.name);
   const outputs: PdfFile[] = [];
   for (const group of groups) {
     const out = await PDFDocument.create();
@@ -76,7 +76,7 @@ export async function splitPdf(file: PdfFile, mode: SplitMode, ranges: string) {
  */
 export async function rotatePdf(file: PdfFile, turns: number[]) {
   const { degrees } = await import("pdf-lib");
-  const doc = await load(file);
+  const doc = await loadPdf(file);
   const pages = doc.getPages();
   pages.forEach((page, i) => {
     const turn = turns[i] ?? 0;
@@ -84,7 +84,7 @@ export async function rotatePdf(file: PdfFile, turns: number[]) {
     page.setRotation(degrees((((page.getRotation().angle + turn) % 360) + 360) % 360));
   });
   return {
-    name: `${baseName(file.name)}-rotated.pdf`,
+    name: `${pdfBaseName(file.name)}-rotated.pdf`,
     data: await doc.save(),
     rotations: pages.map((p) => p.getRotation().angle),
   };

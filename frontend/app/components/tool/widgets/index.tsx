@@ -30,6 +30,15 @@ const widgets: Record<WidgetId, ComponentType> = {
   "qr-code-generator": load(() => import("./QrCode"), "QrCode"),
   "lorem-ipsum": load(() => import("./LoremIpsum"), "LoremIpsum"),
   "image-converter": load(() => import("./ImageConverter"), "ImageConverter"),
+  "compress-pdf": load(() => import("./CompressPdf"), "CompressPdf"),
+  "word-to-pdf": load(() => import("./WordToPdf"), "WordToPdf"),
+  "pdf-to-word": load(() => import("./PdfToWord"), "PdfToWord"),
+  "organize-pdf": load(() => import("./PageArranger"), "OrganizePdf"),
+  "delete-pdf-pages": load(() => import("./PageArranger"), "DeletePdfPages"),
+  "add-page-numbers": load(() => import("./PageNumbers"), "PageNumbers"),
+  "watermark-pdf": load(() => import("./Watermark"), "Watermark"),
+  "protect-pdf": load(() => import("./PdfPassword"), "ProtectPdf"),
+  "unlock-pdf": load(() => import("./PdfPassword"), "UnlockPdf"),
 };
 
 export function ToolWidget({ id }: { id: WidgetId }) {

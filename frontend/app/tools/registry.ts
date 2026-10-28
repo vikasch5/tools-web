@@ -15,6 +15,17 @@ import { ageCalculator, bmiCalculator, loanCalculator, percentageCalculator } fr
 import { compressImage, imageConverter, passportPhoto, resizeImage } from "./defs/images";
 import { imageToPdf, mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
 import { hashGenerator, timestampConverter } from "./defs/utilities";
+import {
+  addPageNumbers,
+  compressPdf,
+  deletePdfPages,
+  organizePdf,
+  pdfToWord,
+  protectPdf,
+  unlockPdf,
+  watermarkPdf,
+  wordToPdf,
+} from "./defs/pdf-more";
 
 /** Full definitions of working tools. Import from loaders only. */
 export const toolDefinitions: ToolDefinition[] = [
@@ -37,6 +48,15 @@ export const toolDefinitions: ToolDefinition[] = [
   rotatePdf,
   pdfToImage,
   imageToPdf,
+  compressPdf,
+  wordToPdf,
+  pdfToWord,
+  organizePdf,
+  deletePdfPages,
+  addPageNumbers,
+  watermarkPdf,
+  protectPdf,
+  unlockPdf,
   compressImage,
   resizeImage,
   passportPhoto,

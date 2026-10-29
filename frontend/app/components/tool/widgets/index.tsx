@@ -42,6 +42,12 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "protect-pdf": load(() => import("./PdfPassword"), "ProtectPdf"),
   "unlock-pdf": load(() => import("./PdfPassword"), "UnlockPdf"),
   "form-photo": load(() => import("./FormPhoto"), "FormPhoto"),
+  "gst-calculator": load(() => import("./GstCalculator"), "GstCalculator"),
+  "sip-calculator": load(() => import("./SipCalculator"), "SipCalculator"),
+  "fd-calculator": load(() => import("./FdCalculator"), "FdCalculator"),
+  "ppf-calculator": load(() => import("./PpfCalculator"), "PpfCalculator"),
+  "gratuity-calculator": load(() => import("./GratuityCalculator"), "GratuityCalculator"),
+  "hra-calculator": load(() => import("./HraCalculator"), "HraCalculator"),
 };
 
 export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {

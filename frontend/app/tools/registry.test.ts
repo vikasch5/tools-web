@@ -5,6 +5,16 @@ import { runEngine } from "./engine/run";
 import { tools, toolVariants } from "~/data/tools";
 import { targetBytes } from "./engine/image-target";
 import { describePreset, formPresets } from "./engine/form-photo";
+import {
+  describeCompound,
+  describeFd,
+  describeGratuity,
+  describeGst,
+  describeHra,
+  describePpf,
+  describeSip,
+  type Compounding,
+} from "./engine/finance";
 import type { TextToolDefinition, WidgetId } from "./types";
 import { statsSummary, textStats } from "./engine/text-stats";
 import { diffLines, diffToText } from "./engine/diff";
@@ -283,6 +293,37 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
       y -= size * 1.3;
     }
     return describeOutline(textToWordPages([{ width: 612, height: 792, items }]));
+  },
+  "gst-calculator": (input) => {
+    const add = input.match(/^([\d,.]+) \+ ([\d.]+)% GST$/);
+    if (add) return describeGst(parseNumber(add[1]), Number(add[2]), "add");
+    const [, amount, rate] = input.match(/^([\d,.]+) including ([\d.]+)% GST$/)!;
+    return describeGst(parseNumber(amount), Number(rate), "remove");
+  },
+  "sip-calculator": (input) => {
+    const [, amount, rate, years, , step] = input.match(/^([\d,]+) a month at ([\d.]+)% for (\d+) years(, stepping up (\d+)% a year)?$/)!;
+    return describeSip(parseNumber(amount), Number(rate), Number(years), Number(step ?? 0));
+  },
+  "fd-calculator": (input) => {
+    const ci = input.match(/^([\d,]+)( a month)? at ([\d.]+)% for (\d+) years, compounded (\w+)$/);
+    if (ci) {
+      const amount = parseNumber(ci[1]);
+      return describeCompound(ci[2] ? 0 : amount, Number(ci[3]), Number(ci[4]) * 12, ci[5] as Compounding, ci[2] ? amount : 0);
+    }
+    const [, amount, rate, years] = input.match(/^([\d,]+) at ([\d.]+)% for (\d+) years$/)!;
+    return describeFd(parseNumber(amount), Number(rate), Number(years) * 12);
+  },
+  "ppf-calculator": (input) => {
+    const [, amount, years, rate] = input.match(/^([\d,]+) a year for (\d+) years at ([\d.]+)%$/)!;
+    return describePpf(parseNumber(amount), Number(rate), Number(years));
+  },
+  "gratuity-calculator": (input) => {
+    const [, wages, years, months, cover] = input.match(/^([\d,]+) basic \+ DA, (\d+) years (\d+) months, (covered|not covered)$/)!;
+    return describeGratuity({ wages: parseNumber(wages), years: Number(years), months: Number(months), covered: cover === "covered" });
+  },
+  "hra-calculator": (input) => {
+    const [, salary, hra, rent, city] = input.match(/^Basic \+ DA ([\d,]+), HRA ([\d,]+), rent ([\d,]+) a year, (big|other) city$/)!;
+    return describeHra({ salary: parseNumber(salary), hra: parseNumber(hra), rent: parseNumber(rent), bigCity: city === "big" });
   },
   "form-photo": (input) => describePreset(formPresets.find((p) => p.id === input)!),
   "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),

@@ -101,7 +101,13 @@ export type WidgetId =
   | "watermark-pdf"
   | "protect-pdf"
   | "unlock-pdf"
-  | "form-photo";
+  | "form-photo"
+  | "gst-calculator"
+  | "sip-calculator"
+  | "fd-calculator"
+  | "ppf-calculator"
+  | "gratuity-calculator"
+  | "hra-calculator";
 
 /** Starting settings for a widget on a landing page, e.g. { targetKb: 50 }. */
 export type WidgetPreset = Record<string, string | number>;

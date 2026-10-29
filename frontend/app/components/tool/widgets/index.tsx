@@ -1,11 +1,13 @@
 import { lazy, Suspense, type ComponentType } from "react";
-import type { WidgetId } from "~/tools/types";
+import type { WidgetId, WidgetPreset } from "~/tools/types";
 
-const load = <K extends string>(factory: () => Promise<Record<K, ComponentType>>, name: K) =>
+export type WidgetProps = { preset?: WidgetPreset };
+
+const load = <K extends string>(factory: () => Promise<Record<K, ComponentType<WidgetProps>>>, name: K) =>
   lazy(() => factory().then((m) => ({ default: m[name] })));
 
 /** Each tool panel is its own chunk, so a page only downloads its own UI. */
-const widgets: Record<WidgetId, ComponentType> = {
+const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "word-counter": load(() => import("./WordCounter"), "WordCounter"),
   "diff-checker": load(() => import("./DiffChecker"), "DiffChecker"),
   "uuid-generator": load(() => import("./UuidGenerator"), "UuidGenerator"),
@@ -41,7 +43,7 @@ const widgets: Record<WidgetId, ComponentType> = {
   "unlock-pdf": load(() => import("./PdfPassword"), "UnlockPdf"),
 };
 
-export function ToolWidget({ id }: { id: WidgetId }) {
+export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {
   const Widget = widgets[id];
   return (
     <Suspense
@@ -54,7 +56,7 @@ export function ToolWidget({ id }: { id: WidgetId }) {
         </div>
       }
     >
-      <Widget />
+      <Widget preset={preset} />
     </Suspense>
   );
 }

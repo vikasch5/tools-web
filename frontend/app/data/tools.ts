@@ -78,6 +78,32 @@ export const tools: Tool[] = [
   { slug: "percentage-calculator", name: "Percentage Calculator", category: "calculators", description: "Work out increases, decreases and ratios.", status: "live", isNew: true, keywords: ["percent", "discount", "increase", "decrease", "ratio"] },
 ];
 
+/**
+ * Landing pages for one setting of a live tool ("Compress Image to 50 KB").
+ * They have their own URL, title and guide, appear in the sitemap and in
+ * search results, but not in category listings or tool counts.
+ */
+export type ToolVariant = {
+  slug: string;
+  name: string;
+  category: string;
+  description: string;
+  /** Slug of the live tool whose widget the page uses. */
+  variantOf: string;
+  keywords?: string[];
+};
+
+const kbVariant = (kb: number): ToolVariant => ({
+  slug: `compress-image-to-${kb}kb`,
+  name: `Compress Image to ${kb} KB`,
+  category: "image-tools",
+  description: `Get a JPG under ${kb} KB for upload forms.`,
+  variantOf: "compress-image",
+  keywords: [`${kb}kb`, `${kb} kb`, "reduce size", "target size", "form upload"],
+});
+
+export const toolVariants: ToolVariant[] = [10, 20, 30, 50, 100, 200, 500].map(kbVariant);
+
 export const toolPath = (tool: Pick<Tool, "category" | "slug">) =>
   `/${tool.category}/${tool.slug}`;
 
@@ -85,3 +111,16 @@ export const liveTools = tools.filter((t) => t.status === "live");
 
 export const toolsInCategory = (category: string) =>
   tools.filter((t) => t.category === category);
+
+/** Live tools plus landing-page variants, for search results only. */
+export const searchableTools: Tool[] = [
+  ...liveTools,
+  ...toolVariants.map((v): Tool => ({
+    slug: v.slug,
+    name: v.name,
+    category: v.category,
+    description: v.description,
+    status: "live",
+    keywords: v.keywords,
+  })),
+];

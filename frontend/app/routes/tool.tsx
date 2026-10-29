@@ -121,7 +121,7 @@ export default function ToolPage({ loaderData }: Route.ComponentProps) {
             }}
           />
         ) : (
-          <ToolWidget id={tool.workspace} />
+          <ToolWidget id={tool.workspace} preset={tool.preset} />
         )}
       </Container>
 

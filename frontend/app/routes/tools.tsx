@@ -7,7 +7,7 @@ import { Breadcrumbs } from "~/components/layout/Breadcrumbs";
 import { ToolCard } from "~/components/tool/ToolCard";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { categories, categoryPath } from "~/data/categories";
-import { tools } from "~/data/tools";
+import { searchableTools, tools } from "~/data/tools";
 import { searchTools } from "~/lib/search";
 import { breadcrumbJsonLd, buildMeta } from "~/lib/seo";
 import { site } from "~/config/site";
@@ -75,7 +75,14 @@ export default function ToolsPage() {
   };
 
   const inCategory = category ? live.filter((t) => t.category === category) : live;
-  const results = useMemo(() => searchTools(query, inCategory), [query, inCategory]);
+  const results = useMemo(() => {
+    if (!query.trim()) return inCategory;
+    // Landing pages ("Compress Image to 50 KB") show up only as search results.
+    const variants = searchableTools.filter(
+      (t) => !live.includes(t) && (!category || t.category === category),
+    );
+    return searchTools(query, [...inCategory, ...variants]);
+  }, [query, inCategory, category]);
   const searching = query.trim() !== "";
   const counts = new Map(categories.map((c) => [c.slug, live.filter((t) => t.category === c.slug).length]));
 

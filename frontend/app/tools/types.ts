@@ -102,7 +102,14 @@ export type WidgetId =
   | "protect-pdf"
   | "unlock-pdf";
 
-export type WidgetToolDefinition = ToolContentBase & { workspace: WidgetId };
+/** Starting settings for a widget on a landing page, e.g. { targetKb: 50 }. */
+export type WidgetPreset = Record<string, string | number>;
+
+export type WidgetToolDefinition = ToolContentBase & {
+  workspace: WidgetId;
+  /** Landing-page variants of a tool open the same widget with these settings. */
+  preset?: WidgetPreset;
+};
 
 /**
  * Everything a tool page needs. Definitions are plain data, loaded by the

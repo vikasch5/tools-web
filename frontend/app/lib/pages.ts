@@ -1,6 +1,6 @@
 // Relative imports: react-router.config.ts loads this file too.
 import { categories } from "../data/categories";
-import { liveTools, toolPath } from "../data/tools";
+import { liveTools, toolPath, toolVariants } from "../data/tools";
 
 export const staticPaths = ["/tools", "/about", "/help", "/contact", "/privacy", "/terms"];
 
@@ -15,5 +15,6 @@ export function publicPaths() {
     ...staticPaths,
     ...categoriesWithLiveTools.map((category) => `/${category.slug}`),
     ...liveTools.map(toolPath),
+    ...toolVariants.map(toolPath),
   ];
 }

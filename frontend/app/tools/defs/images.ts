@@ -8,14 +8,15 @@ export const compressImage: WidgetToolDefinition = {
   name: "Compress Image",
   metaTitle: "Compress Image – Reduce JPG, PNG and WebP File Size",
   description:
-    "Shrink JPG, PNG and WebP images in your browser. Choose quality and format, optionally cap the dimensions, and download them one by one or as a ZIP.",
+    "Shrink JPG, PNG and WebP images in your browser. Pick a quality, or a target size like 50 KB for upload forms, and download one by one or as a ZIP.",
   overview: [
     "Large images are the main reason web pages load slowly and emails bounce. Photos from phones are often 3–10 MB each, far more than a website, chat app or upload form needs.",
     "Compression re-encodes the image at a chosen quality. Around 70–80% quality, most photos look the same to the eye but are several times smaller. Converting to WebP saves even more for the web, and capping the dimensions helps when the original is much larger than it will ever be shown. Re-encoding also removes hidden metadata such as GPS location, and because it happens in your browser, your photos stay private.",
   ],
   howTo: [
     "Drop up to 30 images onto the page or choose them from your device. They are compressed straight away.",
-    "Adjust Quality: 70–80% is usually indistinguishable from the original and much smaller.",
+    "For an upload form with a size limit, switch Mode to Size limit and pick the limit (for example 50 KB). Each image is fitted under it at the best quality that fits.",
+    "Otherwise adjust Quality: 70–80% is usually indistinguishable from the original and much smaller.",
     "Convert to WebP for the smallest files on the web, or JPG for maximum compatibility. PNG keeps transparency but compresses least.",
     "Set Max size to scale down very large photos, for example to 1920 px for a website.",
     "Download each image, or all of them as a ZIP file.",
@@ -23,6 +24,7 @@ export const compressImage: WidgetToolDefinition = {
   examples: [
     { title: "Scale a camera photo for the web (Max size 1920 px)", input: "6000 × 4000 px", output: "1920 × 1280 px" },
     { title: "Portrait phone photo (Max size 1280 px)", input: "3024 × 4032 px", output: "960 × 1280 px" },
+    { title: "Target size for a form limit", input: "Target 50 KB", output: "at most 50,000 bytes" },
   ],
   limitations: [
     "If an image is already well compressed and would get bigger, the original is kept and labelled as such.",
@@ -34,6 +36,11 @@ export const compressImage: WidgetToolDefinition = {
       question: "Does compressing reduce quality?",
       answer:
         "JPG and WebP compression is lossy, so some detail is discarded, but at 70–80% quality the difference is very hard to see. Compare before and after for important images.",
+    },
+    {
+      question: "How do I compress an image to a specific size like 50 KB?",
+      answer:
+        "Switch Mode to Size limit and choose the limit. The tool tries the highest quality first and lowers it, then the dimensions if needed, until the file is under the limit. 1 KB is counted as 1,000 bytes, so it passes forms that use either 1,000 or 1,024.",
     },
     {
       question: "Why is my PNG barely smaller?",

@@ -47,7 +47,7 @@ export function runInWorker(request: EngineRequest): Promise<EngineResult> {
  * the main thread where workers cannot draw (no OffscreenCanvas).
  */
 export async function runTaskInWorker<T extends Task>(task: T): Promise<TaskResult<T["type"]>> {
-  if (task.type === "image" && typeof OffscreenCanvas === "undefined") {
+  if ((task.type === "image" || task.type === "image-target") && typeof OffscreenCanvas === "undefined") {
     const { runTask } = await import("./tasks");
     return runTask(task);
   }

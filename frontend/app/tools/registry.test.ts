@@ -28,7 +28,7 @@ import { describeQr, wifiPayload, type QrLevel } from "./engine/qr";
 import { generateLorem } from "./engine/lorem";
 import { describeAge } from "./engine/age";
 import { describeBmi } from "./engine/bmi";
-import { describeLoan } from "./engine/loan";
+import { describeLoan, describePrepayment } from "./engine/loan";
 import { describeTimestamp } from "./engine/timestamp";
 import { describeHash } from "./engine/hash";
 import { describeColor } from "./engine/color";
@@ -185,6 +185,18 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     return describeBmi({ system: "imperial", weightLb: Number(lb), heightFt: Number(ft), heightIn: Number(inch) });
   },
   "loan-calculator": (input) => {
+    const prepay = input.match(/^([\d,]+) at ([\d.]+)% for (\d+) years, prepaying ([\d,]+) (every year|in month (\d+)), (finish sooner|lower the EMI)$/);
+    if (prepay) {
+      const [, amount, rate, years, lump, when, month, use] = prepay;
+      const yearly = when === "every year";
+      return describePrepayment({
+        principal: parseNumber(amount),
+        annualRate: Number(rate),
+        months: Number(years) * 12,
+        ...(yearly ? { yearly: parseNumber(lump), yearlyFromMonth: 12 } : { oneTime: parseNumber(lump), oneTimeMonth: Number(month) }),
+        mode: use === "finish sooner" ? "tenure" : "emi",
+      });
+    }
     const [, amount, rate, term, unit] = input.match(/^([\d,]+) at ([\d.]+)% for (\d+) (years|months)$/)!;
     return describeLoan({
       principal: parseNumber(amount),

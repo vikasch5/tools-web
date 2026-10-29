@@ -127,6 +127,16 @@ export const toolVariants: ToolVariant[] = [
   formVariant("pan-card-photo-resizer", "PAN Card Photo Resizer", "PAN photo and signature for the online form.", ["pan", "pan card", "nsdl", "protean", "utiitsl", "form 49a"]),
   formVariant("ibps-photo-signature-resizer", "IBPS & SBI Photo and Signature Resizer", "200 × 230 px photo, 140 × 60 px signature.", ["ibps", "sbi", "rbi", "bank exam", "po", "clerk"]),
   formVariant("upsc-photo-resizer", "UPSC Photo and Signature Resizer", "20–200 KB photo for UPSC forms.", ["upsc", "ias", "civil services", "cse"]),
+  ...[100, 200, 500, 1000].map(
+    (kb): ToolVariant => ({
+      slug: kb >= 1000 ? `compress-pdf-to-${kb / 1000}mb` : `compress-pdf-to-${kb}kb`,
+      name: `Compress PDF to ${kb >= 1000 ? `${kb / 1000} MB` : `${kb} KB`}`,
+      category: "pdf-tools",
+      description: "Get a PDF under a form's size limit.",
+      variantOf: "compress-pdf",
+      keywords: [kb >= 1000 ? `${kb / 1000}mb` : `${kb}kb`, "reduce pdf size", "form upload"],
+    }),
+  ),
   loanVariant("home-loan-emi-calculator", "Home Loan EMI Calculator", "EMI, interest and prepayment savings on a home loan.", ["home loan", "housing loan", "mortgage"]),
   loanVariant("car-loan-emi-calculator", "Car Loan EMI Calculator", "EMI and total interest on a car loan.", ["car loan", "auto loan", "vehicle loan"]),
   loanVariant("personal-loan-emi-calculator", "Personal Loan EMI Calculator", "EMI and interest on a personal loan.", ["personal loan", "instant loan"]),

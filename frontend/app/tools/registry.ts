@@ -16,6 +16,7 @@ import { compressImage, imageConverter, passportPhoto, resizeImage } from "./def
 import { compressImageTargets } from "./defs/image-target";
 import { examPhotoResizer, formPhotoPages, signatureResizer } from "./defs/form-photo";
 import { loanPages } from "./defs/loan-pages";
+import { compressPdfTargets } from "./defs/pdf-target";
 import { imageToPdf, mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
 import { hashGenerator, timestampConverter } from "./defs/utilities";
 import {
@@ -52,6 +53,7 @@ export const toolDefinitions: ToolDefinition[] = [
   pdfToImage,
   imageToPdf,
   compressPdf,
+  ...compressPdfTargets,
   wordToPdf,
   pdfToWord,
   organizePdf,

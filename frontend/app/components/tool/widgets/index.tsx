@@ -48,6 +48,7 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "ppf-calculator": load(() => import("./PpfCalculator"), "PpfCalculator"),
   "gratuity-calculator": load(() => import("./GratuityCalculator"), "GratuityCalculator"),
   "hra-calculator": load(() => import("./HraCalculator"), "HraCalculator"),
+  "income-tax-calculator": load(() => import("./IncomeTaxCalculator"), "IncomeTaxCalculator"),
 };
 
 export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {

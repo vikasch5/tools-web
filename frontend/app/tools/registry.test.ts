@@ -15,6 +15,7 @@ import {
   describeSip,
   type Compounding,
 } from "./engine/finance";
+import { describeTax } from "./engine/income-tax";
 import type { TextToolDefinition, WidgetId } from "./types";
 import { statsSummary, textStats } from "./engine/text-stats";
 import { diffLines, diffToText } from "./engine/diff";
@@ -324,6 +325,20 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
   "hra-calculator": (input) => {
     const [, salary, hra, rent, city] = input.match(/^Basic \+ DA ([\d,]+), HRA ([\d,]+), rent ([\d,]+) a year, (big|other) city$/)!;
     return describeHra({ salary: parseNumber(salary), hra: parseNumber(hra), rent: parseNumber(rent), bigCity: city === "big" });
+  },
+  "income-tax-calculator": (input) => {
+    const field = (name: string) => {
+      const m = input.match(new RegExp(`${name} ([\\d,]+)`));
+      return m ? parseNumber(m[1]) : 0;
+    };
+    return describeTax({
+      salary: field("Salary"),
+      section80C: field("80C"),
+      section80D: field("80D"),
+      nps: field("NPS"),
+      hraExemption: field("HRA"),
+      homeLoanInterest: field("home loan"),
+    });
   },
   "form-photo": (input) => describePreset(formPresets.find((p) => p.id === input)!),
   "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),

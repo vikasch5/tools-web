@@ -18,6 +18,7 @@ import { examPhotoResizer, formPhotoPages, signatureResizer } from "./defs/form-
 import { loanPages } from "./defs/loan-pages";
 import { compressPdfTargets } from "./defs/pdf-target";
 import { financeCalculators } from "./defs/finance";
+import { incomeTaxCalculator } from "./defs/income-tax";
 import { imageToPdf, mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
 import { hashGenerator, timestampConverter } from "./defs/utilities";
 import {
@@ -88,6 +89,7 @@ export const toolDefinitions: ToolDefinition[] = [
   loanCalculator,
   ...loanPages,
   ...financeCalculators,
+  incomeTaxCalculator,
 ];
 
 export function getToolDefinition(category: string, slug: string) {

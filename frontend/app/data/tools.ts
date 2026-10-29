@@ -69,6 +69,8 @@ export const tools: Tool[] = [
   { slug: "split-pdf", name: "Split PDF", category: "pdf-tools", description: "Extract pages or split by range.", status: "live", isNew: true, keywords: ["extract pages", "separate", "cut", "pdf"] },
   { slug: "compress-image", name: "Compress Image", category: "image-tools", description: "Shrink JPG, PNG and WebP file sizes.", status: "live", popular: true, isNew: true, keywords: ["optimize", "reduce size", "shrink", "jpg", "jpeg", "png", "webp", "photo"] },
   { slug: "resize-image", name: "Resize Image", category: "image-tools", description: "Set exact pixel dimensions or a percentage.", status: "live", isNew: true, keywords: ["scale", "dimensions", "pixels", "jpg", "png", "photo"] },
+  { slug: "exam-photo-resizer", name: "Exam Photo & Signature Resizer", category: "image-tools", description: "Exact pixel and KB sizes for IBPS, SSC, UPSC, GDS and PAN forms.", status: "live", popular: true, isNew: true, keywords: ["exam photo", "ibps", "sbi", "ssc", "upsc", "gds", "pan card", "20kb", "50kb", "200x230", "thumb impression", "sarkari form"] },
+  { slug: "signature-resizer", name: "Signature Resizer", category: "image-tools", description: "Clean, cropped signatures at 140 × 60 px, 10–20 KB and more.", status: "live", isNew: true, keywords: ["signature", "sign", "10kb", "20kb", "140x60", "scan signature", "white background"] },
   { slug: "passport-photo", name: "Passport Photo Maker", category: "image-tools", description: "Crop photos to official size presets.", status: "live", isNew: true, keywords: ["visa", "id photo", "2x2", "35x45", "crop"] },
   { slug: "word-counter", name: "Word Counter", category: "text-tools", description: "Count words, characters and reading time.", status: "live", popular: true, isNew: true, keywords: ["character count", "characters", "letters", "reading time", "essay"] },
   { slug: "diff-checker", name: "Diff Checker", category: "text-tools", description: "Compare two texts side by side.", status: "live", isNew: true, keywords: ["compare", "difference", "text compare", "changes"] },
@@ -102,7 +104,22 @@ const kbVariant = (kb: number): ToolVariant => ({
   keywords: [`${kb}kb`, `${kb} kb`, "reduce size", "target size", "form upload"],
 });
 
-export const toolVariants: ToolVariant[] = [10, 20, 30, 50, 100, 200, 500].map(kbVariant);
+const formVariant = (slug: string, name: string, description: string, keywords: string[]): ToolVariant => ({
+  slug,
+  name,
+  category: "image-tools",
+  description,
+  variantOf: "exam-photo-resizer",
+  keywords,
+});
+
+export const toolVariants: ToolVariant[] = [
+  ...[10, 20, 30, 50, 100, 200, 500].map(kbVariant),
+  formVariant("pan-card-photo-resizer", "PAN Card Photo Resizer", "PAN photo and signature for the online form.", ["pan", "pan card", "nsdl", "protean", "utiitsl", "form 49a"]),
+  formVariant("ibps-photo-signature-resizer", "IBPS & SBI Photo and Signature Resizer", "200 × 230 px photo, 140 × 60 px signature.", ["ibps", "sbi", "rbi", "bank exam", "po", "clerk"]),
+  formVariant("upsc-photo-resizer", "UPSC Photo and Signature Resizer", "20–200 KB photo for UPSC forms.", ["upsc", "ias", "civil services", "cse"]),
+  formVariant("india-post-gds-photo-resizer", "India Post GDS Photo Resizer", "320 × 400 px photo for the GDS form.", ["gds", "india post", "gramin dak sevak", "postal"]),
+];
 
 export const toolPath = (tool: Pick<Tool, "category" | "slug">) =>
   `/${tool.category}/${tool.slug}`;

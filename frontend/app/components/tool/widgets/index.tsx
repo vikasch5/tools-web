@@ -41,6 +41,7 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "watermark-pdf": load(() => import("./Watermark"), "Watermark"),
   "protect-pdf": load(() => import("./PdfPassword"), "ProtectPdf"),
   "unlock-pdf": load(() => import("./PdfPassword"), "UnlockPdf"),
+  "form-photo": load(() => import("./FormPhoto"), "FormPhoto"),
 };
 
 export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {

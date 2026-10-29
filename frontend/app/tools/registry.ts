@@ -14,6 +14,7 @@ import { colorConverter, gradientGenerator } from "./defs/design";
 import { ageCalculator, bmiCalculator, loanCalculator, percentageCalculator } from "./defs/calculators";
 import { compressImage, imageConverter, passportPhoto, resizeImage } from "./defs/images";
 import { compressImageTargets } from "./defs/image-target";
+import { examPhotoResizer, formPhotoPages, signatureResizer } from "./defs/form-photo";
 import { imageToPdf, mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
 import { hashGenerator, timestampConverter } from "./defs/utilities";
 import {
@@ -62,6 +63,9 @@ export const toolDefinitions: ToolDefinition[] = [
   ...compressImageTargets,
   resizeImage,
   passportPhoto,
+  examPhotoResizer,
+  signatureResizer,
+  ...formPhotoPages,
   imageConverter,
   wordCounter,
   diffChecker,

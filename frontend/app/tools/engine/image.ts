@@ -172,3 +172,63 @@ export async function compressImageToTarget(job: TargetImageJob): Promise<Target
     bitmap.close();
   }
 }
+
+export type FormImageJob = {
+  file: Blob;
+  crop: Rect;
+  /** Exact output size the form asks for. */
+  width: number;
+  height: number;
+  minBytes: number;
+  maxBytes: number;
+  /** Whiten paper and darken ink (signatures, thumb impressions). */
+  clean?: boolean;
+};
+
+export type FormImageResult = {
+  blob: Blob;
+  quality: number;
+  /** Bytes of padding added to reach the minimum size. */
+  padded: number;
+  /** False when even the lowest quality is above the maximum. */
+  reached: boolean;
+};
+
+/**
+ * Crops and resizes to a form's exact pixel size, then picks the highest
+ * JPEG quality under the maximum. A result below the minimum is padded
+ * with a JPEG comment, which leaves the picture unchanged.
+ */
+export async function fitFormImage(job: FormImageJob): Promise<FormImageResult> {
+  const { cleanPaper, padJpeg } = await import("./form-photo");
+  const bitmap = await decodeImage(job.file);
+  const canvas = drawScaled(bitmap, job.crop, job.width, job.height, "#ffffff");
+  bitmap.close();
+  if (job.clean) {
+    const ctx = context(canvas);
+    const image = ctx.getImageData(0, 0, job.width, job.height);
+    cleanPaper(image.data);
+    ctx.putImageData(image, 0, 0);
+  }
+
+  const r = await findTargetEncoding((_scale, quality) => toBlob(canvas, "image/jpeg", quality), {
+    target: job.maxBytes,
+    maxQuality: 0.98,
+    preferredQuality: 0.3,
+    minQuality: 0.1,
+    minScale: 1,
+    qualitySteps: 7,
+  });
+  if (!r.reached || r.blob.size >= job.minBytes) return { blob: r.blob, quality: r.quality, padded: 0, reached: r.reached };
+
+  const data = new Uint8Array(await r.blob.arrayBuffer());
+  // Pad to just inside the range, never past the maximum.
+  const goal = Math.min(job.maxBytes, job.minBytes + 512);
+  const padded = padJpeg(data, goal);
+  return {
+    blob: new Blob([padded as BlobPart], { type: "image/jpeg" }),
+    quality: r.quality,
+    padded: padded.length - data.length,
+    reached: true,
+  };
+}

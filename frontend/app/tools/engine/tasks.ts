@@ -1,5 +1,5 @@
 import type { DiffOptions, DiffResult } from "./diff";
-import type { ImageJob, TargetImageJob, TargetImageResult } from "./image";
+import type { FormImageJob, FormImageResult, ImageJob, TargetImageJob, TargetImageResult } from "./image";
 import type { PdfFile, SplitMode } from "./pdf";
 import type { ImagesPdfOptions, PdfImage } from "./images-pdf";
 import type { HashAlgorithm } from "./hash";
@@ -27,7 +27,8 @@ export type Task =
   | { type: "docx-pdf"; pages: RenderedPage[]; name: string }
   | { type: "hash"; data: Uint8Array }
   | { type: "image"; job: ImageJob }
-  | { type: "image-target"; job: TargetImageJob };
+  | { type: "image-target"; job: TargetImageJob }
+  | { type: "image-form"; job: FormImageJob };
 
 export type TaskOutputs = {
   diff: DiffResult;
@@ -48,6 +49,7 @@ export type TaskOutputs = {
   hash: Record<HashAlgorithm, string>;
   image: Blob;
   "image-target": TargetImageResult;
+  "image-form": FormImageResult;
 };
 
 export type TaskResult<T extends Task["type"]> =
@@ -103,5 +105,7 @@ async function dispatch(task: Task) {
       return (await import("./image")).renderImage(task.job);
     case "image-target":
       return (await import("./image")).compressImageToTarget(task.job);
+    case "image-form":
+      return (await import("./image")).fitFormImage(task.job);
   }
 }

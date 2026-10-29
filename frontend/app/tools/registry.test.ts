@@ -4,6 +4,7 @@ import { toolDefinitions } from "./registry";
 import { runEngine } from "./engine/run";
 import { tools, toolVariants } from "~/data/tools";
 import { targetBytes } from "./engine/image-target";
+import { describePreset, formPresets } from "./engine/form-photo";
 import type { TextToolDefinition, WidgetId } from "./types";
 import { statsSummary, textStats } from "./engine/text-stats";
 import { diffLines, diffToText } from "./engine/diff";
@@ -269,6 +270,7 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     }
     return describeOutline(textToWordPages([{ width: 612, height: 792, items }]));
   },
+  "form-photo": (input) => describePreset(formPresets.find((p) => p.id === input)!),
   "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),
   "merge-pdf": async (input) => {
     const files = await Promise.all(

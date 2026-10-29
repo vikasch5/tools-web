@@ -2,11 +2,12 @@ import { useMemo, useState } from "react";
 import { Download } from "lucide-react";
 import { Button } from "~/components/ui/Button";
 import { SelectField, TextAreaField, TextField } from "~/components/ui/Field";
-import { contrastRatio, encodeQr, qrSvg, wifiPayload, type QrLevel, type WifiSecurity } from "~/tools/engine/qr";
+import { contrastRatio, encodeQr, qrSvg, upiPayload, wifiPayload, type QrLevel, type WifiSecurity } from "~/tools/engine/qr";
+import type { WidgetProps } from "./index";
 import { Segmented, Switch } from "../OptionControls";
 import { Panel, PanelSection, StatusMessage, downloadBlob } from "../Panel";
 
-type Mode = "text" | "wifi";
+type Mode = "text" | "wifi" | "upi";
 
 const levels: { value: QrLevel; label: string }[] = [
   { value: "L", label: "L 7%" },
@@ -31,8 +32,9 @@ function svgToPng(svg: string, size: number) {
   });
 }
 
-export function QrCode() {
-  const [mode, setMode] = useState<Mode>("text");
+export function QrCode({ preset }: WidgetProps) {
+  const [mode, setMode] = useState<Mode>(preset?.mode === "upi" ? "upi" : "text");
+  const [upi, setUpi] = useState({ vpa: "", name: "", amount: "", note: "" });
   const [text, setText] = useState("https://example.com");
   const [wifi, setWifi] = useState({ ssid: "", password: "", security: "WPA" as WifiSecurity, hidden: false });
   const [level, setLevel] = useState<QrLevel>("M");
@@ -44,13 +46,14 @@ export function QrCode() {
 
   const result = useMemo(() => {
     try {
-      const data = mode === "text" ? text : wifiPayload(wifi.ssid, wifi.password, wifi.security, wifi.hidden);
+      const data =
+        mode === "text" ? text : mode === "upi" ? upiPayload(upi) : wifiPayload(wifi.ssid, wifi.password, wifi.security, wifi.hidden);
       const qr = encodeQr(data, level);
       return { ok: true as const, ...qr, svg: qrSvg(qr.modules, dark, light), bytes: new TextEncoder().encode(data).length };
     } catch (e) {
       return { ok: false as const, message: (e as Error).message };
     }
-  }, [mode, text, wifi, level, dark, light]);
+  }, [mode, text, wifi, upi, level, dark, light]);
 
   const contrast = contrastRatio(dark, light);
   const lowContrast = contrast < 4 || contrastRatio(dark, "#000000") > contrastRatio(light, "#000000");
@@ -59,7 +62,7 @@ export function QrCode() {
     if (!result.ok) return;
     try {
       setSaveError("");
-      downloadBlob(await svgToPng(result.svg, Number(pngSize)), "qr-code.png");
+      downloadBlob(await svgToPng(result.svg, Number(pngSize)), mode === "upi" ? "upi-qr-code.png" : "qr-code.png");
     } catch (e) {
       setSaveError((e as Error).message);
     }
@@ -76,6 +79,7 @@ export function QrCode() {
             choices={[
               { value: "text", label: "Link or text" },
               { value: "wifi", label: "Wi-Fi" },
+              { value: "upi", label: "UPI payment" },
             ]}
           />
           <Segmented label="Error correction" value={level} onChange={(v) => setLevel(v as QrLevel)} choices={levels} />
@@ -85,7 +89,7 @@ export function QrCode() {
         saveError ? (
           <StatusMessage tone="error">{saveError}</StatusMessage>
         ) : !result.ok ? (
-          <StatusMessage tone={mode === "wifi" && !wifi.ssid ? "idle" : "error"}>{result.message}</StatusMessage>
+          <StatusMessage tone={(mode === "wifi" && !wifi.ssid) || (mode === "upi" && !upi.vpa) ? "idle" : "error"}>{result.message}</StatusMessage>
         ) : lowContrast ? (
           <StatusMessage tone="warning">
             Low contrast: scanners need a dark code on a light background. Pick darker and lighter colours.
@@ -110,6 +114,27 @@ export function QrCode() {
                 placeholder="https://…"
                 rows={5}
               />
+            ) : mode === "upi" ? (
+              <>
+                <TextField
+                  label="UPI ID"
+                  hint="e.g. yourshop@okaxis"
+                  value={upi.vpa}
+                  onChange={(event) => setUpi({ ...upi, vpa: event.target.value })}
+                  autoComplete="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                />
+                <TextField label="Name shown to the payer" hint="Optional" value={upi.name} onChange={(event) => setUpi({ ...upi, name: event.target.value })} />
+                <div className="grid grid-cols-2 gap-3">
+                  <TextField label="Amount" hint="Optional" suffix="₹" inputMode="decimal" value={upi.amount} onChange={(event) => setUpi({ ...upi, amount: event.target.value })} />
+                  <TextField label="Note" hint="Optional" maxLength={50} value={upi.note} onChange={(event) => setUpi({ ...upi, note: event.target.value })} />
+                </div>
+                <p className="text-xs leading-relaxed text-fg-subtle">
+                  Works with every UPI app (GPay, PhonePe, Paytm, BHIM and bank apps). Leave the amount empty for a code customers
+                  can use for any amount. Scan it once yourself and check the name before you print it.
+                </p>
+              </>
             ) : (
               <>
                 <TextField
@@ -160,7 +185,13 @@ export function QrCode() {
               {result.ok ? (
                 <img
                   src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(result.svg)}`}
-                  alt={mode === "text" ? `QR code for ${text.slice(0, 80)}` : `QR code to join the Wi-Fi network ${wifi.ssid}`}
+                  alt={
+                    mode === "text"
+                      ? `QR code for ${text.slice(0, 80)}`
+                      : mode === "upi"
+                        ? `UPI QR code to pay ${upi.name || upi.vpa}`
+                        : `QR code to join the Wi-Fi network ${wifi.ssid}`
+                  }
                   className="size-full [image-rendering:pixelated]"
                 />
               ) : (

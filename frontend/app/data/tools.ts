@@ -89,6 +89,7 @@ export const tools: Tool[] = [
   { slug: "gratuity-calculator", name: "Gratuity Calculator", category: "calculators", description: "Gratuity with the 15/26 formula and labour code rules.", status: "live", isNew: true, keywords: ["gratuity", "15/26", "labour code", "resignation", "retirement"] },
   { slug: "hra-calculator", name: "HRA Exemption Calculator", category: "calculators", description: "Tax-free house rent allowance under the old regime.", status: "live", isNew: true, keywords: ["hra", "house rent allowance", "rent", "exemption", "metro", "income tax"] },
   // Roadmap phase 4: everyday tools
+  { slug: "rent-receipt-generator", name: "Rent Receipt Generator", category: "generators", description: "Monthly rent receipts for HRA as a printable PDF.", status: "live", isNew: true, keywords: ["rent receipt", "hra", "house rent", "landlord", "pan", "pdf", "income tax"] },
   { slug: "date-calculator", name: "Date Calculator", category: "calculators", description: "Days between dates, working days, add or subtract days.", status: "live", isNew: true, keywords: ["days between dates", "date difference", "working days", "add days", "countdown", "how many days"] },
   { slug: "discount-calculator", name: "Discount Calculator", category: "calculators", description: "Sale price, savings and stacked discounts.", status: "live", isNew: true, keywords: ["discount", "sale", "offer", "percent off", "mrp", "bank offer"] },
   { slug: "gold-price-calculator", name: "Gold Price Calculator", category: "calculators", description: "Jewellery price with purity, making charges and GST.", status: "live", isNew: true, keywords: ["gold", "22k", "24k", "jewellery", "making charges", "tola", "gold rate"] },
@@ -155,6 +156,14 @@ export const toolVariants: ToolVariant[] = [
       keywords: [kb >= 1000 ? `${kb / 1000}mb` : `${kb}kb`, "reduce pdf size", "form upload"],
     }),
   ),
+  {
+    slug: "upi-qr-code-generator",
+    name: "UPI QR Code Generator",
+    category: "generators",
+    description: "Payment QR code from your UPI ID.",
+    variantOf: "qr-code-generator",
+    keywords: ["upi", "upi qr", "payment qr", "gpay", "phonepe", "paytm", "bhim", "shop"],
+  },
   loanVariant("home-loan-emi-calculator", "Home Loan EMI Calculator", "EMI, interest and prepayment savings on a home loan.", ["home loan", "housing loan", "mortgage"]),
   loanVariant("car-loan-emi-calculator", "Car Loan EMI Calculator", "EMI and total interest on a car loan.", ["car loan", "auto loan", "vehicle loan"]),
   loanVariant("personal-loan-emi-calculator", "Personal Loan EMI Calculator", "EMI and interest on a personal loan.", ["personal loan", "instant loan"]),

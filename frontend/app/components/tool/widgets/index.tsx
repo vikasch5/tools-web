@@ -56,6 +56,7 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "gold-calculator": load(() => import("./GoldCalculator"), "GoldCalculator"),
   "unit-converter": load(() => import("./UnitConverter"), "UnitConverter"),
   "typing-test": load(() => import("./TypingTest"), "TypingTest"),
+  "rent-receipt": load(() => import("./RentReceipt"), "RentReceipt"),
 };
 
 export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {

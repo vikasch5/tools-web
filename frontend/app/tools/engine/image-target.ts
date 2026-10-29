@@ -115,7 +115,7 @@ export async function findTargetEncoding(encode: TargetEncode, search: TargetSea
 
   // Narrow down to the largest scale that still fits, then raise quality.
   for (let step = 0; step < scaleSteps; step++) {
-    const mid = (fits.scale + tooBig) / 2;
+    const mid: number = (fits.scale + tooBig) / 2;
     const blob = await encode(mid, preferredQuality);
     if (blob.size <= target) fits = { scale: mid, blob };
     else tooBig = mid;

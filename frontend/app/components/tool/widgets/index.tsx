@@ -49,6 +49,8 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "gratuity-calculator": load(() => import("./GratuityCalculator"), "GratuityCalculator"),
   "hra-calculator": load(() => import("./HraCalculator"), "HraCalculator"),
   "income-tax-calculator": load(() => import("./IncomeTaxCalculator"), "IncomeTaxCalculator"),
+  "crop-image": load(() => import("./CropImage"), "CropImage"),
+  "add-text": load(() => import("./AddText"), "AddText"),
 };
 
 export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {

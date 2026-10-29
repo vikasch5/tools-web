@@ -108,7 +108,9 @@ export type WidgetId =
   | "ppf-calculator"
   | "gratuity-calculator"
   | "hra-calculator"
-  | "income-tax-calculator";
+  | "income-tax-calculator"
+  | "crop-image"
+  | "add-text";
 
 /** Starting settings for a widget on a landing page, e.g. { targetKb: 50 }. */
 export type WidgetPreset = Record<string, string | number>;

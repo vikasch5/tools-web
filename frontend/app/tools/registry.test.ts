@@ -16,6 +16,8 @@ import {
   type Compounding,
 } from "./engine/finance";
 import { describeTax } from "./engine/income-tax";
+import { centredRect, aspectChoices } from "./engine/crop-geometry";
+import { describeTextSize } from "./engine/text-layer";
 import type { TextToolDefinition, WidgetId } from "./types";
 import { statsSummary, textStats } from "./engine/text-stats";
 import { diffLines, diffToText } from "./engine/diff";
@@ -339,6 +341,15 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
       hraExemption: field("HRA"),
       homeLoanInterest: field("home loan"),
     });
+  },
+  "crop-image": (input) => {
+    const [, w, h, ratio] = input.match(/^(\d+) × (\d+) px, (.+)$/)!;
+    const r = centredRect({ width: Number(w), height: Number(h) }, aspectChoices.find((a) => a.value === ratio)!.ratio);
+    return `${r.width} × ${r.height} px from (${r.x}, ${r.y})`;
+  },
+  "add-text": (input) => {
+    const [, pct, w, h] = input.match(/^([\d.]+)% on (\d+) × (\d+) px$/)!;
+    return describeTextSize(Number(pct), Number(w), Number(h));
   },
   "form-photo": (input) => describePreset(formPresets.find((p) => p.id === input)!),
   "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),

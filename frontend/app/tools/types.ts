@@ -100,7 +100,23 @@ export type WidgetId =
   | "add-page-numbers"
   | "watermark-pdf"
   | "protect-pdf"
-  | "unlock-pdf";
+  | "unlock-pdf"
+  | "form-photo"
+  | "gst-calculator"
+  | "sip-calculator"
+  | "fd-calculator"
+  | "ppf-calculator"
+  | "gratuity-calculator"
+  | "hra-calculator"
+  | "income-tax-calculator"
+  | "crop-image"
+  | "add-text"
+  | "date-calculator"
+  | "discount-calculator"
+  | "gold-calculator"
+  | "unit-converter"
+  | "typing-test"
+  | "rent-receipt";
 
 /** Starting settings for a widget on a landing page, e.g. { targetKb: 50 }. */
 export type WidgetPreset = Record<string, string | number>;

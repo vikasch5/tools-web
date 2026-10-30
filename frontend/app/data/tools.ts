@@ -69,12 +69,33 @@ export const tools: Tool[] = [
   { slug: "split-pdf", name: "Split PDF", category: "pdf-tools", description: "Extract pages or split by range.", status: "live", isNew: true, keywords: ["extract pages", "separate", "cut", "pdf"] },
   { slug: "compress-image", name: "Compress Image", category: "image-tools", description: "Shrink JPG, PNG and WebP file sizes.", status: "live", popular: true, isNew: true, keywords: ["optimize", "reduce size", "shrink", "jpg", "jpeg", "png", "webp", "photo"] },
   { slug: "resize-image", name: "Resize Image", category: "image-tools", description: "Set exact pixel dimensions or a percentage.", status: "live", isNew: true, keywords: ["scale", "dimensions", "pixels", "jpg", "png", "photo"] },
+  { slug: "exam-photo-resizer", name: "Exam Photo & Signature Resizer", category: "image-tools", description: "Exact pixel and KB sizes for IBPS, SSC, UPSC, GDS and PAN forms.", status: "live", popular: true, isNew: true, keywords: ["exam photo", "ibps", "sbi", "ssc", "upsc", "gds", "pan card", "20kb", "50kb", "200x230", "thumb impression", "sarkari form"] },
+  { slug: "signature-resizer", name: "Signature Resizer", category: "image-tools", description: "Clean, cropped signatures at 140 × 60 px, 10–20 KB and more.", status: "live", isNew: true, keywords: ["signature", "sign", "10kb", "20kb", "140x60", "scan signature", "white background"] },
+  { slug: "crop-image", name: "Crop Image", category: "image-tools", description: "Crop freely or to 1:1, 4:5, 16:9; rotate and mirror.", status: "live", popular: true, isNew: true, keywords: ["crop", "cut", "trim", "square", "instagram", "aspect ratio", "rotate", "flip"] },
+  { slug: "add-text-to-photo", name: "Add Text to Photo", category: "image-tools", description: "Captions, Hindi text and date stamps on photos.", status: "live", isNew: true, keywords: ["text on photo", "caption", "write on image", "hindi", "date stamp", "watermark text", "meme"] },
   { slug: "passport-photo", name: "Passport Photo Maker", category: "image-tools", description: "Crop photos to official size presets.", status: "live", isNew: true, keywords: ["visa", "id photo", "2x2", "35x45", "crop"] },
   { slug: "word-counter", name: "Word Counter", category: "text-tools", description: "Count words, characters and reading time.", status: "live", popular: true, isNew: true, keywords: ["character count", "characters", "letters", "reading time", "essay"] },
   { slug: "diff-checker", name: "Diff Checker", category: "text-tools", description: "Compare two texts side by side.", status: "live", isNew: true, keywords: ["compare", "difference", "text compare", "changes"] },
   { slug: "csv-to-json", name: "CSV to JSON", category: "converters", description: "Turn spreadsheet rows into JSON objects.", status: "live", isNew: true, keywords: ["spreadsheet", "excel", "convert", "tsv"] },
   { slug: "gradient-generator", name: "Gradient Generator", category: "web-design-tools", description: "Build linear, radial and conic CSS gradients.", status: "live", isNew: true, keywords: ["css gradient", "background", "colors", "linear", "radial"] },
   { slug: "uuid-generator", name: "UUID Generator", category: "generators", description: "Create v4 and v7 UUIDs in bulk.", status: "live", isNew: true, keywords: ["guid", "unique id", "random id", "v4", "v7"] },
+  // Roadmap phase 2: Indian finance calculators
+  { slug: "income-tax-calculator", name: "Income Tax Calculator", category: "calculators", description: "New vs old regime tax for FY 2026-27.", status: "live", popular: true, isNew: true, keywords: ["income tax", "tax", "new regime", "old regime", "slab", "87a", "salary", "itr", "fy 2026-27"] },
+  { slug: "gst-calculator", name: "GST Calculator", category: "calculators", description: "Add or remove GST, with the CGST, SGST or IGST split.", status: "live", popular: true, isNew: true, keywords: ["gst", "tax", "cgst", "sgst", "igst", "inclusive", "exclusive", "invoice", "18%", "5%"] },
+  { slug: "sip-calculator", name: "SIP Calculator", category: "calculators", description: "Monthly SIP, step-up SIP and lump sum returns.", status: "live", popular: true, isNew: true, keywords: ["sip", "mutual fund", "step up", "lumpsum", "lump sum", "investment", "returns"] },
+  { slug: "fd-calculator", name: "FD Calculator", category: "calculators", description: "Fixed deposit maturity and interest, compounded quarterly.", status: "live", isNew: true, keywords: ["fd", "fixed deposit", "bank", "post office", "maturity", "interest"] },
+  { slug: "compound-interest-calculator", name: "Compound Interest Calculator", category: "calculators", description: "Growth with compound interest and monthly additions.", status: "live", isNew: true, keywords: ["compound", "interest", "ci", "savings", "growth", "rule of 72"] },
+  { slug: "ppf-calculator", name: "PPF Calculator", category: "calculators", description: "Public Provident Fund maturity at today's rate.", status: "live", isNew: true, keywords: ["ppf", "provident fund", "80c", "tax free", "post office"] },
+  { slug: "gratuity-calculator", name: "Gratuity Calculator", category: "calculators", description: "Gratuity with the 15/26 formula and labour code rules.", status: "live", isNew: true, keywords: ["gratuity", "15/26", "labour code", "resignation", "retirement"] },
+  { slug: "hra-calculator", name: "HRA Exemption Calculator", category: "calculators", description: "Tax-free house rent allowance under the old regime.", status: "live", isNew: true, keywords: ["hra", "house rent allowance", "rent", "exemption", "metro", "income tax"] },
+  // Roadmap phase 4: everyday tools
+  { slug: "rent-receipt-generator", name: "Rent Receipt Generator", category: "generators", description: "Monthly rent receipts for HRA as a printable PDF.", status: "live", isNew: true, keywords: ["rent receipt", "hra", "house rent", "landlord", "pan", "pdf", "income tax"] },
+  { slug: "date-calculator", name: "Date Calculator", category: "calculators", description: "Days between dates, working days, add or subtract days.", status: "live", isNew: true, keywords: ["days between dates", "date difference", "working days", "add days", "countdown", "how many days"] },
+  { slug: "discount-calculator", name: "Discount Calculator", category: "calculators", description: "Sale price, savings and stacked discounts.", status: "live", isNew: true, keywords: ["discount", "sale", "offer", "percent off", "mrp", "bank offer"] },
+  { slug: "gold-price-calculator", name: "Gold Price Calculator", category: "calculators", description: "Jewellery price with purity, making charges and GST.", status: "live", isNew: true, keywords: ["gold", "22k", "24k", "jewellery", "making charges", "tola", "gold rate"] },
+  { slug: "unit-converter", name: "Unit Converter", category: "converters", description: "Length, weight, area (gaj, acre), temperature and more.", status: "live", popular: true, isNew: true, keywords: ["convert", "cm to feet", "kg to lb", "sq ft", "acre", "gaj", "celsius", "fahrenheit", "litre"] },
+  { slug: "typing-test", name: "Typing Speed Test", category: "text-tools", description: "Check your WPM and accuracy in 1, 3 or 5 minutes.", status: "live", isNew: true, keywords: ["typing", "wpm", "typing speed", "keyboard", "ssc typing", "practice"] },
+  { slug: "character-counter", name: "Character Counter", category: "text-tools", description: "Characters left for Instagram, X, YouTube and SMS.", status: "live", isNew: true, keywords: ["character count", "letters", "instagram", "twitter", "sms", "meta description", "limit"] },
   { slug: "percentage-calculator", name: "Percentage Calculator", category: "calculators", description: "Work out increases, decreases and ratios.", status: "live", isNew: true, keywords: ["percent", "discount", "increase", "decrease", "ratio"] },
 ];
 
@@ -102,7 +123,52 @@ const kbVariant = (kb: number): ToolVariant => ({
   keywords: [`${kb}kb`, `${kb} kb`, "reduce size", "target size", "form upload"],
 });
 
-export const toolVariants: ToolVariant[] = [10, 20, 30, 50, 100, 200, 500].map(kbVariant);
+const formVariant = (slug: string, name: string, description: string, keywords: string[]): ToolVariant => ({
+  slug,
+  name,
+  category: "image-tools",
+  description,
+  variantOf: "exam-photo-resizer",
+  keywords,
+});
+
+const loanVariant = (slug: string, name: string, description: string, keywords: string[]): ToolVariant => ({
+  slug,
+  name,
+  category: "calculators",
+  description,
+  variantOf: "loan-calculator",
+  keywords: [...keywords, "emi", "prepayment"],
+});
+
+export const toolVariants: ToolVariant[] = [
+  ...[10, 20, 30, 50, 100, 200, 500].map(kbVariant),
+  formVariant("pan-card-photo-resizer", "PAN Card Photo Resizer", "PAN photo and signature for the online form.", ["pan", "pan card", "nsdl", "protean", "utiitsl", "form 49a"]),
+  formVariant("ibps-photo-signature-resizer", "IBPS & SBI Photo and Signature Resizer", "200 × 230 px photo, 140 × 60 px signature.", ["ibps", "sbi", "rbi", "bank exam", "po", "clerk"]),
+  formVariant("upsc-photo-resizer", "UPSC Photo and Signature Resizer", "20–200 KB photo for UPSC forms.", ["upsc", "ias", "civil services", "cse"]),
+  ...[100, 200, 500, 1000].map(
+    (kb): ToolVariant => ({
+      slug: kb >= 1000 ? `compress-pdf-to-${kb / 1000}mb` : `compress-pdf-to-${kb}kb`,
+      name: `Compress PDF to ${kb >= 1000 ? `${kb / 1000} MB` : `${kb} KB`}`,
+      category: "pdf-tools",
+      description: "Get a PDF under a form's size limit.",
+      variantOf: "compress-pdf",
+      keywords: [kb >= 1000 ? `${kb / 1000}mb` : `${kb}kb`, "reduce pdf size", "form upload"],
+    }),
+  ),
+  {
+    slug: "upi-qr-code-generator",
+    name: "UPI QR Code Generator",
+    category: "generators",
+    description: "Payment QR code from your UPI ID.",
+    variantOf: "qr-code-generator",
+    keywords: ["upi", "upi qr", "payment qr", "gpay", "phonepe", "paytm", "bhim", "shop"],
+  },
+  loanVariant("home-loan-emi-calculator", "Home Loan EMI Calculator", "EMI, interest and prepayment savings on a home loan.", ["home loan", "housing loan", "mortgage"]),
+  loanVariant("car-loan-emi-calculator", "Car Loan EMI Calculator", "EMI and total interest on a car loan.", ["car loan", "auto loan", "vehicle loan"]),
+  loanVariant("personal-loan-emi-calculator", "Personal Loan EMI Calculator", "EMI and interest on a personal loan.", ["personal loan", "instant loan"]),
+  formVariant("india-post-gds-photo-resizer", "India Post GDS Photo Resizer", "320 × 400 px photo for the GDS form.", ["gds", "india post", "gramin dak sevak", "postal"]),
+];
 
 export const toolPath = (tool: Pick<Tool, "category" | "slug">) =>
   `/${tool.category}/${tool.slug}`;

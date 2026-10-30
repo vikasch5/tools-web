@@ -4,6 +4,21 @@ import { toolDefinitions } from "./registry";
 import { runEngine } from "./engine/run";
 import { tools, toolVariants } from "~/data/tools";
 import { targetBytes } from "./engine/image-target";
+import { describePreset, formPresets } from "./engine/form-photo";
+import {
+  describeCompound,
+  describeFd,
+  describeGratuity,
+  describeGst,
+  describeHra,
+  describePpf,
+  describeSip,
+  type Compounding,
+} from "./engine/finance";
+import { describeTax } from "./engine/income-tax";
+import { centredRect, aspectChoices } from "./engine/crop-geometry";
+import { describeTextSize } from "./engine/text-layer";
+import { describeAddDays, describeConversion as describeUnits, describeDateDifference, describeDiscount, describeGold, describeLimits, describeTyping } from "./engine/everyday";
 import type { TextToolDefinition, WidgetId } from "./types";
 import { statsSummary, textStats } from "./engine/text-stats";
 import { diffLines, diffToText } from "./engine/diff";
@@ -23,11 +38,12 @@ import { describeConversion, targetFormats } from "./engine/image-format";
 import { pageImageName, pageImageSize } from "./engine/pdf-image";
 import { cases, convertCase } from "./engine/case";
 import { passwordEntropy, strengthLabel } from "./engine/password";
-import { describeQr, wifiPayload, type QrLevel } from "./engine/qr";
+import { describeQr, upiPayload, wifiPayload, type QrLevel } from "./engine/qr";
+import { describeRentReceipts } from "./engine/rent-receipt";
 import { generateLorem } from "./engine/lorem";
 import { describeAge } from "./engine/age";
 import { describeBmi } from "./engine/bmi";
-import { describeLoan } from "./engine/loan";
+import { describeLoan, describePrepayment } from "./engine/loan";
 import { describeTimestamp } from "./engine/timestamp";
 import { describeHash } from "./engine/hash";
 import { describeColor } from "./engine/color";
@@ -77,7 +93,7 @@ async function blankPdf(pages: number) {
  * the same functions the tool's panel calls.
  */
 const widgetExamples: Record<WidgetId, (input: string, title: string) => string | Promise<string>> = {
-  "word-counter": (input) => statsSummary(textStats(input)),
+  "word-counter": (input, title) => (title.startsWith("Limits:") ? describeLimits(input) : statsSummary(textStats(input))),
   "diff-checker": (input) => {
     const [a, b] = input.split("\n---\n");
     return diffToText(diffLines(a, b));
@@ -161,6 +177,8 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     return `${strengthLabel(bits)} · ${bits} bits`;
   },
   "qr-code-generator": (input) => {
+    const upi = input.match(/^UPI: ([^,]+)(?:, ([^,]+), ([^,]+), (.+))?$/);
+    if (upi) return upiPayload({ vpa: upi[1], name: upi[2], amount: upi[3], note: upi[4] });
     const wifi = input.match(/^Wi-Fi: network (.+), password (.+), (WPA|WEP)$/);
     if (wifi) return wifiPayload(wifi[1], wifi[2], wifi[3] as "WPA");
     const [, text, level] = input.match(/^(.+) at level ([LMQH])$/)!;
@@ -184,6 +202,18 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     return describeBmi({ system: "imperial", weightLb: Number(lb), heightFt: Number(ft), heightIn: Number(inch) });
   },
   "loan-calculator": (input) => {
+    const prepay = input.match(/^([\d,]+) at ([\d.]+)% for (\d+) years, prepaying ([\d,]+) (every year|in month (\d+)), (finish sooner|lower the EMI)$/);
+    if (prepay) {
+      const [, amount, rate, years, lump, when, month, use] = prepay;
+      const yearly = when === "every year";
+      return describePrepayment({
+        principal: parseNumber(amount),
+        annualRate: Number(rate),
+        months: Number(years) * 12,
+        ...(yearly ? { yearly: parseNumber(lump), yearlyFromMonth: 12 } : { oneTime: parseNumber(lump), oneTimeMonth: Number(month) }),
+        mode: use === "finish sooner" ? "tenure" : "emi",
+      });
+    }
     const [, amount, rate, term, unit] = input.match(/^([\d,]+) at ([\d.]+)% for (\d+) (years|months)$/)!;
     return describeLoan({
       principal: parseNumber(amount),
@@ -238,6 +268,8 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     return `${copies.length} copies on the page`;
   },
   "compress-pdf": (input) => {
+    const target = input.match(/^Target (\d+) KB$/);
+    if (target) return `at most ${targetBytes(Number(target[1])).toLocaleString("en-US")} bytes`;
     const level = ({ Lossless: "low", Recommended: "medium", Strong: "high" } as Record<string, CompressLevel>)[input];
     return describeLevel(level);
   },
@@ -269,6 +301,96 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     }
     return describeOutline(textToWordPages([{ width: 612, height: 792, items }]));
   },
+  "gst-calculator": (input) => {
+    const add = input.match(/^([\d,.]+) \+ ([\d.]+)% GST$/);
+    if (add) return describeGst(parseNumber(add[1]), Number(add[2]), "add");
+    const [, amount, rate] = input.match(/^([\d,.]+) including ([\d.]+)% GST$/)!;
+    return describeGst(parseNumber(amount), Number(rate), "remove");
+  },
+  "sip-calculator": (input) => {
+    const [, amount, rate, years, , step] = input.match(/^([\d,]+) a month at ([\d.]+)% for (\d+) years(, stepping up (\d+)% a year)?$/)!;
+    return describeSip(parseNumber(amount), Number(rate), Number(years), Number(step ?? 0));
+  },
+  "fd-calculator": (input) => {
+    const ci = input.match(/^([\d,]+)( a month)? at ([\d.]+)% for (\d+) years, compounded (\w+)$/);
+    if (ci) {
+      const amount = parseNumber(ci[1]);
+      return describeCompound(ci[2] ? 0 : amount, Number(ci[3]), Number(ci[4]) * 12, ci[5] as Compounding, ci[2] ? amount : 0);
+    }
+    const [, amount, rate, years] = input.match(/^([\d,]+) at ([\d.]+)% for (\d+) years$/)!;
+    return describeFd(parseNumber(amount), Number(rate), Number(years) * 12);
+  },
+  "ppf-calculator": (input) => {
+    const [, amount, years, rate] = input.match(/^([\d,]+) a year for (\d+) years at ([\d.]+)%$/)!;
+    return describePpf(parseNumber(amount), Number(rate), Number(years));
+  },
+  "gratuity-calculator": (input) => {
+    const [, wages, years, months, cover] = input.match(/^([\d,]+) basic \+ DA, (\d+) years (\d+) months, (covered|not covered)$/)!;
+    return describeGratuity({ wages: parseNumber(wages), years: Number(years), months: Number(months), covered: cover === "covered" });
+  },
+  "hra-calculator": (input) => {
+    const [, salary, hra, rent, city] = input.match(/^Basic \+ DA ([\d,]+), HRA ([\d,]+), rent ([\d,]+) a year, (big|other) city$/)!;
+    return describeHra({ salary: parseNumber(salary), hra: parseNumber(hra), rent: parseNumber(rent), bigCity: city === "big" });
+  },
+  "income-tax-calculator": (input) => {
+    const field = (name: string) => {
+      const m = input.match(new RegExp(`${name} ([\\d,]+)`));
+      return m ? parseNumber(m[1]) : 0;
+    };
+    return describeTax({
+      salary: field("Salary"),
+      section80C: field("80C"),
+      section80D: field("80D"),
+      nps: field("NPS"),
+      hraExemption: field("HRA"),
+      homeLoanInterest: field("home loan"),
+    });
+  },
+  "crop-image": (input) => {
+    const [, w, h, ratio] = input.match(/^(\d+) × (\d+) px, (.+)$/)!;
+    const r = centredRect({ width: Number(w), height: Number(h) }, aspectChoices.find((a) => a.value === ratio)!.ratio);
+    return `${r.width} × ${r.height} px from (${r.x}, ${r.y})`;
+  },
+  "add-text": (input) => {
+    const [, pct, w, h] = input.match(/^([\d.]+)% on (\d+) × (\d+) px$/)!;
+    return describeTextSize(Number(pct), Number(w), Number(h));
+  },
+  "date-calculator": (input) => {
+    const add = input.match(/^(\S+) \+ (\d+) (days|weeks|months|years)$/);
+    if (add) return describeAddDays(add[1], Number(add[2]), add[3] as "days");
+    const [, a, b, end] = input.match(/^(\S+) to (\S+)(, counting the end date)?$/)!;
+    return describeDateDifference(a, b, !!end);
+  },
+  "discount-calculator": (input) => {
+    const [, price, discounts] = input.match(/^([\d,.]+) with (.+) off$/)!;
+    return describeDiscount(parseNumber(price), discounts.split(" + ").map((d) => parseNumber(d)));
+  },
+  "gold-calculator": (input) => {
+    const [, rate, karat, grams, making, perGram] = input.match(/^24K at ([\d,]+) a gram, (\d+)K, ([\d.]+) g, making (?:₹)?([\d.]+)(%| a gram)$/)!;
+    return describeGold({ rate24k: parseNumber(rate), karat: Number(karat) as 22, grams: Number(grams), making: Number(making), makingType: perGram === "%" ? "percent" : "perGram" });
+  },
+  "unit-converter": (input) => {
+    const [, value, from, to] = input.match(/^([\d.]+) (\w+) to (\w+)$/)!;
+    const group = { ft: "length", acre: "area", F: "temperature" }[from as "ft"];
+    return describeUnits(Number(value), group, from, to);
+  },
+  "typing-test": (input) => {
+    const [, text, seconds] = input.match(/^(.+) in (\d+) s$/)!;
+    return describeTyping(text, text, Number(seconds));
+  },
+  "rent-receipt": (input) => {
+    const [, rent, from, to] = input.match(/^₹([\d,]+) a month, (\S+) to (\S+)$/)!;
+    return describeRentReceipts({
+      tenant: "Rohan Mehta",
+      landlord: "Sunita Kapoor",
+      address: "Delhi",
+      rent: parseNumber(rent),
+      from,
+      to,
+      mode: "UPI",
+    });
+  },
+  "form-photo": (input) => describePreset(formPresets.find((p) => p.id === input)!),
   "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),
   "merge-pdf": async (input) => {
     const files = await Promise.all(

@@ -152,7 +152,7 @@ export const loanCalculator: WidgetToolDefinition = {
   name: "Loan & EMI Calculator",
   metaTitle: "Loan & EMI Calculator – Monthly Payment and Interest",
   description:
-    "Work out the monthly payment (EMI) on a mortgage, car or personal loan, the total interest you will pay, and a year-by-year repayment schedule.",
+    "Work out the EMI on a home, car or personal loan, the total interest, and how much prepaying saves. Yearly or monthly schedule, with CSV download.",
   overview: [
     "Before taking out a mortgage, car loan or personal loan, it helps to know what it really costs: the fixed amount you will pay each month (often called the EMI, or equated monthly instalment) and how much of your money goes on interest over the whole term.",
     "This calculator uses the standard amortisation formula that banks use for fixed-rate loans: interest is charged each month on the remaining balance, and each payment covers that interest plus a growing share of the principal. The yearly schedule shows how the balance falls over time. Try different rates and terms to see the trade-off: a longer term lowers the monthly payment but usually adds a lot more interest in total.",
@@ -161,10 +161,14 @@ export const loanCalculator: WidgetToolDefinition = {
     "Enter the amount you want to borrow, in any currency.",
     "Enter the yearly interest rate and the term in years or months.",
     "Read the monthly payment, total interest and total paid, and scroll the schedule to see the balance year by year.",
+    "Planning to prepay? Add an extra monthly amount, a yearly lump sum or a one-time payment, and choose whether to finish sooner or lower the EMI. The interest saved appears at once.",
+    "Switch the schedule to months for every EMI, or download it as a CSV file for Excel or Google Sheets.",
   ],
   examples: [
     { title: "A 30-year mortgage", input: "200,000 at 6% for 30 years", output: "Monthly payment: 1,199.10\nTotal interest: 231,676.38\nTotal paid: 431,676.38" },
     { title: "A 3-year car loan", input: "15,000 at 9.5% for 36 months", output: "Monthly payment: 480.49\nTotal interest: 2,297.79\nTotal paid: 17,297.79" },
+    { title: "Home loan, prepaying once a year", input: "5,000,000 at 8.5% for 20 years, prepaying 100,000 every year, finish sooner", output: "EMI: 43,391.16\nPaid off in: 14 years\nInterest saved: 1,855,389.33" },
+    { title: "One-time prepayment used to lower the EMI", input: "5,000,000 at 8.5% for 20 years, prepaying 500,000 in month 24, lower the EMI", output: "EMI: 43,391.16 → 38,863.87\nPaid off in: 20 years\nInterest saved: 477,894.05" },
   ],
   limitations: [
     "Assumes a fixed rate, monthly payments and interest charged monthly at the yearly rate ÷ 12. Variable rates, interest-only periods and balloon payments are not modelled.",
@@ -181,6 +185,11 @@ export const loanCalculator: WidgetToolDefinition = {
       question: "How is the monthly payment calculated?",
       answer:
         "Payment = P × r ÷ (1 − (1 + r)^−n), where P is the amount borrowed, r the monthly rate (yearly rate ÷ 12 ÷ 100) and n the number of months.",
+    },
+    {
+      question: "Should I use a prepayment to cut the tenure or the EMI?",
+      answer:
+        "Cutting the tenure saves more interest, because the balance falls faster while you keep paying the same EMI. Lowering the EMI frees up money each month but saves less. Try both in the calculator to see the difference for your loan.",
     },
     {
       question: "Does a shorter term save money?",

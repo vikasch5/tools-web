@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { PDFDocument } from "pdf-lib";
 import { toolDefinitions } from "./registry";
 import { runEngine } from "./engine/run";
-import { tools } from "~/data/tools";
+import { tools, toolVariants } from "~/data/tools";
+import { targetBytes } from "./engine/image-target";
 import type { TextToolDefinition, WidgetId } from "./types";
 import { statsSummary, textStats } from "./engine/text-stats";
 import { diffLines, diffToText } from "./engine/diff";
@@ -105,6 +106,8 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     throw new Error(`Unrecognised example: ${input}`);
   },
   "compress-image": (input, title) => {
+    const target = input.match(/(\d+) KB$/);
+    if (target) return `at most ${targetBytes(Number(target[1])).toLocaleString("en-US")} bytes`;
     const max = Number(title.match(/Max size (\d+) px/)![1]);
     const out = limitLongEdge(size(input), max);
     return `${out.width} × ${out.height} px`;
@@ -330,9 +333,19 @@ describe("tool definitions", () => {
 
   it("every working tool is listed in the public registry", () => {
     for (const def of toolDefinitions) {
+      const variant = toolVariants.find((v) => v.slug === def.slug);
+      if (variant) {
+        // A landing page opens its parent tool's widget with a preset.
+        const parent = toolDefinitions.find((d) => d.slug === variant.variantOf);
+        expect(variant.category, def.slug).toBe(def.category);
+        expect(parent?.workspace, def.slug).toBe(def.workspace);
+        expect(def.workspace !== "text" && def.preset, def.slug).toBeTruthy();
+        continue;
+      }
       const entry = tools.find((t) => t.slug === def.slug);
       expect(entry, def.slug).toMatchObject({ category: def.category, status: "live" });
     }
+    for (const v of toolVariants) expect(toolDefinitions.some((d) => d.slug === v.slug), v.slug).toBe(true);
   });
 
   it("related links point to live tools and meta lengths are sensible", () => {

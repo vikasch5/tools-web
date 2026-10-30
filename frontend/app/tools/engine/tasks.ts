@@ -1,5 +1,5 @@
 import type { DiffOptions, DiffResult } from "./diff";
-import type { ImageJob } from "./image";
+import type { ImageJob, TargetImageJob, TargetImageResult } from "./image";
 import type { PdfFile, SplitMode } from "./pdf";
 import type { ImagesPdfOptions, PdfImage } from "./images-pdf";
 import type { HashAlgorithm } from "./hash";
@@ -26,7 +26,8 @@ export type Task =
   | { type: "docx-build"; pages: WordPage[]; bodySize: number }
   | { type: "docx-pdf"; pages: RenderedPage[]; name: string }
   | { type: "hash"; data: Uint8Array }
-  | { type: "image"; job: ImageJob };
+  | { type: "image"; job: ImageJob }
+  | { type: "image-target"; job: TargetImageJob };
 
 export type TaskOutputs = {
   diff: DiffResult;
@@ -46,6 +47,7 @@ export type TaskOutputs = {
   "docx-pdf": { name: string; data: Uint8Array; pageCount: number; searchable: number };
   hash: Record<HashAlgorithm, string>;
   image: Blob;
+  "image-target": TargetImageResult;
 };
 
 export type TaskResult<T extends Task["type"]> =
@@ -99,5 +101,7 @@ async function dispatch(task: Task) {
       return (await import("./hash")).hashAll(task.data);
     case "image":
       return (await import("./image")).renderImage(task.job);
+    case "image-target":
+      return (await import("./image")).compressImageToTarget(task.job);
   }
 }

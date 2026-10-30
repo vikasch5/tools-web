@@ -13,6 +13,7 @@ import { loremIpsum, passwordGenerator, qrCodeGenerator, uuidGenerator } from ".
 import { colorConverter, gradientGenerator } from "./defs/design";
 import { ageCalculator, bmiCalculator, loanCalculator, percentageCalculator } from "./defs/calculators";
 import { compressImage, imageConverter, passportPhoto, resizeImage } from "./defs/images";
+import { compressImageTargets } from "./defs/image-target";
 import { imageToPdf, mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
 import { hashGenerator, timestampConverter } from "./defs/utilities";
 import {
@@ -58,6 +59,7 @@ export const toolDefinitions: ToolDefinition[] = [
   protectPdf,
   unlockPdf,
   compressImage,
+  ...compressImageTargets,
   resizeImage,
   passportPhoto,
   imageConverter,

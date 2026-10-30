@@ -5,6 +5,16 @@ import { RangeField, SelectField } from "~/components/ui/Field";
 import { limitLongEdge, type Size } from "~/tools/engine/image-geometry";
 import { createZip } from "~/tools/engine/zip";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
+import {
+  MAX_TARGET_KB,
+  MIN_TARGET_KB,
+  describeTarget,
+  targetBytes,
+  targetLabel,
+  targetPresetsKb,
+} from "~/tools/engine/image-target";
+import { TextField } from "~/components/ui/Field";
+import type { WidgetProps } from "./index";
 import { Segmented } from "../OptionControls";
 import { FileDrop } from "../FileDrop";
 import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
@@ -24,11 +34,34 @@ type Item = {
   file: File;
   preview: string;
   size: Size | null;
-  result?: { blob: Blob; name: string; size: Size; kept: boolean; note: string | null };
+  result?: {
+    blob: Blob;
+    name: string;
+    size: Size;
+    kept: boolean;
+    note: string | null;
+    /** Target-size mode: how the file was fitted. */
+    target?: { text: string; reached: boolean };
+  };
   error?: string;
 };
 
 const MAX_FILES = 30;
+
+type Mode = "quality" | "target";
+type Options = { mode: Mode; format: FormatChoice; quality: number; maxSide: number; targetKb: number };
+
+const modeChoices = [
+  { value: "quality", label: "Quality" },
+  { value: "target", label: "Size limit" },
+];
+const targetFormatChoices = formatChoices.filter((c) => c.value !== "png");
+
+/** Target mode saves JPEG or WebP: PNG has no quality to lower. */
+function targetMime(file: File, format: FormatChoice) {
+  if (format === "webp" || (format === "same" && file.type === "image/webp")) return "image/webp" as const;
+  return "image/jpeg" as const;
+}
 
 function readSize(url: string) {
   return new Promise<Size | null>((resolve) => {
@@ -39,8 +72,53 @@ function readSize(url: string) {
   });
 }
 
-export function CompressImage() {
+/** Fits one image under the target size, keeping the original if it already fits. */
+async function fitTarget(item: Item, original: Size, size: Size, opts: Options): Promise<Item> {
+  const limit = targetBytes(opts.targetKb);
+  const mime = targetMime(item.file, opts.format);
+  const untouched = size.width === original.width && mime === item.file.type;
+  if (untouched && item.file.size <= limit) {
+    return {
+      ...item,
+      error: undefined,
+      result: {
+        blob: item.file,
+        name: item.file.name,
+        size,
+        kept: true,
+        note: null,
+        target: { text: `Already under ${targetLabel(opts.targetKb)}: original kept.`, reached: true },
+      },
+    };
+  }
+  const r = await runTaskInWorker({
+    type: "image-target",
+    job: { file: item.file, width: size.width, height: size.height, mime, target: limit },
+  });
+  if (!r.ok) return { ...item, error: r.message, result: undefined };
+  const { blob, quality, scale, reached, width, height } = r.value;
+  const pngNote = item.file.type === "image/png" ? "PNG has no quality setting, so it was saved as JPG." : null;
+  return {
+    ...item,
+    error: undefined,
+    result: {
+      blob,
+      name: outputName(item.file, blob.type, `${opts.targetKb}kb`),
+      size: { width, height },
+      kept: false,
+      note: encoderNote(mime, blob.type) ?? (blob.type === "image/jpeg" ? pngNote : null),
+      target: { text: describeTarget(size, { size: blob.size, quality, scale, reached }, opts.targetKb), reached },
+    },
+  };
+}
+
+export function CompressImage({ preset }: WidgetProps) {
+  const presetKb = Number(preset?.targetKb) || 50;
   const [items, setItems] = useState<Item[]>([]);
+  const [mode, setMode] = useState<Mode>(preset?.mode === "target" ? "target" : "quality");
+  const [targetKb, setTargetKb] = useState(presetKb);
+  const [customKb, setCustomKb] = useState(String(presetKb));
+  const [custom, setCustom] = useState(!targetPresetsKb.includes(presetKb as (typeof targetPresetsKb)[number]));
   const [format, setFormat] = useState<FormatChoice>("same");
   const [quality, setQuality] = useState(75);
   const [maxSide, setMaxSide] = useState("0");
@@ -68,10 +146,9 @@ export function CompressImage() {
     compress(next);
   };
 
-  const compress = async (
-    list = items,
-    opts = { format, quality, maxSide: Number(maxSide) },
-  ) => {
+  const current = (): Options => ({ mode, format, quality, maxSide: Number(maxSide), targetKb });
+
+  const compress = async (list = items, opts: Options = current()) => {
     if (!list.length) return;
     setWorking(true);
     const done: Item[] = [];
@@ -81,6 +158,10 @@ export function CompressImage() {
         continue;
       }
       const size = limitLongEdge(item.size, opts.maxSide);
+      if (opts.mode === "target") {
+        done.push(await fitTarget(item, item.size, size, opts));
+        continue;
+      }
       const mime = mimeFor(item.file, opts.format);
       const r = await runTaskInWorker({
         type: "image",
@@ -110,16 +191,24 @@ export function CompressImage() {
     setWorking(false);
   };
 
-  const change = (next: Partial<{ format: FormatChoice; quality: number; maxSide: string }>) => {
-    const opts = {
-      format: next.format ?? format,
-      quality: next.quality ?? quality,
-      maxSide: next.maxSide ?? maxSide,
-    };
+  const change = (next: Partial<Options>) => {
+    const opts = { ...current(), ...next };
+    if (next.mode) setMode(next.mode);
     if (next.format) setFormat(next.format);
     if (next.quality !== undefined) setQuality(next.quality);
-    if (next.maxSide) setMaxSide(next.maxSide);
-    return opts;
+    if (next.maxSide !== undefined) setMaxSide(String(next.maxSide));
+    if (next.targetKb !== undefined) setTargetKb(next.targetKb);
+    compress(items, opts);
+  };
+
+  const applyCustom = () => {
+    const kb = Math.round(Number(customKb));
+    if (!Number.isFinite(kb) || kb < MIN_TARGET_KB || kb > MAX_TARGET_KB) {
+      setMessage(`Enter a target between ${MIN_TARGET_KB} and ${MAX_TARGET_KB} KB.`);
+      return;
+    }
+    setMessage("");
+    if (kb !== targetKb) change({ targetKb: kb });
   };
 
   const before = items.reduce((n, i) => n + i.file.size, 0);
@@ -127,6 +216,7 @@ export function CompressImage() {
   const finished = items.filter((i) => i.result);
   const saved = before > 0 ? Math.round((1 - after / before) * 100) : 0;
   const lossy = format !== "png";
+  const missed = finished.filter((i) => i.result?.target && !i.result.target.reached).length;
 
   const downloadAll = () => {
     if (finished.length === 1) return downloadBlob(finished[0].result!.blob, finished[0].result!.name);
@@ -160,32 +250,78 @@ export function CompressImage() {
       toolbar={
         <>
           <Segmented
+            label="Mode"
+            value={mode}
+            onChange={(v) =>
+              change({ mode: v as Mode, format: v === "target" && format === "png" ? "same" : format })
+            }
+            choices={modeChoices}
+          />
+          <Segmented
             label="Format"
             value={format}
-            onChange={(v) => compress(items, { ...change({ format: v as FormatChoice }), maxSide: Number(maxSide) })}
-            choices={formatChoices}
+            onChange={(v) => change({ format: v as FormatChoice })}
+            choices={mode === "target" ? targetFormatChoices : formatChoices}
           />
-          {lossy && (
-            <RangeField
-              label="Quality"
-              valueText={`${quality}%`}
-              min={10}
-              max={95}
-              step={5}
-              value={quality}
-              onChange={(event) => setQuality(Number(event.target.value))}
-              onPointerUp={() => compress()}
-              onKeyUp={(event) => event.key.startsWith("Arrow") && compress()}
-              className="w-44"
-            />
+          {mode === "target" ? (
+            <>
+              <SelectField
+                label="Target size"
+                value={custom ? "custom" : String(targetKb)}
+                onChange={(event) => {
+                  if (event.target.value === "custom") {
+                    setCustom(true);
+                    setCustomKb(String(targetKb));
+                    return;
+                  }
+                  setCustom(false);
+                  change({ targetKb: Number(event.target.value) });
+                }}
+                className="w-36"
+              >
+                {targetPresetsKb.map((kb) => (
+                  <option key={kb} value={kb}>
+                    Under {targetLabel(kb)}
+                  </option>
+                ))}
+                <option value="custom">Custom…</option>
+              </SelectField>
+              {custom && (
+                <TextField
+                  label="Custom target"
+                  type="number"
+                  inputMode="numeric"
+                  min={MIN_TARGET_KB}
+                  max={MAX_TARGET_KB}
+                  suffix="KB"
+                  value={customKb}
+                  onChange={(event) => setCustomKb(event.target.value)}
+                  onBlur={applyCustom}
+                  onKeyDown={(event) => event.key === "Enter" && applyCustom()}
+                  className="w-32"
+                />
+              )}
+            </>
+          ) : (
+            lossy && (
+              <RangeField
+                label="Quality"
+                valueText={`${quality}%`}
+                min={10}
+                max={95}
+                step={5}
+                value={quality}
+                onChange={(event) => setQuality(Number(event.target.value))}
+                onPointerUp={() => compress()}
+                onKeyUp={(event) => event.key.startsWith("Arrow") && compress()}
+                className="w-44"
+              />
+            )
           )}
           <SelectField
             label="Max size"
             value={maxSide}
-            onChange={(event) => {
-              const opts = change({ maxSide: event.target.value });
-              compress(items, { ...opts, maxSide: Number(opts.maxSide) });
-            }}
+            onChange={(event) => change({ maxSide: Number(event.target.value) })}
             className="w-40"
           >
             <option value="0">Keep dimensions</option>
@@ -202,6 +338,11 @@ export function CompressImage() {
           <StatusMessage tone="working">Compressing…</StatusMessage>
         ) : message ? (
           <StatusMessage tone="warning">{message}</StatusMessage>
+        ) : missed > 0 ? (
+          <StatusMessage tone="warning">
+            {missed === 1 ? "1 image" : `${missed} images`} could not get under {targetLabel(targetKb)}. Try a
+            larger target or crop the image first.
+          </StatusMessage>
         ) : finished.length > 0 ? (
           <StatusMessage tone="success">
             {formatBytes(before)} → {formatBytes(after)}
@@ -242,16 +383,19 @@ export function CompressImage() {
                       ) : r ? (
                         <>
                           <span className="font-mono tabular-nums">
-                            {formatBytes(item.file.size)} → {formatBytes(r.blob.size)}
+                            {formatBytes(item.file.size)}
+                            {r.target ? (r.kept ? " ·" : " →") : ` → ${formatBytes(r.blob.size)}`}
                           </span>{" "}
-                          {r.kept ? (
+                          {r.target ? (
+                            <StatusMessage tone={r.target.reached ? "success" : "warning"}>{r.target.text}</StatusMessage>
+                          ) : r.kept ? (
                             <StatusMessage tone="warning">Already well compressed: original kept.</StatusMessage>
                           ) : (
                             <span className="font-semibold text-success">
                               {pct > 0 ? `−${pct}%` : `+${-pct}%`}
                             </span>
                           )}
-                          {r.size.width !== item.size?.width && ` · ${r.size.width} × ${r.size.height} px`}
+                          {!r.target && r.size.width !== item.size?.width && ` · ${r.size.width} × ${r.size.height} px`}
                           {r.note && <span className="block text-warning">{r.note}</span>}
                         </>
                       ) : working ? (

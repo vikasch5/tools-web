@@ -1,4 +1,5 @@
 import type { Rect, SheetLayout } from "./image-geometry";
+import { findTargetEncoding, scaledSize, type TargetResult } from "./image-target";
 
 export type ImageMime = "image/jpeg" | "image/png" | "image/webp";
 
@@ -55,19 +56,19 @@ export async function decodeImage(file: Blob) {
   }
 }
 
+type Bitmap = Awaited<ReturnType<typeof decodeImage>>;
+
 /**
- * Crops, resizes and re-encodes an image. Large reductions are done in
- * halving steps, which keeps fine detail sharper than one big jump.
+ * Draws (part of) a decoded image at the given size. Large reductions are
+ * done in halving steps, which keeps fine detail sharper than one big jump.
  */
-export async function renderImage(job: ImageJob): Promise<Blob> {
-  const bitmap = await decodeImage(job.file);
-  const crop = job.crop ?? { x: 0, y: 0, width: bitmap.width, height: bitmap.height };
+function drawScaled(bitmap: Bitmap, crop: Rect, width: number, height: number, background?: string) {
   let source: CanvasImageSource = bitmap;
   let sx = crop.x;
   let sy = crop.y;
   let sw = crop.width;
   let sh = crop.height;
-  while (sw / 2 >= job.width && sh / 2 >= job.height) {
+  while (sw / 2 >= width && sh / 2 >= height) {
     const w = Math.round(sw / 2);
     const h = Math.round(sh / 2);
     const step = makeCanvas(w, h);
@@ -79,14 +80,22 @@ export async function renderImage(job: ImageJob): Promise<Blob> {
     sh = h;
   }
 
-  const photo = makeCanvas(job.width, job.height);
-  const ctx = context(photo);
-  const background = job.background ?? (job.mime === "image/jpeg" ? "#ffffff" : undefined);
+  const canvas = makeCanvas(width, height);
+  const ctx = context(canvas);
   if (background) {
     ctx.fillStyle = background;
-    ctx.fillRect(0, 0, job.width, job.height);
+    ctx.fillRect(0, 0, width, height);
   }
-  ctx.drawImage(source, sx, sy, sw, sh, 0, 0, job.width, job.height);
+  ctx.drawImage(source, sx, sy, sw, sh, 0, 0, width, height);
+  return canvas;
+}
+
+/** Crops, resizes and re-encodes an image. */
+export async function renderImage(job: ImageJob): Promise<Blob> {
+  const bitmap = await decodeImage(job.file);
+  const crop = job.crop ?? { x: 0, y: 0, width: bitmap.width, height: bitmap.height };
+  const background = job.background ?? (job.mime === "image/jpeg" ? "#ffffff" : undefined);
+  const photo = drawScaled(bitmap, crop, job.width, job.height, background);
   bitmap.close();
 
   let out: AnyCanvas = photo;
@@ -104,4 +113,62 @@ export async function renderImage(job: ImageJob): Promise<Blob> {
     }
   }
   return toBlob(out, job.mime, job.quality);
+}
+
+export type TargetImageJob = {
+  file: Blob;
+  /** Source crop in pixels, after EXIF rotation. Default: the whole image. */
+  crop?: Rect;
+  /** Largest output size; the search may go smaller to reach the target. */
+  width: number;
+  height: number;
+  /** JPEG or WebP (PNG has no quality setting to search). */
+  mime: "image/jpeg" | "image/webp";
+  /** Bytes the result must not exceed. */
+  target: number;
+  background?: string;
+};
+
+export type TargetImageResult = Omit<TargetResult, "blob"> & {
+  blob: Blob;
+  width: number;
+  height: number;
+};
+
+/**
+ * Re-encodes an image to the highest quality that fits under a byte
+ * target, scaling it down only when quality alone cannot get there.
+ */
+export async function compressImageToTarget(job: TargetImageJob): Promise<TargetImageResult> {
+  const bitmap = await decodeImage(job.file);
+  const crop = job.crop ?? { x: 0, y: 0, width: bitmap.width, height: bitmap.height };
+  const start = { width: job.width, height: job.height };
+  const canvases = new Map<string, AnyCanvas>();
+  let mime: ImageMime = job.mime;
+
+  const canvasAt = (scale: number) => {
+    const size = scaledSize(start, scale);
+    const key = `${size.width}x${size.height}`;
+    let canvas = canvases.get(key);
+    if (!canvas) {
+      canvas = drawScaled(bitmap, crop, size.width, size.height, job.background ?? "#ffffff");
+      canvases.clear();
+      canvases.set(key, canvas);
+    }
+    return canvas;
+  };
+
+  try {
+    // Browsers without a WebP encoder return PNG, whose size ignores quality.
+    if (mime === "image/webp") {
+      const probe = await toBlob(canvasAt(1), mime, 0.5);
+      if (probe.type !== mime) mime = "image/jpeg";
+    }
+    const result = await findTargetEncoding((scale, quality) => toBlob(canvasAt(scale), mime, quality), {
+      target: job.target,
+    });
+    return { ...result, ...scaledSize(start, result.scale) };
+  } finally {
+    bitmap.close();
+  }
 }

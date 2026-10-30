@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { ArrowRight, CornerDownLeft, Search, X } from "lucide-react";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { categories } from "~/data/categories";
-import { tools, toolPath } from "~/data/tools";
+import { searchableTools, tools, toolPath } from "~/data/tools";
 import { searchTools } from "~/lib/search";
 import { cn } from "~/lib/cn";
 
@@ -27,7 +27,7 @@ export function CommandPalette({ triggers }: { triggers: { className: string; co
   const listId = useId();
 
   const results = useMemo(
-    () => (query.trim() ? searchTools(query, live).slice(0, 8) : popular),
+    () => (query.trim() ? searchTools(query, searchableTools).slice(0, 8) : popular),
     [query],
   );
 

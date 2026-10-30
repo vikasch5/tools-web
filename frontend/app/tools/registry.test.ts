@@ -38,7 +38,8 @@ import { describeConversion, targetFormats } from "./engine/image-format";
 import { pageImageName, pageImageSize } from "./engine/pdf-image";
 import { cases, convertCase } from "./engine/case";
 import { passwordEntropy, strengthLabel } from "./engine/password";
-import { describeQr, wifiPayload, type QrLevel } from "./engine/qr";
+import { describeQr, upiPayload, wifiPayload, type QrLevel } from "./engine/qr";
+import { describeRentReceipts } from "./engine/rent-receipt";
 import { generateLorem } from "./engine/lorem";
 import { describeAge } from "./engine/age";
 import { describeBmi } from "./engine/bmi";
@@ -176,6 +177,8 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     return `${strengthLabel(bits)} · ${bits} bits`;
   },
   "qr-code-generator": (input) => {
+    const upi = input.match(/^UPI: ([^,]+)(?:, ([^,]+), ([^,]+), (.+))?$/);
+    if (upi) return upiPayload({ vpa: upi[1], name: upi[2], amount: upi[3], note: upi[4] });
     const wifi = input.match(/^Wi-Fi: network (.+), password (.+), (WPA|WEP)$/);
     if (wifi) return wifiPayload(wifi[1], wifi[2], wifi[3] as "WPA");
     const [, text, level] = input.match(/^(.+) at level ([LMQH])$/)!;
@@ -374,6 +377,18 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
   "typing-test": (input) => {
     const [, text, seconds] = input.match(/^(.+) in (\d+) s$/)!;
     return describeTyping(text, text, Number(seconds));
+  },
+  "rent-receipt": (input) => {
+    const [, rent, from, to] = input.match(/^₹([\d,]+) a month, (\S+) to (\S+)$/)!;
+    return describeRentReceipts({
+      tenant: "Rohan Mehta",
+      landlord: "Sunita Kapoor",
+      address: "Delhi",
+      rent: parseNumber(rent),
+      from,
+      to,
+      mode: "UPI",
+    });
   },
   "form-photo": (input) => describePreset(formPresets.find((p) => p.id === input)!),
   "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),

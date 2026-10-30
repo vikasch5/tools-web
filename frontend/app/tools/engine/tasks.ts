@@ -7,6 +7,7 @@ import type { PageNumberOptions, PagePlan, WatermarkImage, WatermarkOptions } fr
 import type { CompressLevel, PageImage, TargetPdfResult } from "./pdf-compress";
 import type { WordPage } from "./pdf-word";
 import type { RenderedPage } from "./docx-pdf";
+import type { RentReceiptInput } from "./rent-receipt";
 
 /** Binary and structured jobs for the engine worker (files in, files out). */
 export type Task =
@@ -30,7 +31,8 @@ export type Task =
   | { type: "hash"; data: Uint8Array }
   | { type: "image"; job: ImageJob }
   | { type: "image-target"; job: TargetImageJob }
-  | { type: "image-form"; job: FormImageJob };
+  | { type: "image-form"; job: FormImageJob }
+  | { type: "rent-receipts"; input: RentReceiptInput };
 
 export type TaskOutputs = {
   diff: DiffResult;
@@ -54,6 +56,7 @@ export type TaskOutputs = {
   image: Blob;
   "image-target": TargetImageResult;
   "image-form": FormImageResult;
+  "rent-receipts": Uint8Array;
 };
 
 export type TaskResult<T extends Task["type"]> =
@@ -115,5 +118,7 @@ async function dispatch(task: Task) {
       return (await import("./image")).compressImageToTarget(task.job);
     case "image-form":
       return (await import("./image")).fitFormImage(task.job);
+    case "rent-receipts":
+      return (await import("./rent-receipt")).buildRentReceipts(task.input);
   }
 }

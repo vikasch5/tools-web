@@ -41,6 +41,22 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "watermark-pdf": load(() => import("./Watermark"), "Watermark"),
   "protect-pdf": load(() => import("./PdfPassword"), "ProtectPdf"),
   "unlock-pdf": load(() => import("./PdfPassword"), "UnlockPdf"),
+  "form-photo": load(() => import("./FormPhoto"), "FormPhoto"),
+  "gst-calculator": load(() => import("./GstCalculator"), "GstCalculator"),
+  "sip-calculator": load(() => import("./SipCalculator"), "SipCalculator"),
+  "fd-calculator": load(() => import("./FdCalculator"), "FdCalculator"),
+  "ppf-calculator": load(() => import("./PpfCalculator"), "PpfCalculator"),
+  "gratuity-calculator": load(() => import("./GratuityCalculator"), "GratuityCalculator"),
+  "hra-calculator": load(() => import("./HraCalculator"), "HraCalculator"),
+  "income-tax-calculator": load(() => import("./IncomeTaxCalculator"), "IncomeTaxCalculator"),
+  "crop-image": load(() => import("./CropImage"), "CropImage"),
+  "add-text": load(() => import("./AddText"), "AddText"),
+  "date-calculator": load(() => import("./DateCalculator"), "DateCalculator"),
+  "discount-calculator": load(() => import("./DiscountCalculator"), "DiscountCalculator"),
+  "gold-calculator": load(() => import("./GoldCalculator"), "GoldCalculator"),
+  "unit-converter": load(() => import("./UnitConverter"), "UnitConverter"),
+  "typing-test": load(() => import("./TypingTest"), "TypingTest"),
+  "rent-receipt": load(() => import("./RentReceipt"), "RentReceipt"),
 };
 
 export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {

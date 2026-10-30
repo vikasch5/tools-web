@@ -16,6 +16,10 @@ export type ImageJob = {
   background?: string;
   /** Repeat the rendered image on a print sheet. */
   sheet?: SheetLayout;
+  /** Quarter turns clockwise (0–3), applied before the crop. */
+  turn?: number;
+  /** Mirror left–right, applied after the turn and before the crop. */
+  flip?: boolean;
 };
 
 type AnyCanvas = OffscreenCanvas | HTMLCanvasElement;
@@ -62,7 +66,7 @@ type Bitmap = Awaited<ReturnType<typeof decodeImage>>;
  * Draws (part of) a decoded image at the given size. Large reductions are
  * done in halving steps, which keeps fine detail sharper than one big jump.
  */
-function drawScaled(bitmap: Bitmap, crop: Rect, width: number, height: number, background?: string) {
+function drawScaled(bitmap: CanvasImageSource, crop: Rect, width: number, height: number, background?: string) {
   let source: CanvasImageSource = bitmap;
   let sx = crop.x;
   let sy = crop.y;
@@ -90,12 +94,29 @@ function drawScaled(bitmap: Bitmap, crop: Rect, width: number, height: number, b
   return canvas;
 }
 
-/** Crops, resizes and re-encodes an image. */
+/** The image turned by quarter turns and optionally mirrored, as a canvas. */
+function orient(bitmap: Bitmap, turn: number, flip: boolean) {
+  const quarter = ((turn % 4) + 4) % 4;
+  const sideways = quarter % 2 === 1;
+  const width = sideways ? bitmap.height : bitmap.width;
+  const height = sideways ? bitmap.width : bitmap.height;
+  const canvas = makeCanvas(width, height);
+  const ctx = context(canvas);
+  ctx.translate(width / 2, height / 2);
+  if (flip) ctx.scale(-1, 1);
+  ctx.rotate((quarter * Math.PI) / 2);
+  ctx.drawImage(bitmap, -bitmap.width / 2, -bitmap.height / 2);
+  return canvas;
+}
+
+/** Turns, crops, resizes and re-encodes an image. */
 export async function renderImage(job: ImageJob): Promise<Blob> {
   const bitmap = await decodeImage(job.file);
-  const crop = job.crop ?? { x: 0, y: 0, width: bitmap.width, height: bitmap.height };
+  const source: CanvasImageSource = job.turn || job.flip ? orient(bitmap, job.turn ?? 0, !!job.flip) : bitmap;
+  const full = source as { width: number; height: number };
+  const crop = job.crop ?? { x: 0, y: 0, width: full.width, height: full.height };
   const background = job.background ?? (job.mime === "image/jpeg" ? "#ffffff" : undefined);
-  const photo = drawScaled(bitmap, crop, job.width, job.height, background);
+  const photo = drawScaled(source, crop, job.width, job.height, background);
   bitmap.close();
 
   let out: AnyCanvas = photo;
@@ -171,4 +192,64 @@ export async function compressImageToTarget(job: TargetImageJob): Promise<Target
   } finally {
     bitmap.close();
   }
+}
+
+export type FormImageJob = {
+  file: Blob;
+  crop: Rect;
+  /** Exact output size the form asks for. */
+  width: number;
+  height: number;
+  minBytes: number;
+  maxBytes: number;
+  /** Whiten paper and darken ink (signatures, thumb impressions). */
+  clean?: boolean;
+};
+
+export type FormImageResult = {
+  blob: Blob;
+  quality: number;
+  /** Bytes of padding added to reach the minimum size. */
+  padded: number;
+  /** False when even the lowest quality is above the maximum. */
+  reached: boolean;
+};
+
+/**
+ * Crops and resizes to a form's exact pixel size, then picks the highest
+ * JPEG quality under the maximum. A result below the minimum is padded
+ * with a JPEG comment, which leaves the picture unchanged.
+ */
+export async function fitFormImage(job: FormImageJob): Promise<FormImageResult> {
+  const { cleanPaper, padJpeg } = await import("./form-photo");
+  const bitmap = await decodeImage(job.file);
+  const canvas = drawScaled(bitmap, job.crop, job.width, job.height, "#ffffff");
+  bitmap.close();
+  if (job.clean) {
+    const ctx = context(canvas);
+    const image = ctx.getImageData(0, 0, job.width, job.height);
+    cleanPaper(image.data);
+    ctx.putImageData(image, 0, 0);
+  }
+
+  const r = await findTargetEncoding((_scale, quality) => toBlob(canvas, "image/jpeg", quality), {
+    target: job.maxBytes,
+    maxQuality: 0.98,
+    preferredQuality: 0.3,
+    minQuality: 0.1,
+    minScale: 1,
+    qualitySteps: 7,
+  });
+  if (!r.reached || r.blob.size >= job.minBytes) return { blob: r.blob, quality: r.quality, padded: 0, reached: r.reached };
+
+  const data = new Uint8Array(await r.blob.arrayBuffer());
+  // Pad to just inside the range, never past the maximum.
+  const goal = Math.min(job.maxBytes, job.minBytes + 512);
+  const padded = padJpeg(data, goal);
+  return {
+    blob: new Blob([padded as BlobPart], { type: "image/jpeg" }),
+    quality: r.quality,
+    padded: padded.length - data.length,
+    reached: true,
+  };
 }

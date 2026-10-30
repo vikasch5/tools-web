@@ -14,6 +14,14 @@ import { colorConverter, gradientGenerator } from "./defs/design";
 import { ageCalculator, bmiCalculator, loanCalculator, percentageCalculator } from "./defs/calculators";
 import { compressImage, imageConverter, passportPhoto, resizeImage } from "./defs/images";
 import { compressImageTargets } from "./defs/image-target";
+import { examPhotoResizer, formPhotoPages, signatureResizer } from "./defs/form-photo";
+import { loanPages } from "./defs/loan-pages";
+import { compressPdfTargets } from "./defs/pdf-target";
+import { financeCalculators } from "./defs/finance";
+import { incomeTaxCalculator } from "./defs/income-tax";
+import { addTextToPhoto, cropImage } from "./defs/image-edit";
+import { everydayTools } from "./defs/everyday";
+import { rentReceiptGenerator, upiQrCode } from "./defs/upi-rent";
 import { imageToPdf, mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
 import { hashGenerator, timestampConverter } from "./defs/utilities";
 import {
@@ -50,6 +58,7 @@ export const toolDefinitions: ToolDefinition[] = [
   pdfToImage,
   imageToPdf,
   compressPdf,
+  ...compressPdfTargets,
   wordToPdf,
   pdfToWord,
   organizePdf,
@@ -62,7 +71,12 @@ export const toolDefinitions: ToolDefinition[] = [
   ...compressImageTargets,
   resizeImage,
   passportPhoto,
+  examPhotoResizer,
+  signatureResizer,
+  ...formPhotoPages,
   imageConverter,
+  cropImage,
+  addTextToPhoto,
   wordCounter,
   diffChecker,
   caseConverter,
@@ -78,6 +92,12 @@ export const toolDefinitions: ToolDefinition[] = [
   ageCalculator,
   bmiCalculator,
   loanCalculator,
+  ...loanPages,
+  ...financeCalculators,
+  incomeTaxCalculator,
+  ...everydayTools,
+  upiQrCode,
+  rentReceiptGenerator,
 ];
 
 export function getToolDefinition(category: string, slug: string) {

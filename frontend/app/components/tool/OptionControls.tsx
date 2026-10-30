@@ -58,7 +58,7 @@ export function Segmented({
           <label
             key={choice.value}
             className={cn(
-              "inline-flex h-7 cursor-pointer items-center rounded-sm px-2.5 text-[0.8125rem] font-medium text-fg-muted transition-colors pointer-coarse:h-9",
+              "inline-flex h-7 cursor-pointer items-center whitespace-nowrap rounded-sm px-2.5 text-[0.8125rem] font-medium text-fg-muted transition-colors pointer-coarse:h-9",
               "hover:text-fg has-checked:bg-surface has-checked:text-fg has-checked:shadow-sm has-focus-visible:outline-2 has-focus-visible:outline-ring",
             )}
           >

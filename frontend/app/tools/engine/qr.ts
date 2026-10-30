@@ -51,3 +51,29 @@ export function contrastRatio(a: string, b: string) {
   const [x, y] = [lum(a), lum(b)];
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
+
+/** A UPI ID (VPA): name@bank, as used by every UPI app. */
+const vpaPattern = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9.-]{1,63}$/;
+
+export type UpiDetails = { vpa: string; name?: string; amount?: string; note?: string };
+
+/**
+ * A UPI payment link (NPCI's upi://pay format) that any UPI app can scan.
+ * The amount is optional: without it the payer types the amount.
+ */
+export function upiPayload({ vpa, name = "", amount = "", note = "" }: UpiDetails) {
+  const id = vpa.trim();
+  if (!id) throw new Error("Enter the UPI ID that should receive the money.");
+  if (!vpaPattern.test(id)) throw new Error("This does not look like a UPI ID. It should be like name@bank, e.g. shop@okaxis.");
+  const params = [`pa=${encodeURIComponent(id)}`];
+  if (name.trim()) params.push(`pn=${encodeURIComponent(name.trim())}`);
+  const a = amount.replace(/,/g, "").trim();
+  if (a) {
+    const value = Number(a);
+    if (!/^\d+(\.\d{1,2})?$/.test(a) || value <= 0) throw new Error("Enter the amount in rupees, with up to 2 decimals.");
+    params.push(`am=${value.toFixed(2)}`);
+  }
+  params.push("cu=INR");
+  if (note.trim()) params.push(`tn=${encodeURIComponent(note.trim().slice(0, 50))}`);
+  return `upi://pay?${params.join("&")}`;
+}

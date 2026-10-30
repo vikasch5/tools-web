@@ -16,7 +16,7 @@ export const compressPdf: WidgetToolDefinition = {
   name: "Compress PDF",
   metaTitle: "Compress PDF – Reduce PDF File Size, Free and Private",
   description:
-    "Make a PDF smaller for email and upload forms. Photos and scans are re-encoded while text stays sharp and selectable. Runs in your browser, no upload.",
+    "Make a PDF smaller for email and upload forms, or get it under a limit like 200 KB. Text stays sharp and selectable. Runs in your browser, no upload.",
   overview: [
     "Upload forms for jobs, visas, banks and universities often cap files at 1, 2 or 5 MB, and email services reject large attachments. Most oversized PDFs are big because of their pictures: scanned pages, phone photos and high-resolution images that were never meant for the screen.",
     "This tool rebuilds the file in your browser. The lossless level only repacks its internal structure, so nothing changes visually. The Recommended and Strong levels also re-encode photos and scans as JPEG and scale down very large images, which is where the real savings are. Text, vector drawings and links are kept as they are, so the result stays crisp and searchable. If a PDF cannot be made smaller, you are told instead of being handed a larger file.",
@@ -26,11 +26,13 @@ export const compressPdf: WidgetToolDefinition = {
     "Pick a level: Lossless changes nothing visible, Recommended suits most files, and Strong makes the smallest file with softer photos.",
     "Press “Compress PDF”. The sizes before and after are shown.",
     "Press “Download compressed PDF” to save it, or pick another level and compress again.",
+    "For a form with a size limit, switch Mode to Size limit and choose it, for example Under 200 KB. The gentlest compression that fits is used.",
   ],
   examples: [
     { title: "The Recommended level", input: "Recommended", output: describeLevel("medium") },
     { title: "The Strong level", input: "Strong", output: describeLevel("high") },
     { title: "The Lossless level", input: "Lossless", output: describeLevel("low") },
+    { title: "A form's size limit", input: "Target 200 KB", output: "at most 200,000 bytes" },
   ],
   limitations: [
     "Savings depend on the file. PDFs that are mostly text are often small already and may shrink only a little.",
@@ -52,7 +54,7 @@ export const compressPdf: WidgetToolDefinition = {
     {
       question: "What if the compressed file is still too big?",
       answer:
-        "Try the Strong level. If that is not enough, Split PDF can break the document into smaller parts, or Delete PDF Pages can remove pages you do not need to send.",
+        "Try Size limit mode: if even the strongest image compression is not enough, it offers to save each page as a picture, which reaches much smaller sizes (the text is then no longer selectable). Split PDF can break the document into smaller parts, or Delete PDF Pages can remove pages you do not need to send.",
     },
     filePrivacyFaq,
   ],

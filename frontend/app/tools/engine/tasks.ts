@@ -1,12 +1,13 @@
 import type { DiffOptions, DiffResult } from "./diff";
-import type { ImageJob, TargetImageJob, TargetImageResult } from "./image";
+import type { FormImageJob, FormImageResult, ImageJob, TargetImageJob, TargetImageResult } from "./image";
 import type { PdfFile, SplitMode } from "./pdf";
 import type { ImagesPdfOptions, PdfImage } from "./images-pdf";
 import type { HashAlgorithm } from "./hash";
 import type { PageNumberOptions, PagePlan, WatermarkImage, WatermarkOptions } from "./pdf-pages";
-import type { CompressLevel } from "./pdf-compress";
+import type { CompressLevel, PageImage, TargetPdfResult } from "./pdf-compress";
 import type { WordPage } from "./pdf-word";
 import type { RenderedPage } from "./docx-pdf";
+import type { RentReceiptInput } from "./rent-receipt";
 
 /** Binary and structured jobs for the engine worker (files in, files out). */
 export type Task =
@@ -20,6 +21,8 @@ export type Task =
   | { type: "pdf-page-numbers"; file: PdfFile; options: PageNumberOptions }
   | { type: "pdf-watermark"; file: PdfFile; image: WatermarkImage; options: WatermarkOptions }
   | { type: "pdf-compress"; file: PdfFile; level: CompressLevel }
+  | { type: "pdf-compress-target"; file: PdfFile; target: number }
+  | { type: "pdf-from-pages"; pages: PageImage[] }
   | { type: "pdf-protect"; file: PdfFile; password: string }
   | { type: "pdf-unlock"; file: PdfFile; password: string }
   | { type: "pdf-encryption"; file: PdfFile }
@@ -27,7 +30,9 @@ export type Task =
   | { type: "docx-pdf"; pages: RenderedPage[]; name: string }
   | { type: "hash"; data: Uint8Array }
   | { type: "image"; job: ImageJob }
-  | { type: "image-target"; job: TargetImageJob };
+  | { type: "image-target"; job: TargetImageJob }
+  | { type: "image-form"; job: FormImageJob }
+  | { type: "rent-receipts"; input: RentReceiptInput };
 
 export type TaskOutputs = {
   diff: DiffResult;
@@ -40,6 +45,8 @@ export type TaskOutputs = {
   "pdf-page-numbers": { name: string; data: Uint8Array; numbered: number };
   "pdf-watermark": { name: string; data: Uint8Array; marked: number };
   "pdf-compress": { name: string; data: Uint8Array; before: number; after: number; reencoded: number };
+  "pdf-compress-target": TargetPdfResult;
+  "pdf-from-pages": Uint8Array;
   "pdf-protect": { name: string; data: Uint8Array };
   "pdf-unlock": { name: string; data: Uint8Array };
   "pdf-encryption": "none" | "restricted" | "password";
@@ -48,6 +55,8 @@ export type TaskOutputs = {
   hash: Record<HashAlgorithm, string>;
   image: Blob;
   "image-target": TargetImageResult;
+  "image-form": FormImageResult;
+  "rent-receipts": Uint8Array;
 };
 
 export type TaskResult<T extends Task["type"]> =
@@ -87,6 +96,10 @@ async function dispatch(task: Task) {
       return (await import("./pdf-pages")).addWatermark(task.file, task.image, task.options);
     case "pdf-compress":
       return (await import("./pdf-compress")).compressPdf(task.file, task.level);
+    case "pdf-compress-target":
+      return (await import("./pdf-compress")).compressPdfToTarget(task.file, task.target);
+    case "pdf-from-pages":
+      return (await import("./pdf-compress")).pagesToPdf(task.pages);
     case "pdf-protect":
       return (await import("./qpdf")).protectPdf(task.file, task.password);
     case "pdf-unlock":
@@ -103,5 +116,9 @@ async function dispatch(task: Task) {
       return (await import("./image")).renderImage(task.job);
     case "image-target":
       return (await import("./image")).compressImageToTarget(task.job);
+    case "image-form":
+      return (await import("./image")).fitFormImage(task.job);
+    case "rent-receipts":
+      return (await import("./rent-receipt")).buildRentReceipts(task.input);
   }
 }

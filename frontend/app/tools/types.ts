@@ -107,7 +107,8 @@ export type WidgetId =
   | "fd-calculator"
   | "ppf-calculator"
   | "gratuity-calculator"
-  | "hra-calculator";
+  | "hra-calculator"
+  | "income-tax-calculator";
 
 /** Starting settings for a widget on a landing page, e.g. { targetKb: 50 }. */
 export type WidgetPreset = Record<string, string | number>;

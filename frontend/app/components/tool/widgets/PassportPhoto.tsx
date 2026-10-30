@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Download, Move, X } from "lucide-react";
 import { IconButton } from "~/components/ui/IconButton";
 import { RangeField, SelectField } from "~/components/ui/Field";
@@ -9,6 +9,7 @@ import { FileDrop } from "../FileDrop";
 import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { IMAGE_ACCEPT, MAX_IMAGE_BYTES, useImageSource } from "./image-shared";
+import { CropFrame } from "./CropFrame";
 
 const SHEET = { width: 152.4, height: 101.6 }; // 6 × 4 in photo paper
 const clamp = (n: number) => Math.min(1, Math.max(-1, n));
@@ -21,8 +22,6 @@ export function PassportPhoto() {
   const [output, setOutput] = useState<"single" | "sheet">("single");
   const [working, setWorking] = useState(false);
   const [done, setDone] = useState("");
-  const frameRef = useRef<HTMLDivElement>(null);
-  const drag = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null);
 
   useEffect(() => warmUpWorker(), []);
 
@@ -32,16 +31,6 @@ export function PassportPhoto() {
   const crop = source ? coverCrop(source, aspect, zoom, offset.x, offset.y) : null;
   const layout = sheetLayout(preset, SHEET);
   const photoPx = { width: mmToPx(preset.widthMm), height: mmToPx(preset.heightMm) };
-
-  /** Pixels on screen per unit of offset, for dragging. */
-  const offsetPerPx = () => {
-    const frame = frameRef.current;
-    if (!frame || !source || !crop) return { x: 0, y: 0 };
-    const scale = frame.clientWidth / crop.width;
-    const spareX = ((source.width - crop.width) / 2) * scale;
-    const spareY = ((source.height - crop.height) / 2) * scale;
-    return { x: spareX ? 1 / spareX : 0, y: spareY ? 1 / spareY : 0 };
-  };
 
   const nudge = (dx: number, dy: number) => {
     setOffset((o) => ({ x: clamp(o.x + dx), y: clamp(o.y + dy) }));
@@ -199,62 +188,19 @@ export function PassportPhoto() {
 
         <PanelSection title="Preview">
           <div className="flex items-center justify-center bg-bg bg-dots p-6">
-            <div
-              ref={frameRef}
-              tabIndex={0}
-              role="img"
-              aria-label={`Passport photo preview, ${preset.label}. Use arrow keys to move the photo.`}
-              onKeyDown={(event) => {
-                const step = event.shiftKey ? 0.1 : 0.02;
-                const moves: Record<string, [number, number]> = {
-                  ArrowLeft: [step, 0],
-                  ArrowRight: [-step, 0],
-                  ArrowUp: [0, step],
-                  ArrowDown: [0, -step],
-                };
-                const move = moves[event.key];
-                if (move) {
-                  event.preventDefault();
-                  nudge(...move);
-                }
-              }}
-              onPointerDown={(event) => {
-                event.currentTarget.setPointerCapture(event.pointerId);
-                drag.current = { x: event.clientX, y: event.clientY, ox: offset.x, oy: offset.y };
-              }}
-              onPointerMove={(event) => {
-                if (!drag.current) return;
-                const per = offsetPerPx();
-                setOffset({
-                  x: clamp(drag.current.ox - (event.clientX - drag.current.x) * per.x),
-                  y: clamp(drag.current.oy - (event.clientY - drag.current.y) * per.y),
-                });
+            <CropFrame
+              url={image.url ?? ""}
+              source={source}
+              crop={crop}
+              ratio={{ width: preset.widthMm, height: preset.heightMm }}
+              offset={offset}
+              onOffset={(next) => {
+                setOffset(next);
                 setDone("");
               }}
-              onPointerUp={() => (drag.current = null)}
-              onPointerCancel={() => (drag.current = null)}
-              className="relative w-full max-w-72 cursor-grab touch-none overflow-hidden bg-white shadow-lg ring-1 ring-border select-none active:cursor-grabbing"
-              style={{ aspectRatio: `${preset.widthMm} / ${preset.heightMm}` }}
-            >
-              <img
-                src={image.url ?? undefined}
-                alt=""
-                draggable={false}
-                className="pointer-events-none absolute max-w-none"
-                style={{
-                  width: `${(source.width / crop.width) * 100}%`,
-                  height: `${(source.height / crop.height) * 100}%`,
-                  left: `${(-crop.x / crop.width) * 100}%`,
-                  top: `${(-crop.y / crop.height) * 100}%`,
-                }}
-              />
-              {/* Alignment guides: preview only, not in the download. */}
-              <div aria-hidden className="pointer-events-none absolute inset-0">
-                <div className="absolute inset-x-[22%] top-[10%] bottom-[18%] rounded-[50%] border-2 border-dashed border-white/80 mix-blend-difference" />
-                <div className="absolute inset-x-0 top-[40%] border-t border-white/70 mix-blend-difference" />
-                <div className="absolute inset-x-0 bottom-[18%] border-t border-white/70 mix-blend-difference" />
-              </div>
-            </div>
+              label={`Passport photo preview, ${preset.label}`}
+              guides="face"
+            />
           </div>
           <p className="border-t border-border px-4 py-3 text-xs leading-relaxed text-fg-muted">
             Guides are approximate and do not appear in the download. This tool sizes and crops your photo; it does not

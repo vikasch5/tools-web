@@ -100,7 +100,8 @@ export type WidgetId =
   | "add-page-numbers"
   | "watermark-pdf"
   | "protect-pdf"
-  | "unlock-pdf";
+  | "unlock-pdf"
+  | "form-photo";
 
 /** Starting settings for a widget on a landing page, e.g. { targetKb: 50 }. */
 export type WidgetPreset = Record<string, string | number>;

@@ -185,3 +185,10 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
 - **Landing pages** (variants of the resizer): `pan-card-photo-resizer`, `ibps-photo-signature-resizer`, `upsc-photo-resizer`, `india-post-gds-photo-resizer`.
 - Passport Photo now uses the shared `CropFrame` (drag, arrow keys, guides).
 - Verified: typecheck, 234 tests, build. Browser run at 375 and 1280 px: every preset downloaded at its exact pixel size inside its KB range (e.g. bank photo 200×230 at 21.0 KB after padding, PAN signature 354×157 at 6.6 KB, UPSC photo 37.6 KB); cleaned signature checked by eye; passport photo still downloads 600×600 after dragging; no page errors, no horizontal scroll.
+
+### EMI calculator with prepayment (roadmap phase 1, tool 4)
+- **Prepayments** in Loan & EMI Calculator: extra every month, a yearly lump sum from a chosen year, and a one-time payment in a chosen month, used either to finish sooner (EMI kept) or to lower the EMI (end date kept, EMI recalculated after each prepayment). Shows interest saved, new tenure or final EMI, total prepaid, and the interest without prepaying.
+- **Schedule** by year or by month, with a CSV download (Month, EMI, Principal, Interest, Prepayment, Balance).
+- **Landing pages** in rupees with Indian digit grouping (₹50,00,000): `/calculators/home-loan-emi-calculator` (₹50 lakh, 8.5%, 20 y), `car-loan-emi-calculator` (₹8 lakh, 9%, 5 y), `personal-loan-emi-calculator` (₹5 lakh, 12%, 3 y). Each has its own guide and a loan-specific FAQ (e.g. RBI's no-foreclosure-charge rule for floating-rate home loans).
+- Segmented labels no longer wrap.
+- Verified: typecheck, 245 tests (new `loan-prepay.test.ts`; base EMIs match standard values, e.g. ₹50 lakh at 8.5% for 20 years = ₹43,391.16), build. Browser run at 375 and 1280 px: ₹1 lakh a year saves ₹18,55,389.33 and ends 6 years early; EMI mode, monthly view (240 rows) and CSV download work; no horizontal page scroll, no errors.

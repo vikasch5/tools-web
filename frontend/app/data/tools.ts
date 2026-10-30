@@ -113,11 +113,23 @@ const formVariant = (slug: string, name: string, description: string, keywords: 
   keywords,
 });
 
+const loanVariant = (slug: string, name: string, description: string, keywords: string[]): ToolVariant => ({
+  slug,
+  name,
+  category: "calculators",
+  description,
+  variantOf: "loan-calculator",
+  keywords: [...keywords, "emi", "prepayment"],
+});
+
 export const toolVariants: ToolVariant[] = [
   ...[10, 20, 30, 50, 100, 200, 500].map(kbVariant),
   formVariant("pan-card-photo-resizer", "PAN Card Photo Resizer", "PAN photo and signature for the online form.", ["pan", "pan card", "nsdl", "protean", "utiitsl", "form 49a"]),
   formVariant("ibps-photo-signature-resizer", "IBPS & SBI Photo and Signature Resizer", "200 × 230 px photo, 140 × 60 px signature.", ["ibps", "sbi", "rbi", "bank exam", "po", "clerk"]),
   formVariant("upsc-photo-resizer", "UPSC Photo and Signature Resizer", "20–200 KB photo for UPSC forms.", ["upsc", "ias", "civil services", "cse"]),
+  loanVariant("home-loan-emi-calculator", "Home Loan EMI Calculator", "EMI, interest and prepayment savings on a home loan.", ["home loan", "housing loan", "mortgage"]),
+  loanVariant("car-loan-emi-calculator", "Car Loan EMI Calculator", "EMI and total interest on a car loan.", ["car loan", "auto loan", "vehicle loan"]),
+  loanVariant("personal-loan-emi-calculator", "Personal Loan EMI Calculator", "EMI and interest on a personal loan.", ["personal loan", "instant loan"]),
   formVariant("india-post-gds-photo-resizer", "India Post GDS Photo Resizer", "320 × 400 px photo for the GDS form.", ["gds", "india post", "gramin dak sevak", "postal"]),
 ];
 

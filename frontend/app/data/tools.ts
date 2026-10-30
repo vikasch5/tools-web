@@ -88,6 +88,13 @@ export const tools: Tool[] = [
   { slug: "ppf-calculator", name: "PPF Calculator", category: "calculators", description: "Public Provident Fund maturity at today's rate.", status: "live", isNew: true, keywords: ["ppf", "provident fund", "80c", "tax free", "post office"] },
   { slug: "gratuity-calculator", name: "Gratuity Calculator", category: "calculators", description: "Gratuity with the 15/26 formula and labour code rules.", status: "live", isNew: true, keywords: ["gratuity", "15/26", "labour code", "resignation", "retirement"] },
   { slug: "hra-calculator", name: "HRA Exemption Calculator", category: "calculators", description: "Tax-free house rent allowance under the old regime.", status: "live", isNew: true, keywords: ["hra", "house rent allowance", "rent", "exemption", "metro", "income tax"] },
+  // Roadmap phase 4: everyday tools
+  { slug: "date-calculator", name: "Date Calculator", category: "calculators", description: "Days between dates, working days, add or subtract days.", status: "live", isNew: true, keywords: ["days between dates", "date difference", "working days", "add days", "countdown", "how many days"] },
+  { slug: "discount-calculator", name: "Discount Calculator", category: "calculators", description: "Sale price, savings and stacked discounts.", status: "live", isNew: true, keywords: ["discount", "sale", "offer", "percent off", "mrp", "bank offer"] },
+  { slug: "gold-price-calculator", name: "Gold Price Calculator", category: "calculators", description: "Jewellery price with purity, making charges and GST.", status: "live", isNew: true, keywords: ["gold", "22k", "24k", "jewellery", "making charges", "tola", "gold rate"] },
+  { slug: "unit-converter", name: "Unit Converter", category: "converters", description: "Length, weight, area (gaj, acre), temperature and more.", status: "live", popular: true, isNew: true, keywords: ["convert", "cm to feet", "kg to lb", "sq ft", "acre", "gaj", "celsius", "fahrenheit", "litre"] },
+  { slug: "typing-test", name: "Typing Speed Test", category: "text-tools", description: "Check your WPM and accuracy in 1, 3 or 5 minutes.", status: "live", isNew: true, keywords: ["typing", "wpm", "typing speed", "keyboard", "ssc typing", "practice"] },
+  { slug: "character-counter", name: "Character Counter", category: "text-tools", description: "Characters left for Instagram, X, YouTube and SMS.", status: "live", isNew: true, keywords: ["character count", "letters", "instagram", "twitter", "sms", "meta description", "limit"] },
   { slug: "percentage-calculator", name: "Percentage Calculator", category: "calculators", description: "Work out increases, decreases and ratios.", status: "live", isNew: true, keywords: ["percent", "discount", "increase", "decrease", "ratio"] },
 ];
 

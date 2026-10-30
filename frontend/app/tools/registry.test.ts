@@ -18,6 +18,7 @@ import {
 import { describeTax } from "./engine/income-tax";
 import { centredRect, aspectChoices } from "./engine/crop-geometry";
 import { describeTextSize } from "./engine/text-layer";
+import { describeAddDays, describeConversion as describeUnits, describeDateDifference, describeDiscount, describeGold, describeLimits, describeTyping } from "./engine/everyday";
 import type { TextToolDefinition, WidgetId } from "./types";
 import { statsSummary, textStats } from "./engine/text-stats";
 import { diffLines, diffToText } from "./engine/diff";
@@ -91,7 +92,7 @@ async function blankPdf(pages: number) {
  * the same functions the tool's panel calls.
  */
 const widgetExamples: Record<WidgetId, (input: string, title: string) => string | Promise<string>> = {
-  "word-counter": (input) => statsSummary(textStats(input)),
+  "word-counter": (input, title) => (title.startsWith("Limits:") ? describeLimits(input) : statsSummary(textStats(input))),
   "diff-checker": (input) => {
     const [a, b] = input.split("\n---\n");
     return diffToText(diffLines(a, b));
@@ -350,6 +351,29 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
   "add-text": (input) => {
     const [, pct, w, h] = input.match(/^([\d.]+)% on (\d+) × (\d+) px$/)!;
     return describeTextSize(Number(pct), Number(w), Number(h));
+  },
+  "date-calculator": (input) => {
+    const add = input.match(/^(\S+) \+ (\d+) (days|weeks|months|years)$/);
+    if (add) return describeAddDays(add[1], Number(add[2]), add[3] as "days");
+    const [, a, b, end] = input.match(/^(\S+) to (\S+)(, counting the end date)?$/)!;
+    return describeDateDifference(a, b, !!end);
+  },
+  "discount-calculator": (input) => {
+    const [, price, discounts] = input.match(/^([\d,.]+) with (.+) off$/)!;
+    return describeDiscount(parseNumber(price), discounts.split(" + ").map((d) => parseNumber(d)));
+  },
+  "gold-calculator": (input) => {
+    const [, rate, karat, grams, making, perGram] = input.match(/^24K at ([\d,]+) a gram, (\d+)K, ([\d.]+) g, making (?:₹)?([\d.]+)(%| a gram)$/)!;
+    return describeGold({ rate24k: parseNumber(rate), karat: Number(karat) as 22, grams: Number(grams), making: Number(making), makingType: perGram === "%" ? "percent" : "perGram" });
+  },
+  "unit-converter": (input) => {
+    const [, value, from, to] = input.match(/^([\d.]+) (\w+) to (\w+)$/)!;
+    const group = { ft: "length", acre: "area", F: "temperature" }[from as "ft"];
+    return describeUnits(Number(value), group, from, to);
+  },
+  "typing-test": (input) => {
+    const [, text, seconds] = input.match(/^(.+) in (\d+) s$/)!;
+    return describeTyping(text, text, Number(seconds));
   },
   "form-photo": (input) => describePreset(formPresets.find((p) => p.id === input)!),
   "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),

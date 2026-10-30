@@ -110,7 +110,12 @@ export type WidgetId =
   | "hra-calculator"
   | "income-tax-calculator"
   | "crop-image"
-  | "add-text";
+  | "add-text"
+  | "date-calculator"
+  | "discount-calculator"
+  | "gold-calculator"
+  | "unit-converter"
+  | "typing-test";
 
 /** Starting settings for a widget on a landing page, e.g. { targetKb: 50 }. */
 export type WidgetPreset = Record<string, string | number>;

@@ -51,6 +51,11 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "income-tax-calculator": load(() => import("./IncomeTaxCalculator"), "IncomeTaxCalculator"),
   "crop-image": load(() => import("./CropImage"), "CropImage"),
   "add-text": load(() => import("./AddText"), "AddText"),
+  "date-calculator": load(() => import("./DateCalculator"), "DateCalculator"),
+  "discount-calculator": load(() => import("./DiscountCalculator"), "DiscountCalculator"),
+  "gold-calculator": load(() => import("./GoldCalculator"), "GoldCalculator"),
+  "unit-converter": load(() => import("./UnitConverter"), "UnitConverter"),
+  "typing-test": load(() => import("./TypingTest"), "TypingTest"),
 };
 
 export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {

@@ -192,3 +192,9 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
 - **Landing pages** in rupees with Indian digit grouping (₹50,00,000): `/calculators/home-loan-emi-calculator` (₹50 lakh, 8.5%, 20 y), `car-loan-emi-calculator` (₹8 lakh, 9%, 5 y), `personal-loan-emi-calculator` (₹5 lakh, 12%, 3 y). Each has its own guide and a loan-specific FAQ (e.g. RBI's no-foreclosure-charge rule for floating-rate home loans).
 - Segmented labels no longer wrap.
 - Verified: typecheck, 245 tests (new `loan-prepay.test.ts`; base EMIs match standard values, e.g. ₹50 lakh at 8.5% for 20 years = ₹43,391.16), build. Browser run at 375 and 1280 px: ₹1 lakh a year saves ₹18,55,389.33 and ends 6 years early; EMI mode, monthly view (240 rows) and CSV download work; no horizontal page scroll, no errors.
+
+### Compress PDF to an exact size (roadmap phase 1, tool 5)
+- **Size limit mode** in Compress PDF (Under 100 KB … 5 MB). Tries, gentlest first: lossless repacking, then JPEG images at 72%/2000 px, 50%/1400 px, 40%/1100 px, 30%/800 px; the first result under the limit wins, so text and vectors stay real text. Files already under the limit are kept.
+- If no step fits, the page explains the trade-off and offers **"Turn pages into images"**: pages are rendered with pdf.js (150 DPI at 75% down to 50 DPI at 35%) and rebuilt at their original page sizes (`pagesToPdf`), so the PDF looks the same but text is no longer selectable. Up to 60 pages.
+- **Landing pages**: `/pdf-tools/compress-pdf-to-{100kb,200kb,500kb,1mb}`, each with its own guide.
+- Verified: typecheck, 254 tests (new `pdf-target.test.ts`), build. Browser run: an 11.7 MB 3-page scan → 181 KB on the 1 MB page and 55.6 KB on the 100 KB page (text kept, A4 pages); a 5 MB PDF with Flate images → offered page images → 131 KB at 72 DPI on the 200 KB page, 2 A4 pages; 375 px without horizontal scroll; no errors.

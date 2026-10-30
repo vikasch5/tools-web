@@ -115,21 +115,92 @@ async function recompressJpegs(data: Uint8Array, name: string, maxEdge: number, 
   return { data: stats.reencoded ? await doc.save({ useObjectStreams: false }) : data, stats };
 }
 
-export async function compressPdf(file: PdfFile, level: CompressLevel) {
-  // Fails early, with a clear message, for damaged or locked files.
-  await loadPdf(file);
-  const settings = compressLevels[level];
+type Settings = { maxEdge: number; quality: number } | null;
+
+async function compressWith(file: PdfFile, settings: Settings) {
   let data = file.data;
   let stats: ImageStats = { images: 0, reencoded: 0 };
   if (settings) ({ data, stats } = await recompressJpegs(data, file.name, settings.maxEdge, settings.quality));
   const optimized = await optimizePdf(data, settings?.quality);
   if (optimized && optimized.length < data.length) data = optimized;
+  return { data, reencoded: stats.reencoded };
+}
+
+export async function compressPdf(file: PdfFile, level: CompressLevel) {
+  // Fails early, with a clear message, for damaged or locked files.
+  await loadPdf(file);
+  const { data, reencoded } = await compressWith(file, compressLevels[level]);
   const smaller = data.length < file.data.length;
   return {
     name: `${pdfBaseName(file.name)}-compressed.pdf`,
     data: smaller ? data : file.data,
     before: file.data.length,
     after: smaller ? data.length : file.data.length,
-    reencoded: stats.reencoded,
+    reencoded,
   };
 }
+
+/**
+ * Steps tried, gentlest first, to get under a size limit. Text and vector
+ * graphics stay as they are; only embedded JPEG images get smaller.
+ */
+export const targetSteps: { label: string; settings: Settings }[] = [
+  { label: "lossless repacking", settings: null },
+  { label: "images at 72% quality, up to 2000 px", settings: compressLevels.medium },
+  { label: "images at 50% quality, up to 1400 px", settings: compressLevels.high },
+  { label: "images at 40% quality, up to 1100 px", settings: { maxEdge: 1100, quality: 40 } },
+  { label: "images at 30% quality, up to 800 px", settings: { maxEdge: 800, quality: 30 } },
+];
+
+export type TargetPdfResult = {
+  name: string;
+  data: Uint8Array;
+  before: number;
+  after: number;
+  reached: boolean;
+  /** Which step produced the result. */
+  step: string;
+};
+
+/** The gentlest step that gets the PDF at or under `target` bytes, or the smallest one tried. */
+export async function compressPdfToTarget(file: PdfFile, target: number): Promise<TargetPdfResult> {
+  await loadPdf(file);
+  const name = `${pdfBaseName(file.name)}-compressed.pdf`;
+  const before = file.data.length;
+  if (before <= target) return { name: file.name, data: file.data, before, after: before, reached: true, step: "already under the limit" };
+  let best = { data: file.data, step: "original" };
+  for (const { label, settings } of targetSteps) {
+    const { data } = await compressWith(file, settings);
+    if (data.length < best.data.length) best = { data, step: label };
+    if (data.length <= target) return { name, data, before, after: data.length, reached: true, step: label };
+  }
+  return { name, data: best.data, before, after: best.data.length, reached: false, step: best.step };
+}
+
+export type PageImage = { jpeg: Uint8Array; widthPt: number; heightPt: number };
+
+/** A PDF whose pages are the given JPEG images, each filling a page of the original size. */
+export async function pagesToPdf(pages: PageImage[]) {
+  const { PDFDocument } = await import("pdf-lib");
+  const doc = await PDFDocument.create();
+  for (const page of pages) {
+    const image = await doc.embedJpg(page.jpeg);
+    doc.addPage([page.widthPt, page.heightPt]).drawImage(image, { x: 0, y: 0, width: page.widthPt, height: page.heightPt });
+  }
+  return doc.save({ useObjectStreams: true });
+}
+
+/**
+ * Page-image settings tried, best first, when the PDF must be turned into
+ * pictures to reach a small limit: [DPI, JPEG quality].
+ */
+export const rasterSteps: [number, number][] = [
+  [150, 0.75],
+  [150, 0.6],
+  [120, 0.6],
+  [100, 0.55],
+  [85, 0.5],
+  [72, 0.45],
+  [60, 0.4],
+  [50, 0.35],
+];

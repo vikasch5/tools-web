@@ -251,6 +251,8 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     return `${copies.length} copies on the page`;
   },
   "compress-pdf": (input) => {
+    const target = input.match(/^Target (\d+) KB$/);
+    if (target) return `at most ${targetBytes(Number(target[1])).toLocaleString("en-US")} bytes`;
     const level = ({ Lossless: "low", Recommended: "medium", Strong: "high" } as Record<string, CompressLevel>)[input];
     return describeLevel(level);
   },

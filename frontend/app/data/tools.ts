@@ -77,6 +77,14 @@ export const tools: Tool[] = [
   { slug: "csv-to-json", name: "CSV to JSON", category: "converters", description: "Turn spreadsheet rows into JSON objects.", status: "live", isNew: true, keywords: ["spreadsheet", "excel", "convert", "tsv"] },
   { slug: "gradient-generator", name: "Gradient Generator", category: "web-design-tools", description: "Build linear, radial and conic CSS gradients.", status: "live", isNew: true, keywords: ["css gradient", "background", "colors", "linear", "radial"] },
   { slug: "uuid-generator", name: "UUID Generator", category: "generators", description: "Create v4 and v7 UUIDs in bulk.", status: "live", isNew: true, keywords: ["guid", "unique id", "random id", "v4", "v7"] },
+  // Roadmap phase 2: Indian finance calculators
+  { slug: "gst-calculator", name: "GST Calculator", category: "calculators", description: "Add or remove GST, with the CGST, SGST or IGST split.", status: "live", popular: true, isNew: true, keywords: ["gst", "tax", "cgst", "sgst", "igst", "inclusive", "exclusive", "invoice", "18%", "5%"] },
+  { slug: "sip-calculator", name: "SIP Calculator", category: "calculators", description: "Monthly SIP, step-up SIP and lump sum returns.", status: "live", popular: true, isNew: true, keywords: ["sip", "mutual fund", "step up", "lumpsum", "lump sum", "investment", "returns"] },
+  { slug: "fd-calculator", name: "FD Calculator", category: "calculators", description: "Fixed deposit maturity and interest, compounded quarterly.", status: "live", isNew: true, keywords: ["fd", "fixed deposit", "bank", "post office", "maturity", "interest"] },
+  { slug: "compound-interest-calculator", name: "Compound Interest Calculator", category: "calculators", description: "Growth with compound interest and monthly additions.", status: "live", isNew: true, keywords: ["compound", "interest", "ci", "savings", "growth", "rule of 72"] },
+  { slug: "ppf-calculator", name: "PPF Calculator", category: "calculators", description: "Public Provident Fund maturity at today's rate.", status: "live", isNew: true, keywords: ["ppf", "provident fund", "80c", "tax free", "post office"] },
+  { slug: "gratuity-calculator", name: "Gratuity Calculator", category: "calculators", description: "Gratuity with the 15/26 formula and labour code rules.", status: "live", isNew: true, keywords: ["gratuity", "15/26", "labour code", "resignation", "retirement"] },
+  { slug: "hra-calculator", name: "HRA Exemption Calculator", category: "calculators", description: "Tax-free house rent allowance under the old regime.", status: "live", isNew: true, keywords: ["hra", "house rent allowance", "rent", "exemption", "metro", "income tax"] },
   { slug: "percentage-calculator", name: "Percentage Calculator", category: "calculators", description: "Work out increases, decreases and ratios.", status: "live", isNew: true, keywords: ["percent", "discount", "increase", "decrease", "ratio"] },
 ];
 

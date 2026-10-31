@@ -46,6 +46,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#4338CA" />
         <meta property="og:image" content="https://alltoolsdesk.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
+        {/* Yandex Webmaster ownership verification. */}
+        <meta name="yandex-verification" content="a975798fd372cfa4" />
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-PN2TBNWQE3"

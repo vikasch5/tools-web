@@ -11,10 +11,19 @@ AddType application/manifest+json .webmanifest
 DirectoryIndex index.html
 Options -Indexes
 
+# Page addresses have no trailing slash (/calculators/gst-calculator), and
+# that is what each page's canonical tag says. Stop Apache from redirecting
+# them to a "/" version, which made Google see a redirect on every page.
+DirectorySlash Off
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  # Prerendered pages live at /<path>/index.html; serve them with or
-  # without a trailing slash.
+  # A trailing slash on a page address: permanently redirect to the
+  # canonical address without it (the home page "/" stays as it is).
+  RewriteCond %{REQUEST_URI} ^/(.+)/$
+  RewriteCond %{DOCUMENT_ROOT}/%1/index.html -f
+  RewriteRule ^ /%1 [R=301,L]
+  # Prerendered pages live at /<path>/index.html; serve them at /<path>.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME}/index.html -f
   RewriteRule ^(.*?)/?$ $1/index.html [L]

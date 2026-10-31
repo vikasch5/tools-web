@@ -9,6 +9,7 @@ import { categories, categoryPath } from "~/data/categories";
 import { toolPath, toolsInCategory } from "~/data/tools";
 import { breadcrumbJsonLd, buildMeta } from "~/lib/seo";
 import { site } from "~/config/site";
+import { isPublicPath } from "~/lib/pages";
 
 export function loader({ params }: Route.LoaderArgs) {
   const category = categories.find((c) => c.slug === params.category);
@@ -24,6 +25,16 @@ export function loader({ params }: Route.LoaderArgs) {
     live: list.filter((t) => t.status === "live"),
     soon: list.filter((t) => t.status === "soon"),
   };
+}
+
+/**
+ * The site is static: only prerendered pages have loader data. An address
+ * that is not one of them (a mistyped link, say) shows "Page not found"
+ * instead of failing to fetch data that was never built.
+ */
+export async function clientLoader({ request, serverLoader }: Route.ClientLoaderArgs) {
+  if (!isPublicPath(new URL(request.url).pathname)) throw data(null, { status: 404 });
+  return serverLoader();
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {

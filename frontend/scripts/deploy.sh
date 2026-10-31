@@ -31,3 +31,7 @@ if [ -d build ]; then mv build build-previous; fi
 mv build-next build
 
 echo "Done. The site is now serving the new build."
+
+# Tell Bing, Yandex and other IndexNow search engines about new and changed
+# pages. Never fails the deploy.
+node scripts/indexnow.mjs || true

@@ -235,3 +235,8 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
 - Search Console showed 9 "Page with redirect" and new pages stuck at "Discovered – currently not indexed". Cause: every page's canonical is `/<path>` (no slash), but Apache's `DirectorySlash` 301-redirected `/<path>` to `/<path>/`, so the canonical URL itself redirected.
 - `.htaccess`: `DirectorySlash Off`; `/<path>/` now 301s to `/<path>` (query kept); `/<path>` serves `<path>/index.html` directly. Home `/` unchanged.
 - Verified on a local Apache 2.4 with the production build: all 100 sitemap URLs return 200 without a redirect, slash versions 301 to them, sitemap/robots/ads.txt and hashed assets unchanged, full page crawl clean, image, UPI QR, rent receipt and PDF (worker + wasm) tools work.
+
+### IndexNow (Bing, Yandex, Naver, Seznam)
+- Key file `frontend/public/19c124958737685b87aee32968a44e5e.txt` (public by design; it proves the site owns the key).
+- `scripts/indexnow.mjs` (`npm run indexnow`, `-- --all` for every page): reads the live sitemap and POSTs pages whose prerendered HTML is new or differs from `build-previous/` to api.indexnow.org. Never fails; prints a line. `deploy.sh` runs it after the swap.
+- Verified against a mock endpoint: first run 100 URLs, identical build 0, one changed + one new page → 2, `--all` → 100, endpoint down → message and exit 0; Apache serves the key as text/plain.

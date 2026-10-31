@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { publicPaths } from "./pages";
+import { isPublicPath, publicPaths } from "./pages";
 import { loader as sitemap } from "~/routes/sitemap";
 import { loader as robots } from "~/routes/robots";
 import { liveTools } from "~/data/tools";
@@ -16,5 +16,20 @@ describe("sitemap and robots", () => {
 
   it("points crawlers at the sitemap", async () => {
     expect(await robots().text()).toMatch(/^User-agent: \*\nAllow: \/\n\nSitemap: https?:\/\/.+\/sitemap\.xml\n$/);
+  });
+});
+
+describe("isPublicPath", () => {
+  it("accepts every prerendered page, with or without a trailing slash", () => {
+    for (const path of publicPaths()) {
+      expect(isPublicPath(path)).toBe(true);
+      if (path !== "/") expect(isPublicPath(`${path}/`)).toBe(true);
+    }
+  });
+
+  it("rejects addresses that were never built", () => {
+    expect(isPublicPath("/compress-image-to-50kb")).toBe(false);
+    expect(isPublicPath("/image-tools/not-a-tool")).toBe(false);
+    expect(isPublicPath("/$")).toBe(false);
   });
 });

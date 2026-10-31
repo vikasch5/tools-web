@@ -18,3 +18,11 @@ export function publicPaths() {
     ...toolVariants.map(toolPath),
   ];
 }
+
+let publicPathSet: Set<string> | undefined;
+
+/** Whether a URL path is one of the prerendered public pages. */
+export function isPublicPath(pathname: string) {
+  publicPathSet ??= new Set(publicPaths());
+  return publicPathSet.has(pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname);
+}

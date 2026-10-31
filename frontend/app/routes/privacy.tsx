@@ -11,7 +11,7 @@ export function meta({}: Route.MetaArgs) {
   });
 }
 
-const lastUpdated = "22 October 2026";
+const lastUpdated = "31 October 2026";
 
 export default function Privacy() {
   return (
@@ -56,22 +56,27 @@ export default function Privacy() {
         {ads.enabled ? (
           <>
             <p>
-              This site is configured to use Google AdSense. Google and its advertising partners may use cookies, device identifiers
-              or similar technologies to deliver, measure and limit the frequency of ads, prevent fraud, and, where permitted,
-              personalise advertising. Advertising partners may process information about your browser, device and visits to this
-              and other websites. They do not need the text or files you process inside a client-side tool to serve ads.
+              This site shows ads from Google AdSense. Third-party vendors, including Google, use cookies to serve ads based on your
+              prior visits to this website or other websites. Google's use of advertising cookies enables it and its partners to
+              serve ads to you based on your visits to this site and/or other sites on the internet. These cookies and similar
+              technologies are also used to measure ads, limit how often you see them and prevent fraud. Ads do not use the text or
+              files you process inside a tool; those stay in your browser.
             </p>
             <p>
-              You can review or manage Google's advertising personalisation choices through{" "}
-              <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">Google My Ad Center</a>
-              {" "}and read{" "}
+              You can opt out of personalised advertising by visiting{" "}
+              <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>
+              {" "}(also called My Ad Center). You can also opt out of some third-party vendors' use of cookies for personalised
+              advertising at{" "}
+              <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">www.aboutads.info</a>
+              {" "}and{" "}
+              <a href="https://www.youronlinechoices.eu/" target="_blank" rel="noopener noreferrer">www.youronlinechoices.eu</a>.
+              Read{" "}
               <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">how Google uses information from sites and apps that use its services</a>.
-              Other advertising partners may provide their own privacy and opt-out controls.
             </p>
             <p>
-              Where required by applicable law and Google policy, consent or other privacy choices must be collected using an
-              appropriately configured consent-management solution before relevant cookies or advertising technologies are used.
-              Availability of a consent message and the choices it offers depends on the site's advertising and consent configuration.
+              Visitors in the European Economic Area, the UK and Switzerland are asked for consent through a Google-certified
+              consent message before advertising cookies are used. You can change your choice at any time with the "Privacy and
+              cookie settings" link at the bottom of every page.
             </p>
           </>
         ) : (

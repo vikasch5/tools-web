@@ -12,6 +12,7 @@ import { categories, categoryPath } from "~/data/categories";
 import { tools, toolPath } from "~/data/tools";
 import { breadcrumbJsonLd, buildMeta, absoluteUrl } from "~/lib/seo";
 import { site } from "~/config/site";
+import { isPublicPath } from "~/lib/pages";
 
 // schema.org application categories for the WebApplication JSON-LD.
 const applicationCategories: Record<string, string> = {
@@ -34,6 +35,16 @@ export function loader({ params }: Route.LoaderArgs) {
     category: { name: category.name, slug: category.slug },
     related,
   };
+}
+
+/**
+ * The site is static: only prerendered pages have loader data. An address
+ * that is not one of them (a mistyped link, say) shows "Page not found"
+ * instead of failing to fetch data that was never built.
+ */
+export async function clientLoader({ request, serverLoader }: Route.ClientLoaderArgs) {
+  if (!isPublicPath(new URL(request.url).pathname)) throw data(null, { status: 404 });
+  return serverLoader();
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {

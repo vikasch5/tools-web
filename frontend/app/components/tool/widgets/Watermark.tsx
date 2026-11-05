@@ -5,10 +5,19 @@ import { RangeField, TextField } from "~/components/ui/Field";
 import { runTaskInWorker, warmUpWorker } from "~/tools/engine/client";
 import type { PdfFile } from "~/tools/engine/pdf";
 import { parsePageRanges } from "~/tools/engine/page-ranges";
-import { watermarkInks, watermarkPlacements, type WatermarkImage, type WatermarkOptions } from "~/tools/engine/pdf-pages";
+import {
+  watermarkInks,
+  watermarkPlacements,
+  watermarkPositions,
+  type WatermarkImage,
+  type WatermarkOptions,
+  cleanWatermarkPixels,
+  type WatermarkCleanup,
+  type WatermarkPosition,
+} from "~/tools/engine/pdf-pages";
 import { cn } from "~/lib/cn";
 import { FileDrop } from "../FileDrop";
-import { Segmented } from "../OptionControls";
+import { Segmented, Switch } from "../OptionControls";
 import { Panel, PanelSection, PrimaryAction, StatusMessage, downloadBlob } from "../Panel";
 import { formatBytes } from "../format";
 import { pdfBlob, toPdfFile } from "./pdf-shared";
@@ -59,16 +68,27 @@ async function toMark(canvas: HTMLCanvasElement): Promise<Mark> {
   };
 }
 
-/** JPEG and PNG logos are used as they are; WebP and GIF are redrawn as PNG. */
-async function imageMark(file: File): Promise<Mark> {
+type Cleanup = WatermarkCleanup;
+
+/** Logos larger than this on their longer side are scaled down; plenty for print. */
+const MAX_LOGO_SIDE = 2400;
+
+/**
+ * JPEG and PNG logos are used as they are unless cleaned up; WebP and GIF,
+ * very large images and cleaned-up images are redrawn as PNG.
+ */
+async function imageMark(file: File, cleanup: Cleanup): Promise<Mark> {
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(file);
   } catch {
     throw new Error(`“${file.name}” could not be opened as an image. Use PNG or JPG.`);
   }
-  const { width, height } = bitmap;
-  if (file.type === "image/png" || file.type === "image/jpeg") {
+  const fit = Math.min(1, MAX_LOGO_SIDE / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * fit));
+  const height = Math.max(1, Math.round(bitmap.height * fit));
+  const asIs = !cleanup.removeWhite && !cleanup.greyscale && fit === 1;
+  if (asIs && (file.type === "image/png" || file.type === "image/jpeg")) {
     bitmap.close();
     return {
       data: new Uint8Array(await file.arrayBuffer()),
@@ -81,9 +101,62 @@ async function imageMark(file: File): Promise<Mark> {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
-  canvas.getContext("2d")!.drawImage(bitmap, 0, 0);
+  const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+  ctx.drawImage(bitmap, 0, 0, width, height);
   bitmap.close();
+  if (cleanup.removeWhite || cleanup.greyscale) {
+    const pixels = ctx.getImageData(0, 0, width, height);
+    cleanWatermarkPixels(pixels.data, cleanup);
+    ctx.putImageData(pixels, 0, 0);
+  }
   return toMark(canvas);
+}
+
+const positionLabel = (p: WatermarkPosition) =>
+  p === "middle-center"
+    ? "Centre"
+    : p
+        .replace("middle-", "middle ")
+        .replace("-center", " centre")
+        .replace("-", " ")
+        .replace(/^./, (c) => c.toUpperCase());
+
+/** A 3 × 3 grid of radio buttons, one per spot on the page. */
+function PositionGrid({ value, onChange }: { value: WatermarkPosition; onChange: (p: WatermarkPosition) => void }) {
+  return (
+    <fieldset className="flex flex-col gap-1.5">
+      <legend className="mb-1.5 text-[0.8125rem] font-medium text-fg-muted">
+        Position <span className="text-fg-subtle">· {positionLabel(value)}</span>
+      </legend>
+      <div className="grid w-fit grid-cols-3 gap-1 rounded-md border border-border bg-bg p-1">
+        {watermarkPositions.map((p) => (
+          <label
+            key={p}
+            title={positionLabel(p)}
+            className={cn(
+              "grid size-8 cursor-pointer place-items-center rounded-sm transition-colors pointer-coarse:size-11",
+              "has-focus-visible:outline-2 has-focus-visible:outline-ring",
+              value === p ? "bg-surface shadow-sm" : "hover:bg-surface-2",
+            )}
+          >
+            <input
+              type="radio"
+              name="watermark-position"
+              value={p}
+              checked={value === p}
+              onChange={() => onChange(p)}
+              aria-label={positionLabel(p)}
+              className="sr-only"
+            />
+            <span
+              aria-hidden
+              className={cn("rounded-full", value === p ? "size-3 bg-fg" : "size-1.5 bg-border-strong")}
+            />
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
 }
 
 const angles = [
@@ -99,6 +172,8 @@ export function Watermark() {
   const [kind, setKind] = useState<"text" | "image">("text");
   const [text, setText] = useState("CONFIDENTIAL");
   const [ink, setInk] = useState<Ink>("grey");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [cleanup, setCleanup] = useState<Cleanup>({ removeWhite: false, greyscale: false });
   const [logo, setLogo] = useState<{ name: string; mark: Mark } | null>(null);
   const [mark, setMark] = useState<Mark | null>(null);
   const [options, setOptions] = useState<WatermarkOptions>({
@@ -106,6 +181,7 @@ export function Watermark() {
     opacity: 0.25,
     angle: 45,
     layout: "center",
+    position: "middle-center",
     pages: "",
   });
   const { pdf, thumbs, error } = usePdfDocument(doc?.pdf.data ?? null);
@@ -145,6 +221,25 @@ export function Watermark() {
     },
     [logo],
   );
+  // Redraw the logo when it or its clean-up options change.
+  useEffect(() => {
+    if (!logoFile) return setLogo(null);
+    let cancelled = false;
+    imageMark(logoFile, cleanup).then(
+      (made) => {
+        if (cancelled) return URL.revokeObjectURL(made.url);
+        setLogo({ name: logoFile.name, mark: made });
+      },
+      (e: Error) => {
+        if (cancelled) return;
+        setLogoFile(null);
+        setStatus({ tone: "error", text: e.message });
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [logoFile, cleanup]);
 
   if (!doc || !pdf)
     return (
@@ -192,7 +287,7 @@ export function Watermark() {
       ? (() => {
           const width = size.width * options.scale;
           const height = (width * mark.height) / mark.width;
-          return watermarkPlacements(size, { width, height }, options.angle, options.layout).map((p, i) => (
+          return watermarkPlacements(size, { width, height }, options.angle, options.layout, options.position).map((p, i) => (
             <img
               key={i}
               src={mark.url}
@@ -226,7 +321,7 @@ export function Watermark() {
             onChange={(v) => setKind(v as "text" | "image")}
             choices={[
               { value: "text", label: "Text" },
-              { value: "image", label: "Image" },
+              { value: "image", label: "Image or logo" },
             ]}
           />
         </>
@@ -290,11 +385,29 @@ export function Watermark() {
                   </div>
                 </fieldset>
               </>
-            ) : logo ? (
-              <div className="flex items-center gap-3 rounded-md border border-border p-2 sm:col-span-2">
-                <img src={logo.mark.url} alt="" className="size-12 rounded-sm bg-surface-2 object-contain" />
-                <p className="min-w-0 flex-1 truncate text-sm text-fg">{logo.name}</p>
-                <IconButton icon={X} label="Remove image" size="sm" onClick={() => setLogo(null)} />
+            ) : logoFile ? (
+              <div className="flex flex-col gap-2 sm:col-span-2">
+                <div className="flex items-center gap-3 rounded-md border border-border p-2">
+                  {logo ? (
+                    <img src={logo.mark.url} alt="" className="size-12 rounded-sm bg-surface-2 object-contain" />
+                  ) : (
+                    <span aria-hidden className="size-12 rounded-sm bg-surface-2" />
+                  )}
+                  <p className="min-w-0 flex-1 truncate text-sm text-fg">{logoFile.name}</p>
+                  <IconButton icon={X} label="Remove image" size="sm" onClick={() => setLogoFile(null)} />
+                </div>
+                <div className="flex flex-wrap gap-x-5">
+                  <Switch
+                    label="Remove white background"
+                    checked={cleanup.removeWhite}
+                    onChange={(v) => setCleanup((c) => ({ ...c, removeWhite: v }))}
+                  />
+                  <Switch
+                    label="Greyscale"
+                    checked={cleanup.greyscale}
+                    onChange={(v) => setCleanup((c) => ({ ...c, greyscale: v }))}
+                  />
+                </div>
               </div>
             ) : (
               <div className="sm:col-span-2">
@@ -304,12 +417,11 @@ export function Watermark() {
                   maxBytes={10 * 1024 * 1024}
                   title="Drop a logo or image"
                   hint="PNG with transparency works best. Up to 10 MB."
-                  onFiles={async ([file]) => {
-                    try {
-                      setLogo({ name: file.name, mark: await imageMark(file) });
-                    } catch (e) {
-                      setStatus({ tone: "error", text: (e as Error).message });
-                    }
+                  onFiles={([file]) => {
+                    setStatus(IDLE);
+                    setLogoFile(file);
+                    // A logo usually looks right smaller and level; keep any settings already changed.
+                    setOptions((o) => (o.scale === 0.6 && o.angle === 45 ? { ...o, scale: 0.3, angle: 0 } : o));
                   }}
                   onReject={(t) => setStatus({ tone: "error", text: t })}
                 />
@@ -340,10 +452,13 @@ export function Watermark() {
                 value={options.layout}
                 onChange={(v) => set("layout", v as WatermarkOptions["layout"])}
                 choices={[
-                  { value: "center", label: "Once, centred" },
+                  { value: "center", label: "Once" },
                   { value: "tile", label: "Repeated" },
                 ]}
               />
+              {options.layout === "center" && (
+                <PositionGrid value={options.position ?? "middle-center"} onChange={(p) => set("position", p)} />
+              )}
             </div>
             <TextField
               label="Pages"

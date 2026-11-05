@@ -168,23 +168,53 @@ export type WatermarkOptions = {
   /** Counter-clockwise tilt in degrees as seen by the reader. */
   angle: number;
   layout: "center" | "tile";
+  /** Where a single mark sits (layout "center"); defaults to the middle. */
+  position?: WatermarkPosition;
   /** Pages to mark; empty means every page. */
   pages: string;
 };
 
+export const watermarkPositions = [
+  "top-left", "top-center", "top-right",
+  "middle-left", "middle-center", "middle-right",
+  "bottom-left", "bottom-center", "bottom-right",
+] as const;
+export type WatermarkPosition = (typeof watermarkPositions)[number];
+
+/** Gap between a positioned mark and the page edge, as a share of the shorter side. */
+export const WATERMARK_MARGIN = 0.04;
+
 /**
  * Bottom-left corners of each copy of a mark of size (w, h) on a displayed
- * page, so that the mark, turned by `angle` around its own centre, is
- * centred on the page (center) or repeated in a grid (tile).
+ * page, so that the mark, turned by `angle` around its own centre, sits once
+ * at `position` inside a small margin (center) or is repeated in a grid (tile).
  */
-export function watermarkPlacements(page: { width: number; height: number }, mark: { width: number; height: number }, angle: number, layout: "center" | "tile") {
+export function watermarkPlacements(
+  page: { width: number; height: number },
+  mark: { width: number; height: number },
+  angle: number,
+  layout: "center" | "tile",
+  position: WatermarkPosition = "middle-center",
+) {
   const centres: { u: number; v: number }[] = [];
-  if (layout === "center") centres.push({ u: page.width / 2, v: page.height / 2 });
-  else {
-    const t = (angle * Math.PI) / 180;
-    // Bounding box of the turned mark, plus a gap.
-    const bw = Math.abs(mark.width * Math.cos(t)) + Math.abs(mark.height * Math.sin(t));
-    const bh = Math.abs(mark.width * Math.sin(t)) + Math.abs(mark.height * Math.cos(t));
+  const t0 = (angle * Math.PI) / 180;
+  // Bounding box of the turned mark.
+  const bw = Math.abs(mark.width * Math.cos(t0)) + Math.abs(mark.height * Math.sin(t0));
+  const bh = Math.abs(mark.width * Math.sin(t0)) + Math.abs(mark.height * Math.cos(t0));
+  if (layout === "center") {
+    const [row, col] = position.split("-") as ["top" | "middle" | "bottom", "left" | "center" | "right"];
+    const margin = Math.min(page.width, page.height) * WATERMARK_MARGIN;
+    // Keep the turned mark inside the margin; if it is too big, centre it on that axis.
+    const along = (side: "start" | "mid" | "end", length: number, box: number) => {
+      if (side === "mid" || box + 2 * margin > length) return length / 2;
+      return side === "start" ? margin + box / 2 : length - margin - box / 2;
+    };
+    centres.push({
+      u: along(col === "left" ? "start" : col === "right" ? "end" : "mid", page.width, bw),
+      // v runs bottom-up, so "top" is the far end.
+      v: along(row === "bottom" ? "start" : row === "top" ? "end" : "mid", page.height, bh),
+    });
+  } else {
     const stepU = bw * 1.35;
     const stepV = Math.max(bh * 1.6, mark.height * 3);
     const cols = Math.max(1, Math.ceil(page.width / stepU));
@@ -194,9 +224,8 @@ export function watermarkPlacements(page: { width: number; height: number }, mar
     for (let r = 0; r < rows; r++)
       for (let c = 0; c < cols; c++) centres.push({ u: offU + c * stepU, v: offV + r * stepV });
   }
-  const t = (angle * Math.PI) / 180;
-  const cos = Math.cos(t);
-  const sin = Math.sin(t);
+  const cos = Math.cos(t0);
+  const sin = Math.sin(t0);
   // Offset from the centre to the bottom-left corner, turned with the mark.
   const du = (-mark.width / 2) * cos - (-mark.height / 2) * sin;
   const dv = (-mark.width / 2) * sin + (-mark.height / 2) * cos;
@@ -217,7 +246,7 @@ export async function addWatermark(file: PdfFile, image: WatermarkImage, options
     const frame = frameOf(page);
     const width = frame.width * Math.min(1, Math.max(0.05, options.scale));
     const height = (width * image.height) / image.width;
-    for (const { u, v } of watermarkPlacements(frame, { width, height }, options.angle, options.layout)) {
+    for (const { u, v } of watermarkPlacements(frame, { width, height }, options.angle, options.layout, options.position)) {
       const at = frame.toPage(u, v);
       page.drawImage(embedded, {
         ...at,
@@ -230,6 +259,27 @@ export async function addWatermark(file: PdfFile, image: WatermarkImage, options
     marked++;
   });
   return { name: `${pdfBaseName(file.name)}-watermarked.pdf`, data: await doc.save(), marked };
+}
+
+export type WatermarkCleanup = { removeWhite: boolean; greyscale: boolean };
+
+/**
+ * Makes near-white pixels transparent (with a soft edge so outlines stay
+ * smooth) and/or turns the image grey. Works on the raw RGBA pixels.
+ */
+export function cleanWatermarkPixels(px: Uint8ClampedArray, { removeWhite, greyscale }: WatermarkCleanup) {
+  for (let i = 0; i < px.length; i += 4) {
+    const r = px[i], g = px[i + 1], b = px[i + 2];
+    if (greyscale) {
+      const y = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+      px[i] = px[i + 1] = px[i + 2] = y;
+    }
+    if (removeWhite) {
+      // Distance from white by the darkest channel: 0–18 fully clear, 18–48 fades in.
+      const d = 255 - Math.min(r, g, b);
+      if (d < 48) px[i + 3] = Math.round((px[i + 3] * Math.max(0, d - 18)) / 30);
+    }
+  }
 }
 
 /** Watermark inks, printed on paper whatever the site theme. */

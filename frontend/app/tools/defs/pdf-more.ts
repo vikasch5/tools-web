@@ -316,12 +316,13 @@ export const watermarkPdf: WidgetToolDefinition = {
     "Stamp a PDF with text like CONFIDENTIAL or DRAFT, or with your logo. Set size, opacity and angle with a live preview. Runs in your browser, no upload.",
   overview: [
     "A watermark tells readers at a glance that a document is a draft, confidential or a copy, and a logo marks it as yours. It also discourages people from passing on or reusing a file as if it were the final version.",
-    "Type your text, in any language your device can display, or add a logo, then set its colour, size, opacity, angle and whether it appears once or repeated across the page. The preview shows the first page as it will look. The mark is placed on top of every chosen page while the original content stays untouched underneath, and the whole job runs in your browser, so the document is never uploaded.",
+    "Type your text, in any language your device can display, or add a logo or signature image, then set its size, opacity, angle and whether it appears once or repeated across the page. A single mark can sit in the centre, a corner or along any edge, and an image can have its white background removed or be turned grey so it reads as a watermark. The preview shows the first page as it will look. The mark is placed on top of every chosen page while the original content stays untouched underneath, and the whole job runs in your browser, so the document is never uploaded.",
   ],
   howTo: [
     "Drop a PDF onto the page or choose one from your device.",
-    "Choose Text and type the words, or choose Image and add a logo.",
-    "Adjust the colour, size, opacity, angle and layout while watching the preview.",
+    "Choose Text and type the words, or choose Image or logo and add a PNG, JPG, WebP or GIF.",
+    "For an image, optionally remove its white background or make it greyscale.",
+    "Adjust the size, opacity, angle and layout, and pick a position for a single mark, while watching the preview.",
     "Optionally list the pages to mark, then press “Add watermark and download”.",
   ],
   examples: [
@@ -342,6 +343,16 @@ export const watermarkPdf: WidgetToolDefinition = {
       question: "Can I write the watermark in Hindi or another script?",
       answer:
         "Yes. The text is drawn with your device's own fonts, so any script your device can show works, including Devanagari, Arabic and Chinese.",
+    },
+    {
+      question: "How do I put my logo in the corner of every page?",
+      answer:
+        "Choose Image or logo, add your logo, set Layout to Once and pick a corner in the Position grid. The logo keeps a small margin from the page edge, and the preview shows exactly where it lands.",
+    },
+    {
+      question: "My logo has a white box around it. Can I remove it?",
+      answer:
+        "Yes. Turn on “Remove white background” and near-white pixels become see-through, with a soft edge so the outline stays smooth. A PNG with transparency gives the cleanest result.",
     },
     {
       question: "Will the watermark hide my content?",

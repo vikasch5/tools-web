@@ -5,6 +5,7 @@ import { PDFDocument, StandardFonts, degrees } from "pdf-lib";
 import {
   addPageNumbers,
   addWatermark,
+  cleanWatermarkPixels,
   arrangePdf,
   displayFrame,
   labelOrigin,
@@ -123,6 +124,33 @@ describe("drawing on displayed pages", () => {
     expect(watermarkPlacements({ width: 600, height: 800 }, { width: 100, height: 20 }, 0, "tile").length).toBeGreaterThan(4);
   });
 
+  it("places a single mark at any of nine spots, inside the margin", () => {
+    const page = { width: 600, height: 800 };
+    const mark = { width: 100, height: 40 };
+    const m = 600 * 0.04; // 24
+    expect(watermarkPlacements(page, mark, 0, "center", "bottom-right")).toEqual([{ u: 600 - m - 100, v: m }]);
+    expect(watermarkPlacements(page, mark, 0, "center", "top-left")).toEqual([{ u: m, v: 800 - m - 40 }]);
+    expect(watermarkPlacements(page, mark, 0, "center", "middle-center")).toEqual(
+      watermarkPlacements(page, mark, 0, "center"),
+    );
+    // Turned upright, the 100-wide mark needs 100 of height and 40 of width.
+    const [up] = watermarkPlacements(page, mark, 90, "center", "bottom-left");
+    expect(up).toEqual({ u: m + 40, v: m });
+    // Too wide to fit with margins: centred on that axis instead.
+    const [wide] = watermarkPlacements(page, { width: 590, height: 40 }, 0, "center", "top-right");
+    expect(wide).toEqual({ u: 5, v: 800 - m - 40 });
+  });
+
+  it("clears a white background softly and turns pixels grey", () => {
+    const px = new Uint8ClampedArray([255, 255, 255, 255, 240, 240, 240, 255, 225, 225, 225, 255, 200, 0, 0, 255]);
+    cleanWatermarkPixels(px, { removeWhite: true, greyscale: false });
+    expect([px[3], px[7], px[11], px[15]]).toEqual([0, 0, 102, 255]);
+    expect([px[12], px[13], px[14]]).toEqual([200, 0, 0]);
+    const grey = new Uint8ClampedArray([200, 0, 0, 255]);
+    cleanWatermarkPixels(grey, { removeWhite: false, greyscale: true });
+    expect(Array.from(grey)).toEqual([60, 60, 60, 255]);
+  });
+
   it("stamps a PNG watermark on the chosen pages", async () => {
     const png = Uint8Array.from(
       atob("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="),
@@ -134,6 +162,12 @@ describe("drawing on displayed pages", () => {
       { scale: 0.5, opacity: 0.3, angle: 45, layout: "center", pages: "1, 3" },
     );
     expect(r).toMatchObject({ name: "report-watermarked.pdf", marked: 2 });
+    const corner = await addWatermark(
+      await textPdf(2, { rotate: 90 }),
+      { data: png, type: "image/png", width: 1, height: 1 },
+      { scale: 0.2, opacity: 1, angle: 0, layout: "center", position: "bottom-right", pages: "" },
+    );
+    expect(corner.marked).toBe(2);
   });
 });
 

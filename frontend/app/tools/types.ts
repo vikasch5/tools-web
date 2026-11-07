@@ -116,7 +116,8 @@ export type WidgetId =
   | "gold-calculator"
   | "unit-converter"
   | "typing-test"
-  | "rent-receipt";
+  | "rent-receipt"
+  | "invoice-generator";
 
 /** Starting settings for a widget on a landing page, e.g. { targetKb: 50 }. */
 export type WidgetPreset = Record<string, string | number>;

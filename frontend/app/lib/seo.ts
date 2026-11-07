@@ -21,16 +21,20 @@ export function buildMeta({
   description,
   path,
   jsonLd = [],
+  noindex = false,
 }: {
   title: string;
   description: string;
   path: string;
   jsonLd?: object[];
+  /** For private working pages that should stay out of search results. */
+  noindex?: boolean;
 }): MetaDescriptor[] {
   const url = absoluteUrl(path);
   return [
     { title },
     { name: "description", content: description },
+    ...(noindex ? [{ name: "robots", content: "noindex" }] : []),
     { tagName: "link", rel: "canonical", href: url },
     { property: "og:type", content: "website" },
     { property: "og:site_name", content: site.name },

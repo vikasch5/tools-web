@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useMatches,
 } from "react-router";
 import { ArrowLeft, LayoutGrid, SearchX, TriangleAlert } from "lucide-react";
 
@@ -38,6 +39,8 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  // Full-screen working pages (route handle `{ bare: true }`) bring their own navigation.
+  const bare = useMatches().some((m) => (m.handle as { bare?: boolean } | undefined)?.bare);
   return (
     <html lang="en">
       <head>
@@ -85,11 +88,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         >
           Skip to content
         </a>
-        <SiteHeader />
+        {!bare && <SiteHeader />}
         <main id="main" tabIndex={-1} className="flex-1 outline-none">
           {children}
         </main>
-        <SiteFooter />
+        {!bare && <SiteFooter />}
         <ScrollRestoration />
         <Scripts />
       </body>

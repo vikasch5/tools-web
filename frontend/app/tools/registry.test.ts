@@ -40,6 +40,7 @@ import { cases, convertCase } from "./engine/case";
 import { passwordEntropy, strengthLabel } from "./engine/password";
 import { describeQr, upiPayload, wifiPayload, type QrLevel } from "./engine/qr";
 import { describeRentReceipts } from "./engine/rent-receipt";
+import { describeInvoice, states } from "./engine/invoice";
 import { generateLorem } from "./engine/lorem";
 import { describeAge } from "./engine/age";
 import { describeBmi } from "./engine/bmi";
@@ -389,6 +390,15 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
       to,
       mode: "UPI",
     });
+  },
+  "invoice-generator": (input) => {
+    const [, lines, from, to] = input.match(/^(.+), (.+) to (.+)$/)!;
+    const code = (name: string) => states.find((s) => s.name === name)!.code;
+    const items = lines.split(" + ").map((part) => {
+      const [, qty, rate, gst] = part.match(/^([\d.]+) × ([\d.]+) at ([\d.]+)%$/)!;
+      return { qty: Number(qty), rate: Number(rate), gstRate: Number(gst) };
+    });
+    return describeInvoice({ items, sellerState: code(from), buyerState: code(to) });
   },
   "form-photo": (input) => describePreset(formPresets.find((p) => p.id === input)!),
   "word-to-pdf": (input) => describeWordLayout(!input.includes("no saved page layout")),

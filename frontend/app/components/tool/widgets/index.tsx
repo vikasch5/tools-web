@@ -57,6 +57,7 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "unit-converter": load(() => import("./UnitConverter"), "UnitConverter"),
   "typing-test": load(() => import("./TypingTest"), "TypingTest"),
   "rent-receipt": load(() => import("./RentReceipt"), "RentReceipt"),
+  "invoice-generator": load(() => import("./InvoiceGenerator"), "InvoiceGenerator"),
 };
 
 export function ToolWidget({ id, preset }: { id: WidgetId; preset?: WidgetPreset }) {

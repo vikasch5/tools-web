@@ -89,6 +89,7 @@ export const tools: Tool[] = [
   { slug: "gratuity-calculator", name: "Gratuity Calculator", category: "calculators", description: "Gratuity with the 15/26 formula and labour code rules.", status: "live", isNew: true, keywords: ["gratuity", "15/26", "labour code", "resignation", "retirement"] },
   { slug: "hra-calculator", name: "HRA Exemption Calculator", category: "calculators", description: "Tax-free house rent allowance under the old regime.", status: "live", isNew: true, keywords: ["hra", "house rent allowance", "rent", "exemption", "metro", "income tax"] },
   // Roadmap phase 4: everyday tools
+  { slug: "invoice-generator", name: "Invoice Generator", category: "generators", description: "GST invoices, bills and quotations as PDF, with saved history.", status: "live", popular: true, isNew: true, keywords: ["invoice", "gst invoice", "tax invoice", "bill", "bill maker", "billing", "quotation", "estimate", "proforma", "receipt", "cgst", "sgst", "igst", "hsn"] },
   { slug: "rent-receipt-generator", name: "Rent Receipt Generator", category: "generators", description: "Monthly rent receipts for HRA as a printable PDF.", status: "live", isNew: true, keywords: ["rent receipt", "hra", "house rent", "landlord", "pan", "pdf", "income tax"] },
   { slug: "date-calculator", name: "Date Calculator", category: "calculators", description: "Days between dates, working days, add or subtract days.", status: "live", isNew: true, keywords: ["days between dates", "date difference", "working days", "add days", "countdown", "how many days"] },
   { slug: "discount-calculator", name: "Discount Calculator", category: "calculators", description: "Sale price, savings and stacked discounts.", status: "live", isNew: true, keywords: ["discount", "sale", "offer", "percent off", "mrp", "bank offer"] },
@@ -167,6 +168,16 @@ export const toolVariants: ToolVariant[] = [
   loanVariant("home-loan-emi-calculator", "Home Loan EMI Calculator", "EMI, interest and prepayment savings on a home loan.", ["home loan", "housing loan", "mortgage"]),
   loanVariant("car-loan-emi-calculator", "Car Loan EMI Calculator", "EMI and total interest on a car loan.", ["car loan", "auto loan", "vehicle loan"]),
   loanVariant("personal-loan-emi-calculator", "Personal Loan EMI Calculator", "EMI and interest on a personal loan.", ["personal loan", "instant loan"]),
+  ...(
+    [
+      ["gst-invoice-generator", "GST Invoice Generator", "Tax invoice with GSTIN, HSN and CGST/SGST or IGST.", ["gst invoice", "tax invoice", "gst bill", "invoice format", "b2b"]],
+      ["bill-generator", "Bill Generator", "Bills for shops and services, with or without GST.", ["bill", "bill maker", "bill format", "shop bill", "cash bill", "without gst"]],
+      ["quotation-maker", "Quotation Maker", "Quotations and estimates that turn into invoices.", ["quotation", "estimate", "quote", "quotation format"]],
+      ["proforma-invoice-generator", "Proforma Invoice Generator", "Proforma invoices for advance payment.", ["proforma", "pro forma", "advance payment", "pi"]],
+    ] as const
+  ).map(
+    ([slug, name, description, keywords]): ToolVariant => ({ slug, name, category: "generators", description, variantOf: "invoice-generator", keywords: [...keywords, "invoice"] }),
+  ),
   formVariant("india-post-gds-photo-resizer", "India Post GDS Photo Resizer", "320 × 400 px photo for the GDS form.", ["gds", "india post", "gramin dak sevak", "postal"]),
 ];
 

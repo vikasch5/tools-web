@@ -9,6 +9,7 @@ export default [
   route("contact", "routes/contact.tsx"),
   route("privacy", "routes/privacy.tsx"),
   route("terms", "routes/terms.tsx"),
+  route("invoices", "routes/invoices.tsx"),
   route("sitemap.xml", "routes/sitemap.ts"),
   route("robots.txt", "routes/robots.ts"),
   route("ads.txt", "routes/ads-txt.ts"),

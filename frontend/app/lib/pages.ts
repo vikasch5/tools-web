@@ -4,6 +4,9 @@ import { liveTools, toolPath, toolVariants } from "../data/tools";
 
 export const staticPaths = ["/tools", "/about", "/help", "/contact", "/privacy", "/terms"];
 
+/** Working pages: prerendered so they load, but not indexed or listed in the sitemap. */
+export const appPaths = ["/invoices"];
+
 /** Every public, indexable page: prerendered at build time and listed in the sitemap. */
 export function publicPaths() {
   const categoriesWithLiveTools = categories.filter((category) =>

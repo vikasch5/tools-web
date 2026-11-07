@@ -16,7 +16,7 @@ No ESLint is configured.
 ## Conventions
 - Routing/rendering changes: read `frontend/.agents/skills/react-router/` (Framework Mode reference) first.
 - Colours, radii, shadows, spacing come from semantic tokens in `app/app.css` (bright neutral canvas, ink primary buttons, orange→pink brand gradient for highlights, coloured category tiles, rounded cards with soft shadows; Bricolage Grotesque + Geist + Geist Mono); no ad hoc hex values or one-off sizes in components.
-- Reuse `app/components/ui` and `layout` primitives; tools are composed from `ToolLayout` + panels, never bespoke pages.
+- Reuse `app/components/ui` and `layout` primitives; tools are composed from `ToolLayout` + panels, never bespoke pages. One approved exception: the full-screen invoice panel at `/invoices` (route handle `bare`, noindex, not in the sitemap); its public pages still use `ToolLayout`.
 - Tool list: `app/data/tools.ts` (status live|soon). Working tools: definition in `app/tools/defs/`, registered in `app/tools/registry.ts`; processing runs client-side in the engine worker (`app/tools/engine/`). Published examples are tested against real engine output.
 - Every route exports `meta` via the shared `buildMeta()` helper (title, description, canonical, OG).
 - Semantic HTML, one `h1` per page, keyboard-accessible interactions, labelled icon buttons, state never shown by colour alone, respect `prefers-reduced-motion`.

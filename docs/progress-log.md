@@ -240,3 +240,30 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
 - Key file `frontend/public/19c124958737685b87aee32968a44e5e.txt` (public by design; it proves the site owns the key).
 - `scripts/indexnow.mjs` (`npm run indexnow`, `-- --all` for every page): reads the live sitemap and POSTs pages whose prerendered HTML is new or differs from `build-previous/` to api.indexnow.org. Never fails; prints a line. `deploy.sh` runs it after the swap.
 - Verified against a mock endpoint: first run 100 URLs, identical build 0, one changed + one new page → 2, `--all` → 100, endpoint down → message and exit 0; Apache serves the key as text/plain.
+
+### Invoice Generator: GST invoices, bills, quotations and proforma invoices (Phase 1, no login)
+- `/generators/invoice-generator` plus landing pages `gst-invoice-generator`, `bill-generator` (preset `gst: off` for new profiles), `quotation-maker`, `proforma-invoice-generator`.
+- Engine `engine/invoice.ts` (pure, tested): line totals with discount before GST; CGST + SGST, CGST + UTGST (Chandigarh, Ladakh, Lakshadweep, A&N, DNH&DD) or IGST by place of supply vs seller state (export code 96 = IGST); tax split per rate; HSN-wise summary; optional round-off; amount in words with paise; GSTIN format + mod-36 check digit, state read from GSTIN; numbering PREFIX/YY-YY/001 restarting each April (≤16 chars, Rule 46); validation; status (paid/part paid/unpaid/overdue/cancelled, quotations open/invoiced); FY summary; CSV export; backup/restore with merge by `updatedAt`. Slabs offered: 0, 0.25, 3, 5, 18, 40% (any 0–100 accepted).
+- PDF `engine/invoice-pdf.ts` (worker, pdf-lib): A4, Modern/Classic templates, 5 accent colours, logo and signature, seller/buyer blocks, place of supply, reverse charge line, items table repeated across pages, totals by rate, HSN summary, bank details, UPI QR for the amount due (reuses `qr.ts`), notes, terms, page numbers.
+- UI `widgets/InvoiceGenerator.tsx` + `widgets/invoice/*`: tabs Create, History, Customers, Items, Business profile. Saved in IndexedDB (`alltoolsdesk-invoices`; every record has `id` + `updatedAt` so cloud sync can be added later), persistent storage requested. Saved customers/items fill the form; quotation/proforma → invoice in one click; mark paid, cancel (keeps the number), delete with confirm, copy; Share uses the Web Share API with the PDF file, falling back to download + WhatsApp link.
+- Not included (by decision): login/cloud sync (Phase 2), e-invoice IRN and e-way bill, non-Latin scripts in the PDF.
+- Superseded for the UI by the invoice panel entry below.
+- Verified: typecheck, 357 tests (new `invoice.test.ts`: GSTIN check digits, intra/inter/UT splits, round-off ₹9,265.48 → ₹9,265, numbering across FY, CSV, backup merge, multi-page PDF), build. Headless Chrome at 375 and 1280 px: profile → invoice → PDF (IGST ₹6,903.00 correct), quotation → invoice INV/26-27/002, data survives reload, no horizontal scroll, one H1, no app errors.
+
+### Invoice panel (full-screen, approved exception to the ToolLayout rule)
+- `/invoices`: full-screen panel with no site header or footer (route handle `bare`), `noindex`, prerendered via `appPaths`, not in the sitemap. One route; the view is in the URL (`?view=`, `?edit=<id>`, `?new=<kind>`, `?gst=off`), so Back and reload work.
+- Side menu (bottom bar on phones): Dashboard (FY totals, needs attention, 6-month chart, recent activity; get-started steps on first run), Invoices and Quotations (table with search, status filters, row actions; cards on phones), Customers, Items, Business settings (profile plus backup/restore).
+- `InvoiceGenerator` on the public pages is now a launcher; `History.tsx` and the tabs are gone. Engine: `monthlyInvoiced`, `needingAttention`, and `draft` on `buildInvoicePdf` (preview only; downloads still validate).
+- Preview is the real PDF drawn with pdf.js. Fixed: `Fieldset` legend hid the first field of each section; History changes were overwritten by a stale open editor (the editor now only mounts for one document, read fresh); unsaved work prompts before leaving (`useBlocker`).
+- Customers does not yet show per-customer invoices and balance.
+
+### Invoice PDF redesign
+- `engine/invoice-pdf.ts` redrawn: large title, tinted key-facts strip with amount due, From / Bill to / Place of supply columns, open table on hairlines with HSN/SAC under the item name, Total card, tax summary, rounded payment card with UPI QR, Notes and Terms side by side. Classic is the same layout in ink only.
+- New dependency `@pdf-lib/fontkit`: Geist Regular and SemiBold are embedded for the rupee sign and modern type. `engine/fonts/` holds subsets (OFL, licence alongside) covering exactly what `validateInvoice` allows, inlined with `?inline` so the PDF needs no network request. Other scripts are still refused, including in drafts, because the font would print empty boxes.
+- Ordinary invoices stay on one page; long ones repeat the table header. Rent receipts still use Helvetica and "Rs.".
+
+### Invoice templates
+- Four templates in `engine/invoice-pdf.ts`, sharing one body: Clean, Elegant (centred name, Source Serif headings), Bold (full-width band, solid total), Classic (black and white, ruled table). Older saved `modern` reads as Clean (`normalTemplate`).
+- `StylePicker`: template thumbnails, five colours and any custom colour, in the editor beside the preview and in Business settings. A document can keep its own `template` and `accent`; "Use this look for all new documents" saves it as the default. Text on the colour switches between white and ink by luminance.
+- New document fields `shipTo` and `poNumber`. Balance due takes the highlight on part-paid invoices; words, notes and terms sit beside the totals unless long. `invoiceWarnings` gives non-blocking GST checks (HSN digits, ₹50,000 to unregistered customers).
+- Design based on public examples (Invoice Ninja, Refrens, Vyapar, Stripe, Wave); HSN digits per Notification 78/2020-CT. Source Serif subset added to `engine/fonts/` (OFL).

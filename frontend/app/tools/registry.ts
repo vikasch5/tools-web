@@ -22,6 +22,7 @@ import { incomeTaxCalculator } from "./defs/income-tax";
 import { addTextToPhoto, cropImage } from "./defs/image-edit";
 import { everydayTools } from "./defs/everyday";
 import { rentReceiptGenerator, upiQrCode } from "./defs/upi-rent";
+import { invoiceGenerator, invoicePages } from "./defs/invoice";
 import { imageToPdf, mergePdf, pdfToImage, rotatePdf, splitPdf } from "./defs/pdf";
 import { hashGenerator, timestampConverter } from "./defs/utilities";
 import {
@@ -98,6 +99,8 @@ export const toolDefinitions: ToolDefinition[] = [
   ...everydayTools,
   upiQrCode,
   rentReceiptGenerator,
+  invoiceGenerator,
+  ...invoicePages,
 ];
 
 export function getToolDefinition(category: string, slug: string) {

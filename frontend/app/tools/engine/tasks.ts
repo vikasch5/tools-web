@@ -8,6 +8,7 @@ import type { CompressLevel, PageImage, TargetPdfResult } from "./pdf-compress";
 import type { WordPage } from "./pdf-word";
 import type { RenderedPage } from "./docx-pdf";
 import type { RentReceiptInput } from "./rent-receipt";
+import type { InvoicePdfInput } from "./invoice-pdf";
 
 /** Binary and structured jobs for the engine worker (files in, files out). */
 export type Task =
@@ -32,7 +33,8 @@ export type Task =
   | { type: "image"; job: ImageJob }
   | { type: "image-target"; job: TargetImageJob }
   | { type: "image-form"; job: FormImageJob }
-  | { type: "rent-receipts"; input: RentReceiptInput };
+  | { type: "rent-receipts"; input: RentReceiptInput }
+  | { type: "invoice-pdf"; input: InvoicePdfInput };
 
 export type TaskOutputs = {
   diff: DiffResult;
@@ -57,6 +59,7 @@ export type TaskOutputs = {
   "image-target": TargetImageResult;
   "image-form": FormImageResult;
   "rent-receipts": Uint8Array;
+  "invoice-pdf": Uint8Array;
 };
 
 export type TaskResult<T extends Task["type"]> =
@@ -120,5 +123,7 @@ async function dispatch(task: Task) {
       return (await import("./image")).fitFormImage(task.job);
     case "rent-receipts":
       return (await import("./rent-receipt")).buildRentReceipts(task.input);
+    case "invoice-pdf":
+      return (await import("./invoice-pdf")).buildInvoicePdf(task.input);
   }
 }

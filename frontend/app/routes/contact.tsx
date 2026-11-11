@@ -41,6 +41,11 @@ export default function Contact() {
         )
       }
     >
+      <ContentSection id="email" title="Email">
+        <p>
+          Write to <a href={`mailto:${site.email}`}>{site.email}</a>. You can also use the form below, which opens your email app with your message filled in.
+        </p>
+      </ContentSection>
       <ContentSection id="write" title="Write to us">
         <form
           className="space-y-4 rounded-xl border border-border bg-surface p-5 shadow-sm sm:p-6"

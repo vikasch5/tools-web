@@ -10,7 +10,7 @@ import { site } from "~/config/site";
 export function meta({}: Route.MetaArgs) {
   return buildMeta({
     title: `About ${site.name} – Private, Browser-Based Online Tools`,
-    description: `${site.name} is a set of free online tools that run entirely in your browser. No sign-up, no uploads, no clutter.`,
+    description: `Who builds ${site.name}, how the tools are tested and kept accurate, and why everything runs in your browser with no sign-up and no uploads.`,
     path: "/about",
   });
 }
@@ -33,6 +33,40 @@ export default function About() {
         </p>
         <p>
           That also means the tools keep working for confidential documents and that they are fast: there is no upload or download step.
+        </p>
+      </ContentSection>
+      <ContentSection id="who" title="Who runs AllToolsDesk">
+        <p>
+          {site.name} is built and maintained by {site.owner}, based in {site.country}. It focuses on everyday jobs that free tool
+          sites often handle badly: fixing a JSON file, getting a photo under an exam form’s 50 KB limit, comparing tax regimes,
+          checking an EMI before signing a loan. Each tool is written, tested and kept up to date by hand.
+        </p>
+        <p>
+          Write to <a href={`mailto:${site.email}`}>{site.email}</a> with bugs, corrections or ideas for new tools.
+        </p>
+      </ContentSection>
+      <ContentSection id="accuracy" title="How we keep the tools accurate">
+        <ul>
+          <li>
+            <strong>Calculators follow published rules.</strong> Tax slabs, GST rates, PPF and gratuity limits and HRA cities live in
+            dated configuration files, checked against official sources and reviewed every year after the Union Budget.
+          </li>
+          <li>
+            <strong>Results are tested.</strong> Each calculator and file engine has automated tests, and calculator results are
+            checked by hand against bank or government calculators before release. The examples on each page come from the
+            real tool output.
+          </li>
+          <li>
+            <strong>Form specifications are sourced.</strong> Photo and signature sizes for exam forms are taken from recruitment
+            notifications. They change from year to year, so each page asks you to confirm against your own notice.
+          </li>
+          <li>
+            <strong>Corrections are welcome.</strong> If a rule has changed or a result looks wrong, <Link to="/contact">tell us</Link>{" "}
+            and we will correct it.
+          </li>
+        </ul>
+        <p>
+          Our <Link to="/guides">guides</Link> explain the rules behind the tools in more depth, with worked examples.
         </p>
       </ContentSection>
       <ContentSection id="built-on" title="Built on trusted open-source engines">

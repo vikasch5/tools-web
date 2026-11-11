@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isPublicPath, publicPaths } from "./pages";
+import { isPublicPath, publicPaths, sitemapPaths } from "./pages";
 import { loader as sitemap } from "~/routes/sitemap";
 import { loader as robots } from "~/routes/robots";
 import { liveTools } from "~/data/tools";
@@ -10,7 +10,7 @@ describe("sitemap and robots", () => {
     expect(new Set(paths).size).toBe(paths.length);
     expect(paths.length).toBeGreaterThan(liveTools.length);
     const xml = await sitemap().text();
-    expect(xml.match(/<loc>/g)).toHaveLength(paths.length);
+    expect(xml.match(/<loc>/g)).toHaveLength(sitemapPaths().length);
     expect(xml).toMatch(/<loc>https?:\/\/[^<]+\/developer-tools\/json-formatter<\/loc>/);
   });
 

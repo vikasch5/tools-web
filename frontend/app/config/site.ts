@@ -5,6 +5,9 @@ export const site = {
   url: import.meta.env.VITE_SITE_URL ?? "https://alltoolsdesk.com",
   tagline: "Small, sharp tools for the jobs in between.",
   email: "hello@alltoolsdesk.com",
+  /** Person responsible for the site, shown on the About page. */
+  owner: "Vikas Sejwar",
+  country: "India",
 } as const;
 
 /**
@@ -30,12 +33,14 @@ export const ads = {
 export type NavLink = { label: string; to: string };
 
 export const primaryNav: NavLink[] = [
+  { label: "Guides", to: "/guides" },
   { label: "About", to: "/about" },
   { label: "Help", to: "/help" },
   { label: "Contact", to: "/contact" },
 ];
 
 export const companyNav: NavLink[] = [
+  { label: "Guides", to: "/guides" },
   { label: "About", to: "/about" },
   { label: "Help center", to: "/help" },
   { label: "Contact", to: "/contact" },

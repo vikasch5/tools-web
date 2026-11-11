@@ -12,7 +12,10 @@ import { categories, categoryPath } from "~/data/categories";
 import { tools, toolPath } from "~/data/tools";
 import { breadcrumbJsonLd, buildMeta, absoluteUrl } from "~/lib/seo";
 import { site } from "~/config/site";
-import { isPublicPath } from "~/lib/pages";
+import { isPublicPath, noindexPaths } from "~/lib/pages";
+import { guidesForTool } from "~/data/guides";
+import { GuideCards } from "~/components/guide/GuideCards";
+import { SectionHeading } from "~/components/layout/SectionHeading";
 
 // schema.org application categories for the WebApplication JSON-LD.
 const applicationCategories: Record<string, string> = {
@@ -34,6 +37,7 @@ export function loader({ params }: Route.LoaderArgs) {
     tool,
     category: { name: category.name, slug: category.slug },
     related,
+    guides: guidesForTool(tool.slug),
   };
 }
 
@@ -48,13 +52,14 @@ export async function clientLoader({ request, serverLoader }: Route.ClientLoader
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  if (!loaderData) return [{ title: `Page not found – ${site.name}` }];
+  if (!loaderData) return [{ title: `Page not found – ${site.name}` }, { name: "robots", content: "noindex" }];
   const { tool, category } = loaderData;
   const path = toolPath(tool);
   return buildMeta({
     title: tool.metaTitle,
     description: tool.description,
     path,
+    noindex: noindexPaths.has(path),
     jsonLd: [
       breadcrumbJsonLd([
         { name: "Home", path: "/" },
@@ -86,7 +91,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
 }
 
 export default function ToolPage({ loaderData }: Route.ComponentProps) {
-  const { tool, category, related } = loaderData;
+  const { tool, category, related, guides } = loaderData;
 
   return (
     <article>
@@ -143,6 +148,14 @@ export default function ToolPage({ loaderData }: Route.ComponentProps) {
         <ToolContent tool={tool} />
         <AdSlot />
         <RelatedTools tools={related} />
+        {guides.length > 0 && (
+          <section aria-labelledby="tool-guides">
+            <SectionHeading id="tool-guides" eyebrow="Guides" title="Read more" action={{ label: "All guides", to: "/guides" }} />
+            <div className="mt-8">
+              <GuideCards guides={guides} />
+            </div>
+          </section>
+        )}
       </Container>
     </article>
   );

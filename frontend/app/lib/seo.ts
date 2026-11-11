@@ -21,17 +21,21 @@ export function buildMeta({
   description,
   path,
   jsonLd = [],
+  noindex = false,
 }: {
   title: string;
   description: string;
   path: string;
   jsonLd?: object[];
+  /** Keep the page out of search results (it still works for visitors). */
+  noindex?: boolean;
 }): MetaDescriptor[] {
   const url = absoluteUrl(path);
   return [
     { title },
     { name: "description", content: description },
     { tagName: "link", rel: "canonical", href: url },
+    ...(noindex ? [{ name: "robots", content: "noindex, follow" }] : []),
     { property: "og:type", content: "website" },
     { property: "og:site_name", content: site.name },
     { property: "og:title", content: title },

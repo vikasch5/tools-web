@@ -11,6 +11,8 @@ import { categories, categoryPath } from "~/data/categories";
 import { tools, toolPath } from "~/data/tools";
 import { site } from "~/config/site";
 import { buildMeta } from "~/lib/seo";
+import { guides } from "~/data/guides";
+import { GuideCards } from "~/components/guide/GuideCards";
 
 export function meta({}: Route.MetaArgs) {
   return buildMeta({
@@ -172,6 +174,22 @@ export default function Home() {
               );
             })}
           </ul>
+        </Container>
+      </section>
+
+      {/* Guides */}
+      <section aria-labelledby="guides-title">
+        <Container className="py-16 sm:py-20">
+          <SectionHeading
+            id="guides-title"
+            eyebrow="Guides"
+            title="Know the rules before you upload or file"
+            description="Plain-language explanations with worked examples: form size limits, tax regimes, HRA, GST and loan prepayment."
+            action={{ label: "All guides", to: "/guides" }}
+          />
+          <div className="mt-10">
+            <GuideCards guides={guides.slice(0, 4)} />
+          </div>
         </Container>
       </section>
 

@@ -38,7 +38,7 @@ export async function clientLoader({ request, serverLoader }: Route.ClientLoader
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  if (!loaderData) return [{ title: `Page not found – ${site.name}` }];
+  if (!loaderData) return [{ title: `Page not found – ${site.name}` }, { name: "robots", content: "noindex" }];
   const { category, live } = loaderData;
   const path = categoryPath(category.slug);
   return [

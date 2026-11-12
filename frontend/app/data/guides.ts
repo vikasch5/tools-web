@@ -640,6 +640,215 @@ export const guides: Guide[] = [
     ],
     tools: ["gst-calculator", "discount-calculator", "gold-price-calculator"],
   },
+  {
+    slug: "pan-card-photo-signature-rejected",
+    title: "PAN Card Photo or Signature Rejected? Common Reasons and How to Fix Them",
+    metaTitle: "PAN Card Photo or Signature Rejected: Reasons and Fixes",
+    description:
+      "The official PAN photo and signature specs (200 dpi, 20 KB and 10 KB), the mistakes that get uploads rejected, and how to make files that pass using a phone.",
+    topic: "Forms and uploads",
+    updated: "2026-11-12",
+    intro: [
+      "A PAN application that comes back with a photo or signature problem costs you days: you wait for the objection, log in again, upload new files and wait once more. Almost every such problem is caused by a handful of avoidable mistakes in the files themselves.",
+      "This guide sets out the limits Protean (formerly NSDL e-Gov) publishes for scanned uploads, converts them into the pixel sizes your phone actually works with, and goes through the reasons uploads fail, one fix at a time.",
+    ],
+    sections: [
+      {
+        id: "specs",
+        heading: "The official upload limits",
+        blocks: [
+          {
+            type: "table",
+            caption: "Scanned image specifications on Protean's online PAN instructions page (checked November 2026)",
+            head: ["Upload", "Print size", "Resolution", "Colour", "Format", "Maximum size"],
+            rows: [
+              ["Photograph", "3.5 × 2.5 cm", "200 dpi", "Colour", "JPEG", "20 KB"],
+              ["Signature", "2 × 4.5 cm", "200 dpi", "Colour", "JPEG", "10 KB"],
+              ["Proof of identity, address or date of birth", "—", "200 dpi", "Black and white", "PDF/A or JPEG", "300 KB per page"],
+            ],
+          },
+          p("Some of Protean's own help articles mention limits up to 50 KB, and UTIITSL's portal shows its limits on its upload screen. Files that meet the stricter 20 KB and 10 KB limits above are accepted wherever the larger limit applies, so it makes sense to aim for those."),
+          note("Portal screens and application rules change. If the upload page shows a different limit from this table, follow the page."),
+        ],
+      },
+      {
+        id: "pixels",
+        heading: "Turning centimetres and dpi into pixels",
+        blocks: [
+          p("Your phone does not work in centimetres, so convert the print size first. One inch is 2.54 cm, and 200 dpi means 200 pixels per inch."),
+          list([
+            "Photo height: 3.5 cm ÷ 2.54 = 1.378 inches × 200 = about 276 pixels.",
+            "Photo width: 2.5 cm ÷ 2.54 = 0.984 inches × 200 = about 197 pixels.",
+            "Signature width: 4.5 cm ÷ 2.54 × 200 = about 354 pixels.",
+            "Signature height: 2 cm ÷ 2.54 × 200 = about 157 pixels.",
+          ]),
+          p("So the photo is a 197 × 276 px portrait and the signature is a 354 × 157 px landscape strip. These are the sizes the PAN preset in our resizer produces. A camera photo of 4000 × 3000 px has over 200 times as many pixels as the PAN photo, which is why it is several megabytes and why simply lowering quality without resizing ends in a blurred, blocky face."),
+          p("For the size limit, 20 KB can mean 20,000 or 20,480 bytes depending on the portal. Staying at or below 20,000 bytes (and 10,000 bytes for the signature) passes either way."),
+        ],
+      },
+      {
+        id: "reasons",
+        heading: "Why PAN photos and signatures get rejected",
+        blocks: [
+          list([
+            "The file is over the limit. A 21 KB photo fails a 20 KB rule even though it looks fine. Check the size in bytes shown by your file manager or by the tool, not a rounded figure.",
+            "The format is wrong. iPhones save HEIC and screenshots are PNG; renaming a file to .jpg does not convert it. Export a real JPEG.",
+            "The photo is black and white. The specification asks for a colour photograph; only supporting documents are scanned in black and white.",
+            "The face is not clearly visible: too dark, too far from the camera, a shadow across one side, sunglasses, a cap, or a beauty filter that smooths the face. The instructions say the face must be clearly visible, and a blurred 20 KB photo fails that test.",
+            "The shape is wrong. A landscape photo squeezed into a portrait box, or a signature stretched to fill a square, looks distorted. Crop to the right shape; never stretch.",
+            "The signature is faint or messy: blue ballpoint on lined or coloured paper, a shadow from the phone, or ink touching the edges of the image. Protean advises black ink on plain white paper.",
+            "The files are swapped. Uploading the signature in the photo slot (or the reverse) happens more often than you would think when both files have names like IMG_2041.jpg. Rename them photo.jpg and signature.jpg before you start.",
+            "The signature differs from the one on your documents. Sign the way you normally sign on bank and identity documents, not a neater version made for the form.",
+          ]),
+        ],
+      },
+      {
+        id: "fix",
+        heading: "How to make files that pass, with a phone",
+        blocks: [
+          list(
+            [
+              "Photo: stand facing a window in daylight, against a plain white or light wall. Ask someone to take the picture at eye level from about an arm's length, with your head and the top of your shoulders in the frame. No glasses glare, no cap, no filter.",
+              "Signature: sign two or three times on plain white paper with a black pen, and photograph the best one from directly above in good light so the phone casts no shadow.",
+              "Open the PAN Card Photo Resizer, choose the PAN photo preset and select your photo. Move the crop so your face fills most of the height, as on a passport photo, and download the JPG.",
+              "Choose the PAN signature preset, or use the Signature Resizer, which trims the empty paper around the ink and turns the paper pure white before fitting the file under 10 KB.",
+              "Before uploading, check the result: the size should be at or below 20 KB for the photo and 10 KB for the signature, and you should be able to recognise your face and read every stroke of the signature at normal zoom.",
+            ],
+            true,
+          ),
+          p("Proofs such as Aadhaar or a passport go up as separate files of at most 300 KB per page. Scan or photograph each page flat, convert it with Image to PDF, and if a page is still too big, compress the PDF rather than shrinking the photo until the text is unreadable."),
+        ],
+      },
+      {
+        id: "paper",
+        heading: "If you sign or paste on paper",
+        blocks: [
+          p("Some routes still need a printed acknowledgement or form sent by post. Protean's instructions for those are specific:"),
+          list([
+            "Paste a recent 3.5 × 2.5 cm colour photograph in the space provided. Do not staple or clip it.",
+            "Sign, or put your left thumb impression, inside the box provided. The signature must not go across or on the photograph.",
+            "A thumb impression must be attested by a Magistrate, Notary Public or Gazetted Officer under official seal and stamp.",
+            "For a minor, the photo is still required, but it is not printed on the PAN card.",
+          ]),
+        ],
+      },
+      {
+        id: "no-upload",
+        heading: "When you do not need to upload anything",
+        blocks: [
+          p("If you have never been allotted a PAN, are not a minor, and have an Aadhaar with a mobile number linked to it, you can get an instant e-PAN on the Income Tax e-filing portal. The portal's FAQ says no scanned photo or signature is needed for this route; it works from your Aadhaar details with an OTP. The name, date of birth and gender on your Aadhaar must be correct first, because they are used as they are."),
+          note("Changing the photo or signature on an existing PAN is a correction request on the Protean or UTIITSL portal, and uses the same upload limits as a new application."),
+        ],
+      },
+    ],
+    tools: ["pan-card-photo-resizer", "signature-resizer", "compress-image-to-20kb", "image-to-pdf", "compress-pdf", "exam-photo-resizer"],
+  },
+  {
+    slug: "sip-vs-fd-returns-after-tax",
+    title: "SIP vs FD: What Each Really Returns After Tax, With Worked Examples",
+    metaTitle: "SIP vs FD: Returns After Tax, With Examples",
+    description:
+      "How FD interest and equity mutual fund gains are taxed in FY 2026-27, with ₹5 lakh and ₹10,000-a-month examples showing what you keep after tax in each.",
+    topic: "Money and tax",
+    updated: "2026-11-12",
+    intro: [
+      "Comparing an FD at 6.5% with a mutual fund SIP that might earn 12% misses half the story. The two are taxed very differently: FD interest is taxed at your slab rate every year, while gains on equity funds are taxed at lower flat rates, only when you sell, and the first ₹1.25 lakh of long-term gains each year is tax-free.",
+      "This guide sets out the tax rules for FY 2026-27 and then works through two examples, a lump sum and a monthly investment, so you can see what each option leaves in your hands after tax. The equity returns used are assumptions for illustration, not forecasts.",
+    ],
+    sections: [
+      {
+        id: "tax-rules",
+        heading: "How each one is taxed in FY 2026-27",
+        blocks: [
+          {
+            type: "table",
+            caption: "Tax on bank FD interest and on equity mutual fund gains (Budget 2026 kept these rates)",
+            head: ["", "Bank FD or RD", "Equity mutual fund"],
+            rows: [
+              ["What is taxed", "Interest", "Gain on units you sell"],
+              ["Rate", "Your slab rate", "Held over 12 months: 12.5% on long-term gains above ₹1.25 lakh a year. Held 12 months or less: 20%"],
+              ["Health and education cess", "4% of the tax", "4% of the tax"],
+              ["When", "Every year as interest accrues, even on a cumulative FD", "Only in the year you redeem"],
+              ["TDS", "10% once interest from one bank crosses ₹50,000 in a year (₹1 lakh for senior citizens)", "None for resident investors"],
+            ],
+          },
+          p("With cess, the effective FD tax rate is 10.4% in the 10% slab, 20.8% in the 20% slab and 31.2% in the 30% slab. On equity funds it is 13% on long-term gains above the exemption and 20.8% on short-term gains. TDS on an FD is not an extra tax; it is credited against the tax you owe when you file your return."),
+          note("These rules apply to equity-oriented funds, which hold at least 65% in Indian shares. Gains on debt mutual funds bought after 1 April 2023 are taxed at your slab rate, much like FD interest. The examples ignore surcharge, which applies only above ₹50 lakh of income."),
+        ],
+      },
+      {
+        id: "lumpsum",
+        heading: "Example 1: ₹5 lakh for 5 years",
+        blocks: [
+          p("Put ₹5,00,000 in a 5-year FD at 6.5%, compounded quarterly. It matures at ₹6,90,210, so the interest is ₹1,90,210 (an effective 6.66% a year). The same ₹5 lakh in an equity fund is shown at three assumed yearly returns. All units are held for more than 12 months, so the whole gain is long-term."),
+          {
+            type: "table",
+            caption: "What you keep after tax (from our FD and SIP calculators, lump sum mode)",
+            head: ["Option", "Value at 5 years", "Tax", "You keep"],
+            rows: [
+              ["FD at 6.5%, 10% slab", "₹6,90,210", "₹19,782", "₹6,70,428"],
+              ["FD at 6.5%, 20% slab", "₹6,90,210", "₹39,564", "₹6,50,646"],
+              ["FD at 6.5%, 30% slab", "₹6,90,210", "₹59,345", "₹6,30,864"],
+              ["Equity fund at 8%", "₹7,34,664", "₹14,256", "₹7,20,408"],
+              ["Equity fund at 10%", "₹8,05,255", "₹23,433", "₹7,81,822"],
+              ["Equity fund at 12%", "₹8,81,171", "₹33,302", "₹8,47,869"],
+            ],
+          },
+          p("Working for the 12% case: the gain is ₹3,81,171. The first ₹1,25,000 is exempt, leaving ₹2,56,171. Tax at 12.5% plus 4% cess is 13% of that, or ₹33,302."),
+          p("The tax gap matters most when returns are close. If the fund earned only 6% a year, it would be worth ₹6,69,113 and the tax would be ₹5,735, leaving ₹6,63,378. That is less than the FD leaves someone in the 10% slab (₹6,70,428) but more than it leaves someone in the 30% slab (₹6,30,864). The higher your slab, the lower the return an equity fund needs to beat an FD after tax."),
+        ],
+      },
+      {
+        id: "monthly",
+        heading: "Example 2: ₹10,000 a month for 10 years",
+        blocks: [
+          p("Now invest ₹10,000 at the start of every month for 10 years, ₹12 lakh in all. On the deposit side, a recurring deposit at 6.5% compounded quarterly grows to ₹16,89,912, of which ₹4,89,912 is interest. On the fund side, a SIP is shown at three assumed returns and redeemed in full after 10 years."),
+          p("One detail changes the SIP tax: each instalment has its own holding period. When you redeem everything at the end, the 12 instalments made in the last year are 12 months old or less, so their gain is short-term and taxed at 20.8%. All earlier instalments are long-term."),
+          {
+            type: "table",
+            caption: "₹12 lakh invested over 10 years: what you keep after tax",
+            head: ["Option", "Value at 10 years", "Tax", "You keep"],
+            rows: [
+              ["RD at 6.5%, 10% slab", "₹16,89,912", "₹50,951", "₹16,38,961"],
+              ["RD at 6.5%, 20% slab", "₹16,89,912", "₹1,01,902", "₹15,88,010"],
+              ["RD at 6.5%, 30% slab", "₹16,89,912", "₹1,52,853", "₹15,37,059"],
+              ["SIP at 8%", "₹18,41,657", "₹67,581", "₹17,74,076"],
+              ["SIP at 10%", "₹20,65,520", "₹96,790", "₹19,68,730"],
+              ["SIP at 12%", "₹23,23,391", "₹1,30,422", "₹21,92,969"],
+            ],
+          },
+          p("Working for the 12% SIP: the total gain is ₹11,23,391. Of that, ₹8,093 comes from the last year's instalments and is taxed at 20.8% (₹1,683). The remaining ₹11,15,297 is long-term; after the ₹1,25,000 exemption, ₹9,90,297 is taxed at 13% (₹1,28,739). Total tax: ₹1,30,422."),
+          p("You can reproduce the deposit figure with the Compound Interest Calculator by entering a ₹10,000 monthly deposit, and the SIP figures with the SIP Calculator."),
+        ],
+      },
+      {
+        id: "beyond-numbers",
+        heading: "What the tables do not show",
+        blocks: [
+          list([
+            "Risk. The FD rate is fixed when you book it. Equity fund returns are not; over three to five years they can be below an FD or negative, and the examples assume a smooth return every year, which never happens.",
+            "Timing of tax. FD interest is taxable every year even if it is reinvested, so you pay tax on interest you have not received yet. Fund gains are taxed only when you sell, so the untaxed amount keeps compounding.",
+            "Low incomes. Under the new regime there is no tax if your total income stays within ₹12 lakh, thanks to the rebate. If your FD interest keeps you inside that limit, the FD's tax disadvantage disappears.",
+            "Access to money. Breaking an FD early usually costs a reduced rate. Many equity funds charge an exit load, often 1%, if you redeem within a year; check the scheme's documents.",
+          ]),
+        ],
+      },
+      {
+        id: "practical",
+        heading: "Practical ways to keep more",
+        blocks: [
+          list([
+            "Use FDs for money you may need within about three years, and for your emergency fund. Use equity SIPs for goals five or more years away.",
+            "Use the ₹1.25 lakh exemption every year. Redeeming enough units to book about ₹1.25 lakh of long-term gain, and reinvesting, raises your cost and cuts future tax.",
+            "Split a large redemption across two financial years, for example part in March and part in April, so you get the exemption twice.",
+            "Spread large deposits across banks only for convenience, not to avoid tax: interest below the TDS limit is still fully taxable and must be shown in your return.",
+          ]),
+          note("This guide explains tax arithmetic and is not investment advice. Rates of return are assumptions; FD rates vary by bank and change with RBI policy."),
+        ],
+      },
+    ],
+    tools: ["sip-calculator", "fd-calculator", "compound-interest-calculator", "income-tax-calculator"],
+  },
 ];
 
 export const guidePath = (guide: Pick<Guide, "slug">) => `/guides/${guide.slug}`;

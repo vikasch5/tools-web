@@ -51,13 +51,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="yandex-verification" content="a975798fd372cfa4" />
         {/* Monetag site ownership verification. */}
         <meta name="monetag" content="c0785fb6fe35289e449a2f1606b1ce63" />
-        {/* Monetag ad tag (zone 309829). */}
+        {/* Monetag all-in-one tag (zone 309829), disabled; only the
+            vignette in App() is active. To re-enable, restore:
         <script
           src="https://quge5.com/88/tag.min.js"
           data-zone="309829"
           async
           data-cfasync="false"
-        />
+        /> */}
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-PN2TBNWQE3"

@@ -48,6 +48,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="twitter:card" content="summary_large_image" />
         {/* Yandex Webmaster ownership verification. */}
         <meta name="yandex-verification" content="a975798fd372cfa4" />
+        {/* Monetag site ownership verification. */}
+        <meta name="monetag" content="c0785fb6fe35289e449a2f1606b1ce63" />
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-PN2TBNWQE3"

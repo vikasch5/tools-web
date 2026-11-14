@@ -16,6 +16,7 @@ import { ButtonLink } from "~/components/ui/Button";
 import { CategoryIcon } from "~/components/ui/CategoryIcon";
 import { categories, categoryPath } from "~/data/categories";
 import { Link } from "react-router";
+import { useEffect } from "react";
 import { ads } from "~/config/site";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
@@ -107,6 +108,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  // Monetag vignette (zone 12260359). Injected once on the client after
+  // hydration so it never touches the server-rendered markup or delays it.
+  useEffect(() => {
+    if (document.querySelector('script[data-zone="12260359"]')) return;
+    const s = document.createElement("script");
+    s.dataset.zone = "12260359";
+    s.src = "https://n6wxm.com/vignette.min.js";
+    s.async = true;
+    document.body.appendChild(s);
+  }, []);
+
   return <Outlet />;
 }
 

@@ -111,7 +111,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 const MONETAG_TAGS = [
   { zone: "12260359", src: "https://n6wxm.com/vignette.min.js" }, // vignette
   { zone: "12260407", src: "https://nap5k.com/tag.min.js" }, // push notifications
-  { zone: "12260421", src: "https://al5sm.com/tag.min.js" }, // popunder
+  // Popunder, disabled:
+  // { zone: "12260421", src: "https://al5sm.com/tag.min.js" },
 ];
 
 export default function App() {

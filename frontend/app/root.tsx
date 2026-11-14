@@ -108,16 +108,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+const MONETAG_TAGS = [
+  { zone: "12260359", src: "https://n6wxm.com/vignette.min.js" }, // vignette
+  { zone: "12260407", src: "https://nap5k.com/tag.min.js" }, // push notifications
+];
+
 export default function App() {
-  // Monetag vignette (zone 12260359). Injected once on the client after
-  // hydration so it never touches the server-rendered markup or delays it.
+  // Monetag tags, injected once on the client after hydration so they never
+  // touch the server-rendered markup or delay it.
   useEffect(() => {
-    if (document.querySelector('script[data-zone="12260359"]')) return;
-    const s = document.createElement("script");
-    s.dataset.zone = "12260359";
-    s.src = "https://n6wxm.com/vignette.min.js";
-    s.async = true;
-    document.body.appendChild(s);
+    for (const { zone, src } of MONETAG_TAGS) {
+      if (document.querySelector(`script[data-zone="${zone}"]`)) continue;
+      const s = document.createElement("script");
+      s.dataset.zone = zone;
+      s.src = src;
+      s.async = true;
+      document.body.appendChild(s);
+    }
   }, []);
 
   return <Outlet />;

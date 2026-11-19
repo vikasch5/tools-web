@@ -141,7 +141,7 @@ export default function GuidePage({ loaderData }: Route.ComponentProps) {
 
       <Container className="py-10 sm:py-14">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem]">
-          <div className="max-w-3xl space-y-10">
+          <div className="min-w-0 max-w-3xl space-y-10">
             <div className={`${proseClass} text-lg`}>
               {guide.intro.map((text) => (
                 <p key={text}>{text}</p>

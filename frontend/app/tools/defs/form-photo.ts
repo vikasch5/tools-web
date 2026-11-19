@@ -108,6 +108,7 @@ function formPage(
   who: string,
   spec: string,
   output: string,
+  extraFaq: { question: string; answer: string }[] = [],
 ): WidgetToolDefinition {
   return {
     ...examPhotoResizer,
@@ -123,6 +124,7 @@ function formPage(
         question: "What size does this page make?",
         answer: `${spec} The preset is already selected; switch to another form or Custom size in the list if your notification says otherwise.`,
       },
+      ...extraFaq,
       ...examPhotoResizer.faq,
     ],
     related: ["exam-photo-resizer", "signature-resizer", "compress-image"],
@@ -134,11 +136,23 @@ export const formPhotoPages: WidgetToolDefinition[] = [
     "pan-card-photo-resizer",
     "pan-photo",
     "PAN Card Photo Resizer",
-    "PAN Card Photo Resizer – 3.5 × 2.5 cm, Under 20 KB",
-    "Resize a photo for the PAN card online application: 3.5 × 2.5 cm on a white background, under 20 KB. The signature preset is one click away.",
-    "The online PAN application (Form 49A on the Protean or UTIITSL portal) asks for a recent colour photo of about 3.5 × 2.5 cm on a white background, and a signature in black ink, each as a small JPG. Portals have listed limits between 20 and 30 KB for the photo, so this page uses the stricter 20 KB.",
+    "PAN Card Photo Resizer for NSDL (Protean) & UTIITSL – 20 KB",
+    "Resize your photo and signature for the PAN application on the NSDL (Protean) or UTIITSL portal: 3.5 × 2.5 cm, white background, under 20 KB.",
+    "The online PAN application (Form 49A, or 49AA for foreign citizens) on the Protean portal, formerly NSDL e-Gov, or the UTIITSL portal asks for a recent colour photo of about 3.5 × 2.5 cm on a white background, and a signature in black ink, each as a small JPG. Portals have listed limits between 20 and 30 KB for the photo, so this page uses the stricter 20 KB, which both accept.",
     "A 197 × 276 px JPG (3.5 × 2.5 cm at 200 DPI) under 20 KB.",
     "197 × 276 px JPG, up to 20 KB",
+    [
+      {
+        question: "Is the NSDL PAN portal the same as Protean?",
+        answer:
+          "Yes. NSDL e-Governance Infrastructure renamed itself Protean eGov Technologies in 2021, so the old NSDL PAN site is now the Protean portal. The photo and signature rules did not change with the name, and the same 20 KB photo works on UTIITSL too.",
+      },
+      {
+        question: "Why was my PAN photo or signature rejected?",
+        answer:
+          "Usually because the file is over the size limit, the background is not white, the face is too small or the signature is faint. Make the photo here with the PAN preset, and the signature with the signature preset, which whitens the paper and darkens the ink. The guide linked below covers every common rejection reason.",
+      },
+    ],
   ),
   formPage(
     "ibps-photo-signature-resizer",

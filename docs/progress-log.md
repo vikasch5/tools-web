@@ -248,3 +248,11 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
 - Titles for JavaScript Formatter, SQL Formatter, Resize Image, Passport Photo and UUID Generator matched to their real queries; JS formatter FAQ on formatter vs beautifier vs prettifier.
 - PDF tools link to Delete Pages, Add Page Numbers, Protect and Unlock (Google had "discovered" but not indexed them).
 - Verified: typecheck, 341 tests, build; prerendered titles and canonicals checked; BMI widget in Chrome at 375 and 1280 px (65 kg, 5 ft 6 in → 23.1, overweight on Asian ranges; healthy 52–64.4 kg), no horizontal scroll, no page errors.
+
+### Category content, height converter, 5 guides (19 Nov 2026, for AdSense "low value content")
+- **Category pages** (were 32–162 words, now 345–601): "Which tool do I need?" job → tool list, About section, FAQ with FAQPage JSON-LD (`app/data/category-content.ts`, claims checked against the engines: KB counted as 1,000 bytes for upper limits, word counter uses Intl.Segmenter, WCAG AA/AAA). New "Ready-made pages" list links each category's indexable landing pages (loan EMI pages, compress-to-KB pages, exam photo pages, UPI QR), which were not linked from categories before.
+- **Feet to CM Height Converter** (`/converters/feet-to-cm`, engine `height.ts`): both directions, metres and total inches, and both readings of shorthand like "5.8 ft" (5 ft 9.6 in = 176.8 cm vs 5 ft 8 in = 172.7 cm); height chart 4 ft 6 in – 7 ft. Linked from BMI and Unit Converter.
+- **PAN photo page**: title and copy name NSDL (Protean) and UTIITSL, with FAQs on the NSDL → Protean rename and rejection reasons. **JS Minifier**: "JS Minifier – Compress JavaScript Online" and a minify-vs-compress FAQ.
+- **Guides** (now 15; new topic "Health and everyday"): ideal weight for height chart, EMI by hand and in Excel, resize a photo to exact pixels, percentage of marks and CGPA, age on an exam cut-off date. Figures re-checked against the engines in `guides-batch-2.test.ts`.
+- Fixed: guide pages scrolled sideways on phones when they had a table (grid item without `min-w-0`).
+- Verified: typecheck, 353 tests, build; 27 pages at 375 px with no horizontal scroll, no 404s, no page errors; height converter and category pages checked by eye at 375 and 1280 px.

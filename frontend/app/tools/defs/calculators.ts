@@ -178,7 +178,7 @@ export const bmiCalculator: WidgetToolDefinition = {
       answer: "No. The calculation runs in your browser and nothing is stored or sent.",
     },
   ],
-  related: ["age-calculator", "percentage-calculator", "unit-converter"],
+  related: ["feet-to-cm", "age-calculator", "unit-converter"],
 };
 
 export const loanCalculator: WidgetToolDefinition = {

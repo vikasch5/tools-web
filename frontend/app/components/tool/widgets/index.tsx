@@ -23,6 +23,7 @@ const widgets: Record<WidgetId, ComponentType<WidgetProps>> = {
   "image-to-pdf": load(() => import("./ImageToPdf"), "ImageToPdf"),
   "age-calculator": load(() => import("./AgeCalculator"), "AgeCalculator"),
   "bmi-calculator": load(() => import("./BmiCalculator"), "BmiCalculator"),
+  "height-converter": load(() => import("./HeightConverter"), "HeightConverter"),
   "loan-calculator": load(() => import("./LoanCalculator"), "LoanCalculator"),
   "timestamp-converter": load(() => import("./TimestampConverter"), "TimestampConverter"),
   "hash-generator": load(() => import("./HashGenerator"), "HashGenerator"),

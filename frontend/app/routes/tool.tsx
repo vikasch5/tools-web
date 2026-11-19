@@ -9,7 +9,7 @@ import { ToolWidget } from "~/components/tool/widgets";
 import { RelatedTools, ToolContent } from "~/components/tool/ToolContent";
 import { getToolDefinition } from "~/tools/registry";
 import { categories, categoryPath } from "~/data/categories";
-import { tools, toolPath } from "~/data/tools";
+import { searchableTools, toolPath } from "~/data/tools";
 import { breadcrumbJsonLd, buildMeta, absoluteUrl } from "~/lib/seo";
 import { site } from "~/config/site";
 import { isPublicPath, noindexPaths } from "~/lib/pages";
@@ -30,7 +30,7 @@ export function loader({ params }: Route.LoaderArgs) {
   if (!tool || !category) throw data(null, { status: 404 });
 
   const related = tool.related
-    .map((slug) => tools.find((t) => t.slug === slug))
+    .map((slug) => searchableTools.find((t) => t.slug === slug))
     .filter((t) => t !== undefined);
 
   return {

@@ -18,3 +18,12 @@ describe("loan landing pages", () => {
     }
   });
 });
+
+describe("related links", () => {
+  it("resolve to a tool card, including landing pages", async () => {
+    const { searchableTools } = await import("~/data/tools");
+    const { toolDefinitions } = await import("../registry");
+    for (const def of toolDefinitions)
+      for (const slug of def.related) expect(searchableTools.some((t) => t.slug === slug), `${def.slug} → ${slug}`).toBe(true);
+  });
+});

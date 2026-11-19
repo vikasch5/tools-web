@@ -27,7 +27,7 @@ export const jsFormatter: TextToolDefinition = {
   slug: "js-formatter",
   category: "developer-tools",
   name: "JavaScript Formatter",
-  metaTitle: "JavaScript Formatter – Beautify JS and TypeScript Online",
+  metaTitle: "JavaScript Formatter & JS Beautifier – Format JS Online",
   description:
     "Beautify JavaScript and TypeScript with Prettier. Choose indentation, quotes, semicolons and line width. Your code stays in your browser.",
   engine: "prettier",
@@ -74,6 +74,11 @@ export const jsFormatter: TextToolDefinition = {
     "Code must be syntactically valid. JSX is supported in JavaScript mode; TSX in TypeScript mode.",
   ],
   faq: [
+    {
+      question: "Is a JS formatter the same as a beautifier or prettifier?",
+      answer:
+        "Yes. Formatter, beautifier and prettifier all mean the same thing: a tool that re-indents code and puts line breaks in consistent places without changing what the code does. This one uses Prettier, the formatter most JavaScript and TypeScript projects use.",
+    },
     {
       question: "Is the output the same as running Prettier locally?",
       answer:

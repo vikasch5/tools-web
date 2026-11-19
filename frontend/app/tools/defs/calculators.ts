@@ -1,4 +1,5 @@
 import type { WidgetToolDefinition } from "../types";
+import { bmiHeightChart } from "../engine/bmi";
 
 export const percentageCalculator: WidgetToolDefinition = {
   workspace: "percentage-calculator",
@@ -96,53 +97,88 @@ export const ageCalculator: WidgetToolDefinition = {
   related: ["percentage-calculator", "bmi-calculator", "timestamp-converter"],
 };
 
+const bmiChart = bmiHeightChart();
+const chartRow = (ft: number, inches: number) => bmiChart.find((r) => r.ft === ft && r.in === inches)!;
+const fiveSix = chartRow(5, 6);
+
 export const bmiCalculator: WidgetToolDefinition = {
   workspace: "bmi-calculator",
   slug: "bmi-calculator",
   category: "calculators",
   name: "BMI Calculator",
-  metaTitle: "BMI Calculator – Body Mass Index in kg/cm or lb/ft",
+  metaTitle: "BMI Calculator in kg and cm or Feet – WHO & Asian Ranges",
   description:
-    "Calculate your body mass index from your weight and height in metric or US units, see your WHO weight category and the healthy weight range for your height.",
+    "Calculate BMI in kg and cm, kg and feet, or pounds. See your WHO or Asian (India) weight category, the healthy weight for your height and a full chart.",
   overview: [
-    "Body mass index (BMI) is your weight in kilograms divided by the square of your height in metres. Doctors and health services use it as a quick screening measure, because it is simple to calculate and correlates with body fat across large groups of people.",
-    "This calculator accepts metric or US units and places the result in the World Health Organization’s adult categories: underweight below 18.5, healthy weight from 18.5 to 24.9, overweight from 25 to 29.9 and obesity from 30. It also shows the weight range that corresponds to a healthy BMI at your height. BMI does not measure body fat directly, so it can overestimate it in muscular people and underestimate it in older adults; it is a starting point for a conversation with a health professional, not a diagnosis.",
+    "Body mass index (BMI) is your weight in kilograms divided by the square of your height in metres. Doctors use it as a quick screening measure because it is simple to work out and tracks body fat reasonably well across large groups of adults.",
+    "Enter your weight in kilograms and your height in centimetres, or in feet and inches if that is how you know it: most people in India give their height in feet but weigh themselves in kilograms, so the calculator accepts that mix directly, with no conversion needed. Pounds work too.",
+    "You can read the result against two sets of ranges. The WHO ranges are the international standard: healthy from 18.5 to 24.9, overweight from 25 and obesity from 30. The Asian ranges are the WHO Asia-Pacific cut-offs that India’s clinical guidelines also use: healthy from 18.5 to 22.9, overweight from 23 and obesity from 25. They are lower because people of South Asian and East Asian descent tend to develop diabetes and heart disease at a lower BMI.",
+    "BMI does not measure body fat directly. It can overestimate it in muscular people and underestimate it in older adults, so treat it as a starting point for a conversation with a doctor, not a diagnosis.",
   ],
   howTo: [
-    "Choose metric (kg and cm) or US units (lb, feet and inches).",
-    "Enter your weight and height. The BMI and category update as you type.",
-    "Compare your result with the category table and the healthy weight range for your height.",
+    "Choose your units: kg and cm, kg and feet/inches, or pounds and feet/inches.",
+    "Enter your weight and height. For 5 ft 6 in, type 5 in the feet box and 6 in the inches box.",
+    "Pick WHO or Asian ranges. If you are of South Asian or East Asian descent, the Asian ranges are usually the better guide.",
+    "Read your BMI, your category and the healthy weight range for your height. The chart below lists healthy weights for every height from 4 ft 10 in to 6 ft 4 in.",
   ],
   examples: [
-    { title: "Metric", input: "70 kg, 175 cm", output: "BMI 22.9 · Healthy weight\nHealthy weight for this height: 56.7–76.3 kg" },
-    { title: "US units", input: "200 lb, 5 ft 10 in", output: "BMI 28.7 · Overweight\nHealthy weight for this height: 128.9–173.5 lb" },
+    { title: "Kilograms and centimetres", input: "70 kg, 175 cm", output: "BMI 22.9 · Healthy weight\nHealthy weight for this height: 56.7–76.3 kg" },
+    { title: "Kilograms and feet", input: "65 kg, 5 ft 6 in", output: "BMI 23.1 · Healthy weight\nHealthy weight for this height: 52–70 kg" },
+    { title: "The same person on the Asian ranges", input: "65 kg, 5 ft 6 in, Asian ranges", output: "BMI 23.1 · Overweight (Asian cut-offs)\nHealthy weight for this height: 52–64.4 kg" },
+    { title: "Pounds and feet", input: "200 lb, 5 ft 10 in", output: "BMI 28.7 · Overweight\nHealthy weight for this height: 128.9–173.5 lb" },
   ],
+  reference: {
+    title: "BMI chart: healthy weight in kg by height",
+    intro:
+      "The weight range that gives a healthy BMI at each height, in kilograms, worked out with the same formula as the calculator. Find your height in feet and inches or centimetres, then read across.",
+    columns: ["Height (ft, in)", "Height (cm)", "Healthy weight, WHO (kg)", "Healthy weight, Asian (kg)"],
+    rows: bmiChart.map((r) => [
+      `${r.ft} ft ${r.in} in`,
+      String(r.cm),
+      `${r.who[0]} – ${r.who[1]}`,
+      `${r.asian[0]} – ${r.asian[1]}`,
+    ]),
+    note: "WHO: BMI 18.5–24.9. Asian: BMI 18.5–22.9 (WHO Asia-Pacific cut-offs, used by India’s guidelines). For adults 18 and over.",
+  },
   limitations: [
     "For adults aged 18 and over. Children and teenagers are assessed with age- and sex-specific BMI percentiles instead.",
-    "BMI does not distinguish muscle from fat or show where fat is carried. Waist measurement and other checks give a fuller picture.",
-    "Some health services use lower thresholds for people of Asian, Black African or other backgrounds. Ask your doctor which ones apply to you.",
+    "BMI does not distinguish muscle from fat or show where fat is carried. A waist measurement adds useful information: for Indian adults, guidelines flag a waist above 90 cm for men and 80 cm for women.",
+    "Height in feet uses 1 ft = 30.48 cm and 1 in = 2.54 cm. Decimal feet are read as decimals: 5.8 ft is 5 ft 9.6 in, not 5 ft 8 in.",
   ],
   faq: [
     {
-      question: "How is BMI calculated?",
+      question: "How do I calculate BMI in kg and cm?",
       answer:
-        "Weight in kilograms divided by height in metres squared. For 70 kg and 1.75 m: 70 ÷ (1.75 × 1.75) = 22.9. US units are converted to metric first.",
+        "Convert your height to metres, square it, and divide your weight by the result. For 70 kg and 175 cm: 1.75 × 1.75 = 3.0625, and 70 ÷ 3.0625 = 22.9.",
+    },
+    {
+      question: "How do I calculate BMI with weight in kg and height in feet?",
+      answer:
+        "Turn the height into inches (feet × 12 + inches), multiply by 2.54 to get centimetres, then use the kg and cm formula. For 65 kg and 5 ft 6 in: 66 in × 2.54 = 167.6 cm, 1.676 × 1.676 = 2.81, and 65 ÷ 2.81 = 23.1. Or choose “kg, ft/in” above and the calculator does it for you.",
+    },
+    {
+      question: "What is the healthy weight for 5 ft 6 in?",
+      answer: `For 5 ft 6 in (${fiveSix.cm} cm), a healthy weight is ${fiveSix.who[0]}–${fiveSix.who[1]} kg on the WHO ranges, or ${fiveSix.asian[0]}–${fiveSix.asian[1]} kg on the Asian ranges. The chart on this page covers every height from 4 ft 10 in to 6 ft 4 in.`,
+    },
+    {
+      question: "Why are the Asian BMI ranges lower?",
+      answer:
+        "At the same BMI, people of South Asian and East Asian descent tend to carry more body fat and have a higher risk of type 2 diabetes and heart disease. The WHO Asia-Pacific guidance and India’s 2009 consensus guidelines therefore place overweight at 23 and obesity at 25, instead of 25 and 30.",
     },
     {
       question: "What is a healthy BMI?",
-      answer: "For most adults, the WHO considers 18.5 to 24.9 a healthy range. Your doctor may use different targets based on your age, ethnicity or health.",
+      answer: "For most adults, 18.5 to 24.9 on the WHO ranges, or 18.5 to 22.9 on the Asian ranges. Your doctor may use different targets based on your age, ethnicity or health.",
     },
     {
       question: "Is BMI accurate for athletes?",
-      answer:
-        "Often not. Muscle is denser than fat, so very muscular people can have a high BMI while carrying little body fat.",
+      answer: "Often not. Muscle is denser than fat, so very muscular people can have a high BMI while carrying little body fat.",
     },
     {
       question: "Are my measurements saved?",
       answer: "No. The calculation runs in your browser and nothing is stored or sent.",
     },
   ],
-  related: ["age-calculator", "percentage-calculator", "loan-calculator"],
+  related: ["age-calculator", "percentage-calculator", "unit-converter"],
 };
 
 export const loanCalculator: WidgetToolDefinition = {

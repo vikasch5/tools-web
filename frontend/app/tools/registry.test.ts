@@ -196,10 +196,13 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     return describeAge(birth, on);
   },
   "bmi-calculator": (input) => {
+    const scale = input.endsWith(", Asian ranges") ? "asian" : "who";
     const metric = input.match(/^([\d.]+) kg, ([\d.]+) cm$/);
-    if (metric) return describeBmi({ system: "metric", weightKg: Number(metric[1]), heightCm: Number(metric[2]) });
+    if (metric) return describeBmi({ system: "metric", scale, weightKg: Number(metric[1]), heightCm: Number(metric[2]) });
+    const mixed = input.match(/^([\d.]+) kg, (\d+) ft (\d+) in(, Asian ranges)?$/);
+    if (mixed) return describeBmi({ system: "mixed", scale, weightKg: Number(mixed[1]), heightFt: Number(mixed[2]), heightIn: Number(mixed[3]) });
     const [, lb, ft, inch] = input.match(/^([\d.]+) lb, (\d+) ft (\d+) in$/)!;
-    return describeBmi({ system: "imperial", weightLb: Number(lb), heightFt: Number(ft), heightIn: Number(inch) });
+    return describeBmi({ system: "imperial", scale, weightLb: Number(lb), heightFt: Number(ft), heightIn: Number(inch) });
   },
   "loan-calculator": (input) => {
     const prepay = input.match(/^([\d,]+) at ([\d.]+)% for (\d+) years, prepaying ([\d,]+) (every year|in month (\d+)), (finish sooner|lower the EMI)$/);

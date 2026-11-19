@@ -38,7 +38,18 @@ type ToolContentBase = {
   examples: ToolExample[];
   limitations: string[];
   faq: { question: string; answer: string }[];
+  /** Optional reference table (a chart people look up), shown after the examples. */
+  reference?: ToolReference;
   related: string[];
+};
+
+export type ToolReference = {
+  title: string;
+  intro: string;
+  /** Header cells; the first column labels each row. */
+  columns: string[];
+  rows: string[][];
+  note?: string;
 };
 
 /** Text in, text out: rendered by the shared two-pane ToolWorkspace. */

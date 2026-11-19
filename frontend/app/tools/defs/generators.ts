@@ -5,7 +5,7 @@ export const uuidGenerator: WidgetToolDefinition = {
   slug: "uuid-generator",
   category: "generators",
   name: "UUID Generator",
-  metaTitle: "UUID Generator – Create v4 and v7 UUIDs in Bulk",
+  metaTitle: "UUID Generator – Create Unique IDs (v4, v7) in Bulk",
   description:
     "Generate random v4 or time-ordered v7 UUIDs, up to 1,000 at a time, and check any UUID’s version and creation time.",
   overview: [

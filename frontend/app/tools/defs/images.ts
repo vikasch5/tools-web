@@ -61,7 +61,7 @@ export const resizeImage: WidgetToolDefinition = {
   slug: "resize-image",
   category: "image-tools",
   name: "Resize Image",
-  metaTitle: "Resize Image – Change Image Size in Pixels or Percent",
+  metaTitle: "Resize Image in Pixels – Change Image Size Online (JPG, PNG)",
   description:
     "Resize a JPG, PNG or WebP to exact pixel dimensions or by percentage, keeping the aspect ratio if you want. Free and private, in your browser.",
   overview: [
@@ -109,7 +109,7 @@ export const passportPhoto: WidgetToolDefinition = {
   slug: "passport-photo",
   category: "image-tools",
   name: "Passport Photo Maker",
-  metaTitle: "Passport Photo Maker – Crop to Official Sizes at 300 DPI",
+  metaTitle: "Passport Photo Crop – Make Passport & ID Photos at 300 DPI",
   description:
     "Crop a portrait to common passport and visa photo sizes, including US 2×2 in and 35×45 mm. Download a single photo or a 6×4 in print sheet.",
   overview: [

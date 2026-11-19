@@ -21,7 +21,7 @@ export type Guide = {
   metaTitle: string;
   /** Meta description and card summary, 140–160 characters. */
   description: string;
-  topic: "Forms and uploads" | "Money and tax";
+  topic: "Forms and uploads" | "Money and tax" | "Health and everyday";
   /** ISO date of the last content review. */
   updated: string;
   intro: string[];
@@ -29,6 +29,8 @@ export type Guide = {
   /** Slugs of tools or landing pages used in the guide, most relevant first. */
   tools: string[];
 };
+
+import { guidesBatch2 } from "./guides-batch-2";
 
 const p = (text: string): GuideBlock => ({ type: "p", text });
 const list = (items: string[], ordered = false): GuideBlock => ({ type: "list", items, ordered });
@@ -849,6 +851,7 @@ export const guides: Guide[] = [
     ],
     tools: ["sip-calculator", "fd-calculator", "compound-interest-calculator", "income-tax-calculator"],
   },
+  ...guidesBatch2,
 ];
 
 export const guidePath = (guide: Pick<Guide, "slug">) => `/guides/${guide.slug}`;

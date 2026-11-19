@@ -7,15 +7,15 @@ import { site } from "~/config/site";
 
 export function meta({}: Route.MetaArgs) {
   return buildMeta({
-    title: `Guides: Form Uploads, Tax and Loans – ${site.name}`,
+    title: `Guides: Form Uploads, Tax, Loans and BMI – ${site.name}`,
     description:
-      "Plain-language guides to photo and PDF size limits for Indian forms, income tax regimes, HRA, GST and home loans, with worked examples you can check.",
+      "Plain-language guides to photo and PDF limits for Indian forms, tax, EMI, GST, BMI and exam age limits, with worked examples you can check.",
     path: "/guides",
     jsonLd: [breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Guides", path: "/guides" }])],
   });
 }
 
-const topics: Guide["topic"][] = ["Forms and uploads", "Money and tax"];
+const topics: Guide["topic"][] = ["Forms and uploads", "Money and tax", "Health and everyday"];
 
 export default function Guides() {
   return (

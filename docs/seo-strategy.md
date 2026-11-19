@@ -91,3 +91,15 @@ A new site with no backlinks ranks on page 6 for head terms like "bmi calculator
 - Do not buy links or use link exchanges: Google can demote the whole site for that.
 
 **Measure every two weeks** in Search Console → Performance → Pages: impressions, position and CTR for the six pages above. A page that reaches positions 8–15 with CTR under 2% is the moment to rewrite its title and description; before that, work on content and links.
+
+## 5. AdSense readiness (19 Nov 2026)
+
+Done:
+- Category pages now carry real content (345–601 words each) and link every indexable landing page.
+- 15 guides (5 added), each with worked figures from the site's engines.
+- Feet to CM height converter for "5.8 feet in cm" searches (the Unit Converter ranked 9.3 for one).
+- PAN resizer names NSDL (Protean) and UTIITSL; JS Minifier title matches "compress JS".
+
+Known risk, owner's decision to keep: Monetag vignette and push-notification tags plus `/sw.js`. McAfee WebAdvisor blocks the site, and AdSense policy holds the publisher responsible for other networks' behaviour on pages with AdSense code. If the next review is rejected for "site behaviour" or "policy violations", remove Monetag first.
+
+Before reapplying: deploy, request indexing for the new pages, wait about two weeks for a recrawl, then request review in AdSense.

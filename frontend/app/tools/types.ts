@@ -126,6 +126,7 @@ export type WidgetId =
   | "discount-calculator"
   | "gold-calculator"
   | "unit-converter"
+  | "height-converter"
   | "typing-test"
   | "rent-receipt";
 

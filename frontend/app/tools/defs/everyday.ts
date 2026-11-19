@@ -181,7 +181,7 @@ export const unitConverter: WidgetToolDefinition = {
     },
     privateFaq,
   ],
-  related: ["percentage-calculator", "bmi-calculator", "color-converter"],
+  related: ["feet-to-cm", "bmi-calculator", "percentage-calculator"],
 };
 
 export const typingTest: WidgetToolDefinition = {

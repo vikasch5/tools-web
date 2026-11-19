@@ -42,6 +42,7 @@ import { describeQr, upiPayload, wifiPayload, type QrLevel } from "./engine/qr";
 import { describeRentReceipts } from "./engine/rent-receipt";
 import { generateLorem } from "./engine/lorem";
 import { describeAge } from "./engine/age";
+import { describeHeight } from "./engine/height";
 import { describeBmi } from "./engine/bmi";
 import { describeLoan, describePrepayment } from "./engine/loan";
 import { describeTimestamp } from "./engine/timestamp";
@@ -372,6 +373,7 @@ const widgetExamples: Record<WidgetId, (input: string, title: string) => string 
     const [, rate, karat, grams, making, perGram] = input.match(/^24K at ([\d,]+) a gram, (\d+)K, ([\d.]+) g, making (?:₹)?([\d.]+)(%| a gram)$/)!;
     return describeGold({ rate24k: parseNumber(rate), karat: Number(karat) as 22, grams: Number(grams), making: Number(making), makingType: perGram === "%" ? "percent" : "perGram" });
   },
+  "height-converter": (input) => describeHeight(input),
   "unit-converter": (input) => {
     const [, value, from, to] = input.match(/^([\d.]+) (\w+) to (\w+)$/)!;
     const group = { ft: "length", acre: "area", F: "temperature" }[from as "ft"];

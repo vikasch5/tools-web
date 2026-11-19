@@ -99,7 +99,7 @@ export const jsMinifier: TextToolDefinition = {
   slug: "js-minifier",
   category: "developer-tools",
   name: "JavaScript Minifier",
-  metaTitle: "JavaScript Minifier – Compress JS with Terser Online",
+  metaTitle: "JS Minifier – Compress JavaScript Online with Terser",
   description:
     "Minify JavaScript with Terser: removes whitespace and comments, shortens variable names and simplifies code. Runs locally in your browser.",
   engine: "terser",
@@ -136,6 +136,11 @@ export const jsMinifier: TextToolDefinition = {
     "No source map is produced.",
   ],
   faq: [
+    {
+      question: "Is minifying the same as compressing JavaScript?",
+      answer:
+        "People use both words for the same job: making a .js file smaller without changing what it does, by removing spaces, line breaks and comments and shortening names. Gzip or Brotli compression on your web server is a separate, extra step that works on top of minified code, so use both.",
+    },
     {
       question: "Which minifier does this use?",
       answer:

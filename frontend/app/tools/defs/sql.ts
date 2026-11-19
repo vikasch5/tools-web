@@ -6,7 +6,7 @@ export const sqlFormatter: TextToolDefinition = {
   slug: "sql-formatter",
   category: "developer-tools",
   name: "SQL Formatter",
-  metaTitle: "SQL Formatter – Beautify SQL Queries Online",
+  metaTitle: "SQL Formatter – Beautify MySQL & PostgreSQL Queries Online",
   description:
     "Format messy SQL into readable, consistently indented queries. Supports standard SQL, MySQL, PostgreSQL, SQL Server and SQLite.",
   engine: "sql",

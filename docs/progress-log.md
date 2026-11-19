@@ -240,3 +240,11 @@ Plan order: the remaining tools, then site pages, then batch 3 tools (one at a t
 - Key file `frontend/public/19c124958737685b87aee32968a44e5e.txt` (public by design; it proves the site owns the key).
 - `scripts/indexnow.mjs` (`npm run indexnow`, `-- --all` for every page): reads the live sitemap and POSTs pages whose prerendered HTML is new or differs from `build-previous/` to api.indexnow.org. Never fails; prints a line. `deploy.sh` runs it after the swap.
 - Verified against a mock endpoint: first run 100 URLs, identical build 0, one changed + one new page → 2, `--all` → 100, endpoint down → message and exit 0; Apache serves the key as text/plain.
+
+### Search Console review: BMI, loan EMI and titles (19 Nov 2026)
+- Diagnosis and plan in `docs/seo-strategy.md`: 2,260 impressions at average position 59.7, so the low CTR is a ranking problem; 947 impressions are BMI queries in kg and cm or kg and feet. Redirect/canonical/404 rows in the indexing report are expected and need no fix.
+- **BMI Calculator**: kg + feet/inches mode, WHO or Asian (WHO Asia-Pacific, India) ranges, height shown in cm and ft/in, decimal-feet hint (5.8 ft = 5 ft 9.6 in), healthy-weight chart 4 ft 10 in – 6 ft 4 in on the page (new optional `reference` table on tool definitions), new title, content and FAQ; now a popular tool on the home page.
+- **Loan landing pages**: FAQ opens with the EMI formula worked by hand for the page's example (checked against the engine; `loan-pages.test.ts`) and the Excel PMT formula; car, personal and home loan pages link to each other.
+- Titles for JavaScript Formatter, SQL Formatter, Resize Image, Passport Photo and UUID Generator matched to their real queries; JS formatter FAQ on formatter vs beautifier vs prettifier.
+- PDF tools link to Delete Pages, Add Page Numbers, Protect and Unlock (Google had "discovered" but not indexed them).
+- Verified: typecheck, 341 tests, build; prerendered titles and canonicals checked; BMI widget in Chrome at 375 and 1280 px (65 kg, 5 ft 6 in → 23.1, overweight on Asian ranges; healthy 52–64.4 kg), no horizontal scroll, no page errors.

@@ -42,7 +42,7 @@ export const mergePdf: WidgetToolDefinition = {
     },
     filePrivacyFaq,
   ],
-  related: ["split-pdf", "compress-image", "passport-photo"],
+  related: ["split-pdf", "compress-pdf", "delete-pdf-pages", "add-page-numbers", "protect-pdf"],
 };
 
 export const splitPdf: WidgetToolDefinition = {
@@ -89,7 +89,7 @@ export const splitPdf: WidgetToolDefinition = {
     },
     filePrivacyFaq,
   ],
-  related: ["merge-pdf", "compress-image", "word-counter"],
+  related: ["merge-pdf", "delete-pdf-pages", "organize-pdf", "compress-pdf"],
 };
 
 export const rotatePdf: WidgetToolDefinition = {
@@ -130,7 +130,7 @@ export const rotatePdf: WidgetToolDefinition = {
     },
     filePrivacyFaq,
   ],
-  related: ["split-pdf", "merge-pdf", "compress-image"],
+  related: ["organize-pdf", "delete-pdf-pages", "merge-pdf", "split-pdf"],
 };
 
 export const pdfToImage: WidgetToolDefinition = {
@@ -223,5 +223,5 @@ export const imageToPdf: WidgetToolDefinition = {
     },
     filePrivacyFaq,
   ],
-  related: ["merge-pdf", "compress-image", "pdf-to-image"],
+  related: ["merge-pdf", "compress-pdf", "protect-pdf", "pdf-to-image"],
 };

@@ -58,7 +58,7 @@ export const compressPdf: WidgetToolDefinition = {
     },
     filePrivacyFaq,
   ],
-  related: ["split-pdf", "delete-pdf-pages", "compress-image", "merge-pdf"],
+  related: ["merge-pdf", "split-pdf", "delete-pdf-pages", "unlock-pdf"],
 };
 
 export const wordToPdf: WidgetToolDefinition = {
@@ -158,7 +158,7 @@ export const pdfToWord: WidgetToolDefinition = {
     },
     filePrivacyFaq,
   ],
-  related: ["word-to-pdf", "pdf-to-image", "split-pdf", "word-counter"],
+  related: ["word-to-pdf", "pdf-to-image", "unlock-pdf", "split-pdf"],
 };
 
 export const organizePdf: WidgetToolDefinition = {

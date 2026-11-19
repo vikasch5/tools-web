@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { PDFDocument } from "pdf-lib";
 import { calculateAge } from "./age";
-import { calculateBmi } from "./bmi";
+import { bmiCategory, bmiHeightChart, calculateBmi } from "./bmi";
 import { calculateLoan } from "./loan";
 import { convertTimestamp, guessUnit } from "./timestamp";
 import { digest, hashAll, matchChecksum, md5, utf8 } from "./hash";
@@ -36,6 +36,37 @@ describe("bmi", () => {
     expect(imperial).toMatchObject({ bmi: 22.8, category: "Healthy weight", healthyRange: { unit: "lb" } });
     expect(calculateBmi({ system: "metric", weightKg: 95, heightCm: 175 })).toMatchObject({ category: "Obesity" });
     expect(calculateBmi({ system: "metric", weightKg: 0, heightCm: 175 }).ok).toBe(false);
+  });
+
+  it("takes kilograms with feet and inches", () => {
+    const r = calculateBmi({ system: "mixed", weightKg: 65, heightFt: 5, heightIn: 6 });
+    expect(r).toMatchObject({ bmi: 23.1, category: "Healthy weight", healthyRange: { min: 52, max: 70, unit: "kg" }, height: { cm: 167.6, ft: 5, in: 6 } });
+    // Same height in cm gives the same BMI.
+    expect(calculateBmi({ system: "metric", weightKg: 65, heightCm: 167.64 })).toMatchObject({ bmi: 23.1 });
+    // Decimal feet are decimals: 5.8 ft = 5 ft 9.6 in = 176.8 cm.
+    expect(calculateBmi({ system: "mixed", weightKg: 60, heightFt: 5.8, heightIn: 0 })).toMatchObject({ height: { cm: 176.8, ft: 5, in: 9.6 } });
+  });
+
+  it("applies the Asian (WHO Asia-Pacific) cut-offs", () => {
+    const at = (bmi: number) => bmiCategory(bmi, "asian");
+    expect([at(18.4), at(18.5), at(22.9), at(23), at(24.9), at(25)]).toEqual([
+      "Underweight", "Healthy weight", "Healthy weight", "Overweight", "Overweight", "Obesity",
+    ]);
+    expect(bmiCategory(23, "who")).toBe("Healthy weight");
+    const r = calculateBmi({ system: "mixed", scale: "asian", weightKg: 65, heightFt: 5, heightIn: 6 });
+    expect(r).toMatchObject({ category: "Overweight", healthyRange: { min: 52, max: 64.4 } });
+  });
+
+  it("builds the height chart from 4 ft 10 in to 6 ft 4 in", () => {
+    const chart = bmiHeightChart();
+    expect(chart).toHaveLength(19);
+    expect(chart[0]).toMatchObject({ ft: 4, in: 10, cm: 147.3 });
+    expect(chart.at(-1)).toMatchObject({ ft: 6, in: 4, cm: 193 });
+    // Each row agrees with the calculator at that height.
+    for (const row of chart) {
+      const r = calculateBmi({ system: "mixed", weightKg: 70, heightFt: row.ft, heightIn: row.in });
+      expect(r.ok && [r.healthyRange.min, r.healthyRange.max]).toEqual(row.who);
+    }
   });
 });
 

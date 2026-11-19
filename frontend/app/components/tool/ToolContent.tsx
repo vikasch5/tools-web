@@ -10,13 +10,14 @@ import {
   Mail,
   ShieldCheck,
   SquareCode,
+  Table2,
   type LucideIcon,
 } from "lucide-react";
 import type { ToolDefinition } from "~/tools/types";
 import type { Tool } from "~/data/tools";
 import { ToolCard } from "./ToolCard";
 
-type SectionId = "about" | "how-to" | "examples" | "limitations" | "faq";
+type SectionId = "about" | "how-to" | "examples" | "reference" | "limitations" | "faq";
 
 function SectionTitle({ id, icon: Icon, title }: { id: SectionId | "related"; icon: LucideIcon; title: string }) {
   return (
@@ -83,6 +84,7 @@ export function ToolContent({ tool }: { tool: ToolDefinition }) {
     { id: "about", icon: BookOpen, label: "Overview", show: tool.overview.length > 0 },
     { id: "how-to", icon: ListOrdered, label: "How to use", show: tool.howTo.length > 0 },
     { id: "examples", icon: SquareCode, label: "Examples", show: tool.examples.length > 0 },
+    { id: "reference", icon: Table2, label: tool.reference?.title ?? "Reference", show: tool.reference !== undefined },
     { id: "limitations", icon: Info, label: "Good to know", show: tool.limitations.length > 0 },
     { id: "faq", icon: CircleHelp, label: "FAQ", show: tool.faq.length > 0 },
   ];
@@ -153,6 +155,40 @@ export function ToolContent({ tool }: { tool: ToolDefinition }) {
                 </figure>
               ))}
             </div>
+          </Section>
+        )}
+
+        {tool.reference && (
+          <Section id="reference" icon={iconFor("reference")} title={tool.reference.title}>
+            <p className="max-w-3xl leading-relaxed text-fg-muted">{tool.reference.intro}</p>
+            <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-surface shadow-sm">
+              <table className="w-full min-w-[32rem] text-left text-sm">
+                <thead className="bg-surface-2/60 text-fg">
+                  <tr>
+                    {tool.reference.columns.map((column) => (
+                      <th key={column} scope="col" className="px-4 py-3 font-semibold">
+                        {column}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border text-fg-muted tabular-nums">
+                  {tool.reference.rows.map(([label, ...cells]) => (
+                    <tr key={label}>
+                      <th scope="row" className="px-4 py-2.5 font-medium whitespace-nowrap text-fg">
+                        {label}
+                      </th>
+                      {cells.map((cell, i) => (
+                        <td key={i} className="px-4 py-2.5 whitespace-nowrap">
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {tool.reference.note && <p className="mt-3 max-w-3xl text-sm leading-relaxed text-fg-subtle">{tool.reference.note}</p>}
           </Section>
         )}
 

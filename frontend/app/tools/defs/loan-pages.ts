@@ -1,5 +1,32 @@
 import type { WidgetToolDefinition } from "../types";
 import { loanCalculator } from "./calculators";
+import { calculateLoan } from "../engine/loan";
+
+const inr = (v: number, digits = 2) =>
+  v.toLocaleString("en-IN", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+
+/**
+ * The EMI formula worked through by hand for a page's example loan, with
+ * every intermediate number, checked against the calculator's own result.
+ */
+export function manualEmi(amount: string, rate: string, years: number) {
+  const principal = Number(amount.replace(/,/g, ""));
+  const r = Number(rate) / 12 / 100;
+  const n = years * 12;
+  const growth = (1 + r) ** n;
+  const emi = (principal * r * growth) / (growth - 1);
+  const engine = calculateLoan({ principal, annualRate: Number(rate), months: n });
+  if (!engine.ok || Math.abs(engine.payment - emi) > 0.01) throw new Error(`Manual EMI for ${amount} disagrees with the engine`);
+  return {
+    emi: Math.round(emi * 100) / 100,
+    steps: [
+      `Monthly rate r = ${rate}% ÷ 12 ÷ 100 = ${Number(r.toFixed(6))}.`,
+      `Number of EMIs n = ${years} years × 12 = ${n}.`,
+      `(1 + r)^n = ${(1 + r).toFixed(6)}^${n} = ${growth.toFixed(6)}.`,
+      `EMI = P × r × (1 + r)^n ÷ ((1 + r)^n − 1) = ₹${amount} × ${Number(r.toFixed(6))} × ${growth.toFixed(6)} ÷ ${(growth - 1).toFixed(6)} = ₹${inr(emi)}.`,
+    ],
+  };
+}
 
 type Page = {
   slug: string;
@@ -36,7 +63,7 @@ const pages: Page[] = [
   {
     slug: "car-loan-emi-calculator",
     name: "Car Loan EMI Calculator",
-    metaTitle: "Car Loan EMI Calculator – Monthly EMI and Total Interest",
+    metaTitle: "Car Loan EMI Calculator – EMI Formula, Interest & Schedule",
     description: "Calculate the EMI on a new or used car loan, the total interest over the tenure, and the savings from paying extra. Free, in rupees.",
     amount: "8,00,000",
     rate: "9",
@@ -52,7 +79,7 @@ const pages: Page[] = [
   {
     slug: "personal-loan-emi-calculator",
     name: "Personal Loan EMI Calculator",
-    metaTitle: "Personal Loan EMI Calculator – EMI, Interest, Schedule",
+    metaTitle: "Personal Loan EMI Calculator – EMI Formula, Interest, Schedule",
     description: "Find the EMI and total interest on a personal loan for any amount, rate and tenure, plus what a one-time prepayment would save. Free, in rupees.",
     amount: "5,00,000",
     rate: "12",
@@ -67,6 +94,16 @@ const pages: Page[] = [
   },
 ];
 
+const kind = (p: Page) => p.name.replace(" EMI Calculator", "").toLowerCase();
+
+function manualFaq(p: Page) {
+  const { steps } = manualEmi(p.amount, p.rate, p.years);
+  return {
+    question: `How do I calculate ${kind(p)} EMI manually?`,
+    answer: `Use EMI = P × r × (1 + r)^n ÷ ((1 + r)^n − 1), where P is the loan amount, r the monthly interest rate and n the number of monthly instalments. For ₹${p.amount} at ${p.rate}% for ${p.years} years: ${steps.join(" ")} A calculator or spreadsheet gives the same figure: in Excel or Google Sheets, =PMT(${p.rate}%/12, ${p.years * 12}, -${p.amount.replace(/,/g, "")}).`,
+  };
+}
+
 export const loanPages: WidgetToolDefinition[] = pages.map((p) => ({
   ...loanCalculator,
   preset: { amount: p.amount, rate: p.rate, years: p.years, locale: "en-IN", currency: "₹" },
@@ -76,6 +113,10 @@ export const loanPages: WidgetToolDefinition[] = pages.map((p) => ({
   description: p.description,
   overview: [p.intro, `${loanCalculator.overview[1]} ${p.tip}`],
   examples: [{ title: p.name, ...p.example }],
-  faq: [p.faq, ...loanCalculator.faq],
-  related: ["loan-calculator", "percentage-calculator", "age-calculator"],
+  howTo: [
+    ...loanCalculator.howTo,
+    `Want to check the EMI by hand? The FAQ below works through the formula step by step for ₹${p.amount} at ${p.rate}% for ${p.years} years.`,
+  ],
+  faq: [manualFaq(p), p.faq, ...loanCalculator.faq],
+  related: [...pages.filter((other) => other !== p).map((other) => other.slug), "loan-calculator"],
 }));

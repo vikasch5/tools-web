@@ -45,7 +45,7 @@ export const tools: Tool[] = [
   { slug: "hash-generator", name: "Hash Generator", category: "developer-tools", description: "MD5, SHA-1 and SHA-256 of text or files.", status: "live", isNew: true, keywords: ["md5", "sha1", "sha256", "sha512", "checksum", "digest", "verify file"] },
   { slug: "color-converter", name: "Color Converter", category: "web-design-tools", description: "HEX, RGB, HSL, HSV and CMYK, with contrast check.", status: "live", isNew: true, keywords: ["hex to rgb", "rgb to hex", "hsl", "cmyk", "colour", "color picker", "contrast", "wcag"] },
   { slug: "age-calculator", name: "Age Calculator", category: "calculators", description: "Exact age in years, months and days.", status: "live", isNew: true, keywords: ["birthday", "date of birth", "how old", "years old", "days alive"] },
-  { slug: "bmi-calculator", name: "BMI Calculator", category: "calculators", description: "Body mass index in metric or US units.", status: "live", isNew: true, keywords: ["body mass index", "healthy weight", "weight", "height", "obesity"] },
+  { slug: "bmi-calculator", name: "BMI Calculator", category: "calculators", description: "BMI in kg and cm or feet, with Asian ranges.", status: "live", popular: true, isNew: true, keywords: ["body mass index", "kg and feet", "asian bmi", "healthy weight", "weight", "height", "obesity"] },
   { slug: "loan-calculator", name: "Loan & EMI Calculator", category: "calculators", description: "Monthly payment, interest and schedule.", status: "live", isNew: true, keywords: ["emi", "mortgage", "car loan", "personal loan", "interest", "amortization", "repayment"] },
 
   // Added in batch 3
